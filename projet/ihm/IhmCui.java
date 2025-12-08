@@ -48,11 +48,12 @@ public class IhmCui
 		{
 			String portee = attributs.get(cpt).isEstStatic() ? "Class" : "Instance";
 
-			System.out.println(	"attribut : "   + cpt                               +
-								" nom : "       + attributs.get(cpt).getNom()       +
-								" type : "      + attributs.get(cpt).getType()      +
-								" visibilite : "+ attributs.get(cpt).getVisibilite()+
-								" portee : "    + portee                             );
+			System.out.println(String.format("attribut : %-2d  nom : %-10s  type : %-7s  visibilite : %-10s  portée : %s",
+								cpt,
+								attributs.get(cpt).getNom(),
+								attributs.get(cpt).getType(),
+								attributs.get(cpt).getVisibilite().trim(), 
+								portee));
 		}
 
 		System.out.println("");
@@ -60,26 +61,31 @@ public class IhmCui
 		for (Methode methode : methodes)
 		{
 			String nom = methode.getNom().equals(this.ctrl.getNom()) ? "Constructeur" : methode.getNom();
+			String typeRetour = methode.getType() != null && !methode.getType().isEmpty() ? methode.getType() : "aucun";
 
-			System.out.print(	"methode : "     + nom                     +
-								" visibilite : " + methode.getVisibilite() + "\n" +
-								"parametres : "                                  );
+			System.out.println(String.format("méthode : %-10s visibilité : %-8s" + 
+											(methode.getType() != null && !methode.getType().isEmpty() ? " type de retour : %s" : ""),
+											nom,
+											methode.getVisibilite().trim(),
+											typeRetour));
+
+			System.out.print("paramètres : ");
 
 			if(methode.getLstParametre().isEmpty())
 			{
-				System.out.println("aucun \n");
+				System.out.println("aucun");
 			}
 			else
 			{
-				for (int cpt= 0; cpt < methode.getLstParametre().size(); cpt++)
+				for (int cpt = 0; cpt < methode.getLstParametre().size(); cpt++)
 				{
 					if(cpt == 0)
-						System.out.print(methode.getLstParametre().get(cpt) + "\n");
+						System.out.println(String.format("p%d : %s", cpt + 1, methode.getLstParametre().get(cpt)));
 					else
-						System.out.print("             " +methode.getLstParametre().get(cpt) + "\n");
+						System.out.println(String.format("             p%d : %s", cpt + 1, methode.getLstParametre().get(cpt)));
 				}
-				System.out.println("");
 			}
+			System.out.println();
 		}
 	}
 
