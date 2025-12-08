@@ -26,7 +26,7 @@ public class IhmCui
 				this.affichageNiv1();
 				break;
 			case 2 :
-				//this.affichageNiv2();
+				this.affichageNiv2();
 				//break;
 			case 3 :
 				//this.affichageNiv3();
@@ -55,13 +55,17 @@ public class IhmCui
 								" portee : "    + portee                             );
 		}
 
+		System.out.println("");
+
 		for (Methode methode : methodes)
 		{
-			System.out.print(	"methode : "     +methode.getNom()       +
-								" visibilite : " +methode.getVisibilite()+"\n"+
-								"parametres : "                                );
+			String nom = methode.getNom().equals(this.ctrl.getNom()) ? "Constructeur" : methode.getNom();
 
-			if(methode.getLstParametre() == null)
+			System.out.print(	"methode : "     + nom                     +
+								" visibilite : " + methode.getVisibilite() + "\n" +
+								"parametres : "                                  );
+
+			if(methode.getLstParametre().isEmpty())
 			{
 				System.out.println("aucun \n");
 			}
@@ -74,7 +78,37 @@ public class IhmCui
 					else
 						System.out.print("             " +methode.getLstParametre().get(cpt) + "\n");
 				}
+				System.out.println("");
 			}
 		}
+	}
+
+
+	public void affichageNiv2()
+	{
+		List<Methode>  methodes  = ctrl.getMethode ();
+		List<Attribut> attributs = ctrl.getAttribut();
+
+		String res = "";
+
+		res += "------------------------------------------------\n";
+		res += String.format("%49s\n", ctrl.getNom());
+		res += "------------------------------------------------\n";
+
+
+		/*
+		------------------------------------------------
+		                        Point
+		------------------------------------------------
+		- x : int
+		- y : int
+		------------------------------------------------
+		+ Point ( nom : String, x : int , y : int )
+		+ getX () : int
+		+ getY () : int
+		+ setX ( x : int )
+		+ setY ( y : int )
+		------------------------------------------------ 
+		*/
 	}
 }
