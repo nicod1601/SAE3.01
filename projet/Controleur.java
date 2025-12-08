@@ -51,6 +51,7 @@ public class Controleur
 
 	public static void main(String[] args) 
 	{
+		int     niv;
 
 		boolean saisieValide = false;
 
@@ -58,7 +59,14 @@ public class Controleur
 
 		do 
 		{
-			System.out.print("Entrez un entier : ");
+			System.out.println("\n╔════════════════════════════════════════╗");
+			System.out.println("║   Choisissez un niveau d'affichage :   ║");
+			System.out.println("╠════════════════════════════════════════╣");
+			System.out.println("║  1 = IHM CUI simple                    ║");
+			System.out.println("║  2 = IHM CUI normal                    ║");
+			System.out.println("║  3 = IHM CUI avancé                    ║");
+			System.out.println("╚════════════════════════════════════════╝");
+			System.out.print("➜ Entrez un entier : ");
 
 			if (sc.hasNextInt()) 
 			{

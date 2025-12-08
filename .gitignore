@@ -1,0 +1,8 @@
+# Dossier contenant les fichiers .class compilés
+class/
+
+# Fichiers .class individuels
+*.class
+
+# Fichiers IDE
+.vscode/
