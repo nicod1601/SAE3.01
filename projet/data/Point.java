@@ -1,4 +1,4 @@
-package projet.metier;
+package projet.data;
 
 public class Point {
     

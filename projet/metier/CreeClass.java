@@ -1,3 +1,4 @@
+package projet.metier;
 import java.util.*;
 public class CreeClass
 {
