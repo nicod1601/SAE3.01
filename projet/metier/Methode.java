@@ -1,6 +1,8 @@
 package projet.metier;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Methode
 {
@@ -9,7 +11,7 @@ public class Methode
 	private String nom;
 
 	private boolean estStatic;
-	private List<String> lstParametre;
+	private Map<String, String> lstParametre;
 
 	public Methode(String visibilite, String type, String nom, boolean estStatic, List<String> lstParametre)
 	{
@@ -17,7 +19,15 @@ public class Methode
 		this.type = type;
 		this.nom = nom;
 		this.estStatic = estStatic;
-		this.lstParametre = lstParametre;
+		this.lstParametre = new HashMap<>();
+		for (String parametre : lstParametre)
+		{
+			String[] parts = parametre.trim().split(" ");
+			if (parts.length == 2)
+			{
+				this.lstParametre.put(parts[0], parts[1]);
+			}
+		}
 	}
 
 	public String getVisibilite()
