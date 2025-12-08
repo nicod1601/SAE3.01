@@ -11,48 +11,41 @@ public class Methode
 	private String nom;
 
 	private boolean estStatic;
-	private Map<String, String> lstParametre;
+	private List<String[]> lstParametres;
 
-	public Methode(String visibilite, String type, String nom, boolean estStatic, List<String> lstParametre)
+	public Methode(String visibilite, String type, String nom, boolean estStatic, List<String[]> lstParametres)
 	{
-		this.visibilite = visibilite;
-		this.type = type;
-		this.nom = nom;
-		this.estStatic = estStatic;
-		this.lstParametre = new HashMap<>();
-		for (String parametre : lstParametre)
-		{
-			String[] parts = parametre.trim().split(" ");
-			if (parts.length == 2)
-			{
-				this.lstParametre.put(parts[0], parts[1]);
-			}
-		}
+		this.visibilite   = visibilite;
+		this.type         = type;
+		this.nom          = nom;
+		this.estStatic    = estStatic;
+		
+		this.lstParametres = lstParametres;
 	}
 
 	public String getVisibilite()
 	{
-		return visibilite;
+		return this.visibilite;
 	}
 
 	public String getType()
 	{
-		return type;
+		return this.type;
 	}
 
 	public String getNom()
 	{
-		return nom;
+		return this.nom;
 	}
 
 	public boolean isEstStatic()
 	{
-		return estStatic;
+		return this.estStatic;
 	}
 
-	public List<String> getLstParametre()
+	public List<String[]> getLstParametres()
 	{
-		return lstParametre;
+		return this.lstParametres;
 	}
 
 }

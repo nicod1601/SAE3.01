@@ -5,7 +5,7 @@ public class Point
 /*╔════════════════════════╗*/
 /*║       Attribut         ║*/
 /*╚════════════════════════╝*/
-	private int nom;
+	private String nom;
 	private int x;
 	private int y;
 
@@ -13,7 +13,7 @@ public class Point
 /*║      Constructeur      ║*/
 /*╚════════════════════════╝*/
 
-	public Point(int nom, int x, int y) 
+	public Point(String nom, int x, int y) 
 	{
 		this.nom = nom;
 		this.x   = x;
@@ -24,12 +24,12 @@ public class Point
 /*╔════════════════════════╗*/
 /*║   Getters & Setters    ║*/
 /*╚════════════════════════╝*/
-	public int  getNom()        
+	public String  getNom()        
 	{
 		return this.nom;
 	}
 
-	public void setNom(int nom)
+	public void setNom(String nom)
 	{ 
 		this.nom = nom;
 	}

@@ -27,7 +27,7 @@ public class IhmCui
 				break;
 			case 2 :
 				this.affichageNiv2();
-				//break;
+				break;
 			case 3 :
 				//this.affichageNiv3();
 				//break;
@@ -63,26 +63,28 @@ public class IhmCui
 			String nom = methode.getNom().equals(this.ctrl.getNom()) ? "Constructeur" : methode.getNom();
 			String typeRetour = methode.getType() != null && !methode.getType().isEmpty() ? methode.getType() : "aucun";
 
-			System.out.println(String.format("méthode : %-10s visibilité : %-8s" + 
-											(methode.getType() != null && !methode.getType().isEmpty() ? " type de retour : %s" : ""),
+			System.out.println(String.format("méthode : %-10s visibilité : %-8s type de retour : %s",
 											nom,
 											methode.getVisibilite().trim(),
 											typeRetour));
 
 			System.out.print("paramètres : ");
 
-			if(methode.getLstParametre().isEmpty())
+			if(methode.getLstParametres().isEmpty())
 			{
 				System.out.println("aucun");
 			}
 			else
 			{
-				for (int cpt = 0; cpt < methode.getLstParametre().size(); cpt++)
+				for (int cpt = 0; cpt < methode.getLstParametres().size(); cpt++)
 				{
+					String nomParam  = methode.getLstParametres().get(cpt)[1];
+					String typeParam = methode.getLstParametres().get(cpt)[0];
+					
 					if(cpt == 0)
-						System.out.println(String.format("p%d : %s", cpt + 1, methode.getLstParametre().get(cpt)));
+						System.out.println(String.format("p%d : %-10s type : %s", cpt + 1, nomParam, typeParam));
 					else
-						System.out.println(String.format("             p%d : %s", cpt + 1, methode.getLstParametre().get(cpt)));
+						System.out.println(String.format("             p%d : %-10s type : %s", cpt + 1, nomParam, typeParam));
 				}
 			}
 			System.out.println();
@@ -98,10 +100,39 @@ public class IhmCui
 		String res = "";
 
 		res += "------------------------------------------------\n";
-		res += String.format("%49s\n", ctrl.getNom());
+		int centre = (49 + ctrl.getNom().length()) / 2;
+		res += String.format("%" + centre + "s\n", ctrl.getNom());
 		res += "------------------------------------------------\n";
 
+		for (Attribut attribut : attributs)
+		{
+			String type = "";
 
+			switch (attribut.getVisibilite().trim()) 
+			{
+				case "private": 
+					type ="-";
+					break;
+
+				case "public":
+					type = "+";
+					break;
+	
+				default:
+					type = "?";
+					break;
+			}
+
+			res += String.format("%s %s : %s\n",type, attribut.getNom(), attribut.getType());
+		}
+
+		for (Methode methode : methodes)
+		{
+			
+		}
+
+
+		System.out.println(res);
 		/*
 		------------------------------------------------
 		                        Point

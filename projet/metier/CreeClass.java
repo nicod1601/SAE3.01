@@ -81,18 +81,28 @@ public class CreeClass
 		String[] morceaux = avantParenthese.split(" ");
 		String nom = morceaux[morceaux.length - 1];
 
-		String parametresBrut = constructeur.substring(posOuv + 1, posFerm).trim();
-		List<String> lstParametres = new ArrayList<>();
+		// paramBrut -> "typeParam1 nomPram1, typeParam2 nomPram2, ..."
+		String paramBrut = constructeur.substring(posOuv + 1, posFerm).trim();
 
-		if (!parametresBrut.isEmpty()) 
-		{
-			for (String p : parametresBrut.split(",")) 
-			{
-				lstParametres.add(p.trim());
+		// lstLstParamInfo -> [param1 -> ["type", nom]; param2 -> [type, nom]; ...]"
+		List<String[]> lstLstParamInfo  = new ArrayList<>();
+
+		if (!paramBrut.isEmpty()) {
+			//tabParams -> ["param1", "param2", ...] param -> "typeParam1 nomPram1"
+			String[] tabParams = paramBrut.split(",");
+
+			//param -> "typeParam nomPram"
+			for (String param : tabParams) {
+
+				// infoParam -> [type, nom] type -> "typeParam1" et nom -> "nomPram1"
+				String[] tabInfoParam = param.trim().split(" ");
+
+				lstLstParamInfo.add(tabInfoParam);
 			}
 		}
 
-		Methode c = new Methode(visibilite, null, nom, false, lstParametres);
+
+		Methode c = new Methode(visibilite, null, nom, false, lstLstParamInfo);
 		this.lstMethode.add(c);
 	}
 
@@ -153,20 +163,28 @@ public class CreeClass
 			int posFerm = reste.indexOf(")");
 
 			String nom = reste.substring(0, posOuv);
-			String parametres = reste.substring(posOuv + 1, posFerm);
 
-			List<String> lstParametre = new ArrayList<>();
-			
-			if (!parametres.trim().isEmpty())
-			{
-				String[] params = parametres.split(",");
-				for (String param : params)
-				{
-					lstParametre.add(param.trim());
+			// paramBrut -> "typeParam1 nomPram1, typeParam2 nomPram2, ..."
+			String paramBrut = reste.substring(posOuv + 1, posFerm).trim();
+
+			// lstLstParamInfo -> [param1 -> ["type", nom]; param2 -> [type, nom]; ...]"
+			List<String[]> lstLstParamInfo  = new ArrayList<>();
+
+			if (!paramBrut.isEmpty()) {
+				//tabParams -> ["param1", "param2", ...] param -> "typeParam1 nomPram1"
+				String[] tabParams = paramBrut.split(",");
+
+				//param -> "typeParam nomPram"
+				for (String param : tabParams) {
+
+					// infoParam -> [type, nom] type -> "typeParam1" et nom -> "nomPram1"
+					String[] tabInfoParam = param.trim().split(" ");
+
+					lstLstParamInfo.add(tabInfoParam);
 				}
 			}
 
-			Methode meth = new Methode(visibilite, type, nom, estStatic, lstParametre);
+			Methode meth = new Methode(visibilite, type, nom, estStatic, lstLstParamInfo);
 			this.lstMethode.add(meth);
 		}
 
