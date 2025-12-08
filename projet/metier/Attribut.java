@@ -18,4 +18,23 @@ public class Attribut
 		this.estFinal = estFinal;
 	}
 
+	public String getVisibilite()
+	{
+		return visibilite;
+	}
+
+	public String getType() {return type;}
+
+	public String getNom() {
+		return nom;
+	}
+
+	public boolean isEstStatic() {
+		return estStatic;
+	}
+
+	public boolean isEstFinal() {
+		return estFinal;
+	}
+
 }

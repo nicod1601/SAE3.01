@@ -19,4 +19,30 @@ public class Methode
 		this.estStatic = estStatic;
 		this.lstParametre = lstParametre;
 	}
+
+	public String getVisibilite()
+	{
+		return visibilite;
+	}
+
+	public String getType()
+	{
+		return type;
+	}
+
+	public String getNom()
+	{
+		return nom;
+	}
+
+	public boolean isEstStatic()
+	{
+		return estStatic;
+	}
+
+	public List<String> getLstParametre()
+	{
+		return lstParametre;
+	}
+
 }
