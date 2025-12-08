@@ -10,3 +10,4 @@ echo
 echo "Execution du programme..."
 cd class
 java projet.Controleur
+cd ..

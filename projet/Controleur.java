@@ -43,7 +43,6 @@ public class Controleur
 				//this.ihm = new IhmGuiNiv6();
 				//break;
 			default :
-				System.out.println("petit con ta pas mit le bon chiffre");
 		}
 	}
 
@@ -52,7 +51,6 @@ public class Controleur
 
 	public static void main(String[] args) 
 	{
-		int niv;
 
 		boolean saisieValide = false;
 

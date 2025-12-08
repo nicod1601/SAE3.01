@@ -45,6 +45,7 @@ public class CreeClass
 		}catch (Exception e)
 		{
 			System.out.println("Erreur lors de la lecture du fichier : " + e.getMessage() );
+			e.printStackTrace();
 		}
 	}
 
