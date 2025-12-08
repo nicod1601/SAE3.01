@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Compilation en cours..."
-javac "@compile.list" -d class
+javac @compile.list -d class
 if [ $? -ne 0 ]; then
     echo "Erreur de compilation!"
     exit 1
