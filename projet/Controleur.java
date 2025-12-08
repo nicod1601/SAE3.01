@@ -59,14 +59,21 @@ public class Controleur
 
 		do 
 		{
-			System.out.println("\n╔════════════════════════════════════════╗");
-			System.out.println("║   Choisissez un niveau d'affichage :   ║");
-			System.out.println("╠════════════════════════════════════════╣");
-			System.out.println("║  1 = IHM CUI simple                    ║");
-			System.out.println("║  2 = IHM CUI normal                    ║");
-			System.out.println("║  3 = IHM CUI avancé                    ║");
-			System.out.println("╚════════════════════════════════════════╝");
-			System.out.print("➜ Entrez un entier : ");
+			String blue     = "\u001B[0m" +"\u001B[36m";
+			String vert     = "\u001B[32m";
+			String yellow   = "\u001B[33m";
+			String indispo  = "\u001B[9m" +"\u001B[31m";
+			String reset    = "\u001B[0m";
+
+			System.out.println(blue + "╔═══════════════════════════════════════════════╗\n" +
+				                      "║       Choisissez un niveau d'affichage :      ║\n" +
+				                      "╠═══════════════════════════════════════════════╣\n" +
+				               blue + "║" + vert + "  1 = IHM CUI simple                           " + blue + "║\n" +
+				               blue + "║" + indispo +"  2 = IHM CUI Formalisme UML                   " + blue + "║\n" +
+				               blue + "║" + indispo + "  3 = IHM CUI Formalisme UML (Plusieur Classe) " + blue + "║\n" +
+				               blue + "║" + indispo + "  4 = IHM CUI Héritage                         " + blue + "║\n" +
+				                      "╚═══════════════════════════════════════════════╝" + reset);
+			System.out.print(yellow + "Entrez un entier : " + reset);
 
 			if (sc.hasNextInt()) 
 			{
@@ -82,7 +89,6 @@ public class Controleur
 			}
 		} while (!saisieValide);
 
-		System.out.println("Vous avez saisi : " + niv);
 		Controleur app = new Controleur("../data/Point.java", niv);
 		sc.close();
 	}

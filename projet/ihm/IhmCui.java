@@ -48,25 +48,32 @@ public class IhmCui
 		{
 			String portee = attributs.get(cpt).isEstStatic() ? "Class" : "Instance";
 
-			System.out.println(	"attribut : "   + cpt                                  +
-								" nom : "       + attributs.get(cpt).getNom()          +
-								" type : "      + attributs.get(cpt).getType()         +
-								" visibilite : "+ attributs.get(cpt).getVisibilite()   +
-								" portee : "    + portee                               +
-								"\n"                                                    );
+			System.out.println(	"attribut : "   + cpt                               +
+								" nom : "       + attributs.get(cpt).getNom()       +
+								" type : "      + attributs.get(cpt).getType()      +
+								" visibilite : "+ attributs.get(cpt).getVisibilite()+
+								" portee : "    + portee                             );
 		}
 
 		for (Methode methode : methodes)
 		{
-			System.out.println(	"methode : "     +methode.getNom()       +
-								" visibilite : " +methode.getVisibilite() );
+			System.out.print(	"methode : "     +methode.getNom()       +
+								" visibilite : " +methode.getVisibilite()+"\n"+
+								"parametres : "                                );
 
-			for (int cpt= 0; cpt < methode.getLstParametre().size(); cpt++)
+			if(methode.getLstParametre() == null)
 			{
-				if(cpt == 0)
-					System.out.println("parametres : " +methode.getLstParametre().get(cpt) + "\n");
-				else
-					System.out.println("             " +methode.getLstParametre().get(cpt) + "\n");
+				System.out.println("aucun \n");
+			}
+			else
+			{
+				for (int cpt= 0; cpt < methode.getLstParametre().size(); cpt++)
+				{
+					if(cpt == 0)
+						System.out.print(methode.getLstParametre().get(cpt) + "\n");
+					else
+						System.out.print("             " +methode.getLstParametre().get(cpt) + "\n");
+				}
 			}
 		}
 	}
