@@ -194,4 +194,9 @@ public class CreeClass
     public List<Methode> getLstMethode() {
         return lstMethode;
     }
+
+	public void supprimerAttribut(Attribut att)
+	{
+		this.lstAttribut.remove(att);
+	}
 }
