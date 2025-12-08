@@ -2,6 +2,7 @@ package projet.metier;
 
 
 import java.io.FileInputStream;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class CreeClass
@@ -31,14 +32,24 @@ public class CreeClass
 				String line = sc.nextLine();
 				if (line.contains("private") || line.contains("protected")|| line.contains("public"))
 				{
+					if(line.contains(nom))
+					{
+						this.ajouterConstructeur(line);
+					}
+					else
+					{
+						if (line.contains(")"))
+						{
+							this.ajouterMethode(line);
+						}
+					}
+
 					if (line.contains(";"))
 					{
 						this.ajouterAttribut(line);
 					}
-					else if (line.contains(")"))
-					{
-						this.ajouterMethode(line);
-					}
+					
+					
 				}
 			}
 
@@ -48,6 +59,43 @@ public class CreeClass
 			e.printStackTrace();
 		}
 	}
+
+	private void ajouterConstructeur(String constructeur)
+	{
+		constructeur = constructeur.trim();
+
+		String[] mots = constructeur.split(" ");
+		String visibilite = mots[0];
+
+		int posOuv = constructeur.indexOf("(");
+		int posFerm = constructeur.indexOf(")");
+
+		if (posOuv == -1 || posFerm == -1) 
+		{
+			System.out.println("Constructeur mal formaté : " + constructeur);
+			return;
+		}
+
+
+		String avantParenthese = constructeur.substring(0, posOuv).trim();
+		String[] morceaux = avantParenthese.split(" ");
+		String nom = morceaux[morceaux.length - 1];
+
+		String parametresBrut = constructeur.substring(posOuv + 1, posFerm).trim();
+		List<String> lstParametres = new ArrayList<>();
+
+		if (!parametresBrut.isEmpty()) 
+		{
+			for (String p : parametresBrut.split(",")) 
+			{
+				lstParametres.add(p.trim());
+			}
+		}
+
+		Methode c = new Methode(visibilite, null, nom, false, lstParametres);
+		this.lstMethode.add(c);
+	}
+
 
 	private void ajouterAttribut(String attribut)
 	{
@@ -103,12 +151,6 @@ public class CreeClass
 
 			int posOuv = reste.indexOf("(");
 			int posFerm = reste.indexOf(")");
-
-			if (posOuv == -1 || posFerm == -1)
-			{
-				System.out.println("Méthode mal formatée (parenthèses manquantes) : ");
-				return;
-			}
 
 			String nom = reste.substring(0, posOuv);
 			String parametres = reste.substring(posOuv + 1, posFerm);

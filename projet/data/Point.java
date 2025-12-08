@@ -24,13 +24,34 @@ public class Point
 /*╔════════════════════════╗*/
 /*║   Getters & Setters    ║*/
 /*╚════════════════════════╝*/
-	public int  getNom()        { return this.nom;}
-	public void setNom(int nom) { this.nom = nom; }
+	public int  getNom()        
+	{
+		return this.nom;
+	}
 
-	public int  getX()          { return this.x; }
-	public void setX(int x)     { this.x = x;    }
+	public void setNom(int nom)
+	{ 
+		this.nom = nom;
+	}
 
-	public int  getY()          { return this.y; }
-	public void setY(int y)     { this.y = y;    }
+	public int  getX()          
+	{ 
+		return this.x;
+	}
+
+	public void setX(int x)     
+	{ 
+		this.x = x;    
+	}
+
+	public int  getY()          
+	{ 
+		return this.y;
+	}
+
+	public void setY(int y)     
+	{ 
+		this.y = y;    
+	}
 
 }
