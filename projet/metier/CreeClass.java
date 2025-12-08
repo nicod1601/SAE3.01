@@ -101,10 +101,19 @@ public class CreeClass
 				reste += line[i] + " ";
 			}
 
-			reste = reste.trim();
-			String nom = reste.substring(0, reste.indexOf("("));
-			String parametres = reste.substring(reste.indexOf("(") + 1, reste.indexOf(")")); // avoir le + 1
-			List<String> lstParametre = new ArrayList<String>();
+			int posOuv = reste.indexOf("(");
+			int posFerm = reste.indexOf(")");
+
+			if (posOuv == -1 || posFerm == -1)
+			{
+				System.out.println("Méthode mal formatée (parenthèses manquantes) : ");
+				return;
+			}
+
+			String nom = reste.substring(0, posOuv);
+			String parametres = reste.substring(posOuv + 1, posFerm);
+
+			List<String> lstParametre = new ArrayList<>();
 			
 			if (!parametres.trim().isEmpty())
 			{
@@ -120,7 +129,6 @@ public class CreeClass
 		}
 
 		
-
 	}
 
 	private static boolean verifdata(String data)
