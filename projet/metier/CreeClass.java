@@ -3,6 +3,7 @@ package projet.metier;
 
 import java.io.FileInputStream;
 import java.util.*;
+import projet.Controleur;
 
 public class CreeClass
 {
@@ -43,7 +44,7 @@ public class CreeClass
 				{
 					if(line.contains("extends") || line.contains("implements"))
 					{
-						String[] mots = line.split(" ");
+						String[] mots = Controleur.split(line," ");
 						for (int i = 0; i < mots.length; i++)
 						{
 							if (mots[i].equals("extends"))
@@ -97,7 +98,7 @@ public class CreeClass
 	{
 		constructeur = constructeur.trim();
 
-		String[] mots = constructeur.split(" ");
+		String[] mots = Controleur.split(constructeur," ");
 		String visibilite = mots[0];
 
 		int posOuv = constructeur.indexOf("(");
@@ -111,7 +112,7 @@ public class CreeClass
 
 
 		String avantParenthese = constructeur.substring(0, posOuv).trim();
-		String[] morceaux = avantParenthese.split(" ");
+		String[] morceaux = Controleur.split(avantParenthese," ");
 		String nom = morceaux[morceaux.length - 1];
 
 		// paramBrut -> "typeParam1 nomPram1, typeParam2 nomPram2, ..."
@@ -122,13 +123,13 @@ public class CreeClass
 
 		if (!paramBrut.isEmpty()) {
 			//tabParams -> ["param1", "param2", ...] param -> "typeParam1 nomPram1"
-			String[] tabParams = paramBrut.split(",");
+			String[] tabParams = Controleur.split(paramBrut,",");
 
 			//param -> "typeParam nomPram"
 			for (String param : tabParams) {
 
 				// infoParam -> [type, nom] type -> "typeParam1" et nom -> "nomPram1"
-				String[] tabInfoParam = param.trim().split(" ");
+				String[] tabInfoParam = Controleur.split(param.trim()," ");
 
 				lstLstParamInfo.add(tabInfoParam);
 			}
@@ -142,7 +143,7 @@ public class CreeClass
 
 	private void ajouterAttribut(String attribut)
 	{
-		String[] line = attribut.split(" ");
+		String[] line = Controleur.split(attribut," ");
 		if (line.length >= 3)
 		{
 			String visibilite = line[0];
@@ -171,7 +172,7 @@ public class CreeClass
 
 	private void ajouterMethode(String methode)
 	{
-		String[] line = methode.split(" ");
+		String[] line = Controleur.split(methode," ");
 		String visibilite = line[0];
 		boolean estStatic = false;
 		int indexType = 1;
@@ -205,13 +206,13 @@ public class CreeClass
 
 			if (!paramBrut.isEmpty()) {
 				//tabParams -> ["param1", "param2", ...] param -> "typeParam1 nomPram1"
-				String[] tabParams = paramBrut.split(",");
+				String[] tabParams = Controleur.split(paramBrut,",");
 
 				//param -> "typeParam nomPram"
 				for (String param : tabParams) {
 
 					// infoParam -> [type, nom] type -> "typeParam1" et nom -> "nomPram1"
-					String[] tabInfoParam = param.trim().split(" ");
+					String[] tabInfoParam = Controleur.split(param.trim()," ");
 
 					lstLstParamInfo.add(tabInfoParam);
 				}

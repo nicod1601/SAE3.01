@@ -119,8 +119,34 @@ public class Controleur
 		return niv;
 	}
 
+
+	public static String[] split(String sh, String sep)
+	{
+		try
+		{
+			ArrayList<String> list = new ArrayList<>();
+			Scanner sc = new Scanner(sh);
+			sc.useDelimiter(sep);
+
+			while (sc.hasNext())
+			{
+				list.add(sc.next());
+			}
+
+			sc.close();
+
+			return list.toArray(new String[0]);
+		}catch(Exception e)
+		{
+			System.out.println("erreur de Split");
+		}
+		return null;
+	}
+
+
 	public static void main(String[] args) {
 		new Controleur();
 	}
+
 	
 }
