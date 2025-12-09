@@ -25,8 +25,14 @@ public class Controleur
 
 	public Controleur()
 	{
-		this.niv        = choixNiv();
-		this.lstMetiers = initCreeClass(this.niv);
+		this.niv = choixNiv();
+		
+		do 
+		{
+			this.lstMetiers = initCreeClass(this.niv);
+		}
+		while (this.lstMetiers.get(0) == null);
+
 		this.ihmCui     = new IhmCui(this, this.niv);
 	}
 
@@ -52,8 +58,6 @@ public class Controleur
 			for ( CreeClass c :lectureRepertoire.getLstClass() )
 					lstMetiers.add(c);
 		}
-		sc.close();
-
 		return lstMetiers;
 	}
 

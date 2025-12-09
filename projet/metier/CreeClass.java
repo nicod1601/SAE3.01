@@ -89,8 +89,7 @@ public class CreeClass
 
 		}catch (Exception e)
 		{
-			System.out.println("Erreur lors de la lecture du fichier : " + e.getMessage() );
-			e.printStackTrace();
+			System.out.println("\u001B[31m Erreur : le fichier spécifié ( " + data + " ) n'existe pas.\u001B[0m");
 		}
 	}
 
@@ -233,9 +232,15 @@ public class CreeClass
 	private static boolean verifdata(String data)
 	{
 		// on vérifie que le ficher est en .java
-		if (data.substring(data.length()-5).equals( ".java"))
+		try
 		{
-			return true;
+			if (data.substring(data.length()-5).equals( ".java"))
+			{
+				return true;
+			}
+		} catch (Exception e)
+		{
+			System.out.println("\u001B[31m Erreur : le fichier spécifié n'est pas un fichier .Java.Erreur : le fichier spécifié ( " + data + " ) n'existe pas ou n'est pas un fichier .Java.\u001B[0m");
 		}
 		return false;
 	}
