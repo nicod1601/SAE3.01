@@ -227,7 +227,7 @@ public class CreeClass
 
 	public void creelien(List<CreeClass> lstClass)
 	{
-		this.lien = new Lien(lstClass);
+		this.lien = new Lien(lstClass, this);
 	}
 
 	private static boolean verifdata(String data)

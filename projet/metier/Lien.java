@@ -1,6 +1,8 @@
 package projet.metier;
 
 import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 
 public class Lien
 {
@@ -8,93 +10,84 @@ public class Lien
 	private List<CreeClass> lienHeritage;
 	private List<CreeClass> lienInterface;
 
-	public Lien(List<CreeClass> lstClass)
+	private CreeClass creeClass;
+	private Map<CreeClass, String> multiplicitee;
+
+	public Lien(List<CreeClass> lstClass, CreeClass creeClass)
 	{
+		this.creeClass = creeClass;
+		this.multiplicitee = null;
+		this.lienAttribut = new ArrayList<CreeClass>();
+		this.lienHeritage = new ArrayList<CreeClass>();
+		this.lienInterface = new ArrayList<CreeClass>();
 		this.lienClasseParAttribut(lstClass);
 		this.lienClasseParMere(lstClass);
 		this.lienClasseParInterface(lstClass);
 	}
 
-	public void lienClasseParAttribut(List<CreeClass> lstClass)
+	private void lienClasseParAttribut(List<CreeClass> lstClass)
 	{
-		for(int cpt = 0; cpt < lstClass.size(); cpt++ )
+		for (int cpt2 = 0; cpt2 < lstClass.size(); cpt2++)
 		{
-			for(int cpt2 = 0; cpt2 < lstClass.size(); cpt2++ )
+			List<Attribut> lstAtt = lstClass.get(cpt2).getLstAttribut();
+			if (lstAtt == null) continue;
+		
+			// iterate over a copy because we may remove elements
+			for (Attribut att : new ArrayList<Attribut>(lstAtt))
 			{
-				if(lstClass.get(cpt) != lstClass.get(cpt2))
+				if (this.creeClass.getNom().equals(att.getType()))
 				{
-					List<Attribut> lstAtt = lstClass.get(cpt2).getLstAttribut();
-
-					for(Attribut att : lstAtt)
+					// add the class that has an attribute of type creeClass
+					if (!lienAttribut.contains(lstClass.get(cpt2)))
 					{
-						if(lstClass.get(cpt).getNom().equals(att.getType()))
-						{
-							if(! lienAttribut.contains(lstClass.get(cpt)))
-							{
-								lienAttribut.add(lstClass.get(cpt));
-							}
-							
-							lstClass.get(cpt2).supprimerAttribut(att);
-						}
+						lienAttribut.add(lstClass.get(cpt2));
 					}
+
+					lstClass.get(cpt2).supprimerAttribut(att);
+					}
+				}
+		}
+	}
+
+	private void lienClasseParMere(List<CreeClass> lstClass)
+	{
+		for (int cpt2 = 0; cpt2 < lstClass.size(); cpt2++)
+		{
+			List<Attribut> lstAtt = lstClass.get(cpt2).getLstAttribut();
+
+			if (lstAtt == null || this.creeClass.getMere() == null)
+				continue;
+
+			if (this.creeClass.getMere().equals( lstClass.get(cpt2).getNom()))
+			{
+				// add the class that has an attribute of type creeClass
+				if (!lienHeritage.contains(lstClass.get(cpt2)))
+				{
+					lienHeritage.add(lstClass.get(cpt2));
 				}
 			}
 		}
 	}
 
-	public void lienClasseParMere(List<CreeClass> lstClass)
+	private void lienClasseParInterface(List<CreeClass> lstClass)
 	{
-		for(int cpt = 0; cpt < lstClass.size(); cpt++ )
+		for (int cpt2 = 0; cpt2 < lstClass.size(); cpt2++)
 		{
-			String mere = lstClass.get(cpt).getMere();
-			if(mere != null)
+			List<Attribut> lstAtt = lstClass.get(cpt2).getLstAttribut();
+
+			if (lstAtt == null || this.creeClass.getInterfaces() == null)
+				continue;
+
+			for (String inter : this.creeClass.getInterfaces())
 			{
-				for(int cpt2 = 0; cpt2 < lstClass.size(); cpt2++ )
+				if (inter.equals( lstClass.get(cpt2).getNom()))
 				{
-					if(lstClass.get(cpt) != lstClass.get(cpt2))
+					// add the class that has an attribute of type creeClass
+					if (!lienInterface.contains(lstClass.get(cpt2)))
 					{
-						if(lstClass.get(cpt2).getNom().equals(mere))
-						{
-							if(! lienHeritage.contains(lstClass.get(cpt2)))
-							{
-								lienHeritage.add(lstClass.get(cpt2));
-							}
-							
-							if(! lienHeritage.contains(lstClass.get(cpt)))
-							{
-								lienHeritage.add(lstClass.get(cpt));
-							}
-						}
+						lienInterface.add(lstClass.get(cpt2));
 					}
-				}
 			}
-		}
-	}
-	
-	public void lienClasseParInterface(List<CreeClass> lstClass)
-	{
-		for(int cpt = 0; cpt < lstClass.size(); cpt++ )
-		{
-			List<String> interfaces = lstClass.get(cpt).getInterfaces();
-			if(interfaces != null)
-			{
-				for(int cpt2 = 0; cpt2 < lstClass.size(); cpt2++ )
-				{
-					if(lstClass.get(cpt) != lstClass.get(cpt2))
-					{
-						if(interfaces.contains(lstClass.get(cpt2).getNom()))
-						{
-							if(! lienInterface.contains(lstClass.get(cpt2)))
-							{
-								lienInterface.add(lstClass.get(cpt2));
-							}
-							if(! lienInterface.contains(lstClass.get(cpt)))
-							{
-								lienInterface.add(lstClass.get(cpt));
-							}
-						}
-					}
-				}
 			}
 		}
 	}
@@ -103,14 +96,15 @@ public class Lien
 	{
 		return lienAttribut;
 	}
+
 	public List<CreeClass> getLienHeritage()
 	{
 		return lienHeritage;
 	}
+
 	public List<CreeClass> getLienInterface()
 	{
 		return lienInterface;
 	}
 
-	
 }
