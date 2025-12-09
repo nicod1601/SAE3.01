@@ -37,6 +37,22 @@ public class IhmCui
 	/*╔════════════════════════╗*/
 	/*║         Methodes       ║*/
 	/*╚════════════════════════╝*/
+	public String replaceVisibilite(String visi)
+	{
+		switch (visi.trim()) 
+		{
+			case "private": 
+				return "-";
+			case "public":
+				return "+";
+			case "protected":
+				return "#";
+			default:
+				return "~";
+		}
+	}
+
+
 	public void affichageNiv1() 
 	{
 		List<Methode>  methodes  = ctrl.getMethode ();
@@ -105,26 +121,7 @@ public class IhmCui
 		// Affichage des attributs
 		for (Attribut attribut : attributs)
 		{
-			String symbole = "";
-
-			switch (attribut.getVisibilite().trim()) 
-			{
-				case "private": 
-					symbole = "-";
-					break;
-
-				case "public":
-					symbole = "+";
-					break;
-
-				case "protected":
-					symbole = "#";
-					break;
-	
-				default:
-					symbole = "~";
-					break;
-			}
+			String symbole = this.replaceVisibilite(attribut.getVisibilite());
 
 			res += String.format("%s %s : %s\n", symbole, attribut.getNom(), attribut.getType());
 		}
@@ -136,26 +133,8 @@ public class IhmCui
 		for (Methode methode : methodes)
 		{
 			String signature = "";
-			String symbole;
 
-			switch (methode.getVisibilite().trim()) 
-			{
-				case "private": 
-					symbole = "-";
-					break;
-
-				case "public":
-					symbole = "+";
-					break;
-
-				case "protected":
-					symbole = "#";
-					break;
-	
-				default:
-					symbole = "~";
-					break;
-			}
+			String symbole   = this.replaceVisibilite(methode.getVisibilite());
 
 			// Construction de la signature de la méthode
 			signature += symbole + " " + methode.getNom() + "(";
@@ -186,7 +165,7 @@ public class IhmCui
 			res += signature + "\n";
 		}
 
-		res += "------------------------------------------------";
+		res += "------------------------------------------------\n";
 
 		System.out.println(res);
 	}
@@ -212,27 +191,7 @@ public class IhmCui
 			// Affichage des attributs
 			for (Attribut attribut : attributs)
 			{
-				String symbole = "";
-				
-
-				switch (attribut.getVisibilite().trim()) 
-				{
-					case "private": 
-						symbole = "-";
-						break;
-
-					case "public":
-						symbole = "+";
-						break;
-
-					case "protected":
-						symbole = "#";
-						break;
-		
-					default:
-						symbole = "~";
-						break;
-				}
+				String symbole = this.replaceVisibilite(attribut.getVisibilite());
 
 				res += String.format("%s %s : %s\n", symbole, attribut.getNom(), attribut.getType());
 			}
@@ -243,27 +202,8 @@ public class IhmCui
 			// Affichage des méthodes
 			for (Methode methode : methodes)
 			{
-				String symbole;
+				String symbole   = this.replaceVisibilite(methode.getVisibilite());
 				String signature = "";
-
-				switch (methode.getVisibilite().trim()) 
-				{
-					case "private": 
-						symbole = "-";
-						break;
-
-					case "public":
-						symbole = "+";
-						break;
-
-					case "protected":
-						symbole = "#";
-						break;
-		
-					default:
-						symbole = "~";
-						break;
-				}
 
 				// Construction de la signature de la méthode
 				signature += symbole + " " + methode.getNom() + " (";
