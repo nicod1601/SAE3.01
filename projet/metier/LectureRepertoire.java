@@ -40,19 +40,10 @@ public class LectureRepertoire
 		for(int cpt = 0; cpt < this.lstClass.size(); cpt++ )
 		{
 			List<String> interfaces = this.lstClass.get(cpt).getInterfaces();
-			if(interfaces != null)
-			{
 				for(int cpt2 = 0; cpt2 < this.lstClass.size(); cpt2++ )
 				{
-					if(this.lstClass.get(cpt) != this.lstClass.get(cpt2))
-					{
-						if(interfaces.contains(this.lstClass.get(cpt2).getNom()))
-						{
 							this.lstClass.get(cpt2).creelien(this.lstClass);
-						}
-					}
 				}
-			}
 		}
 	}
 
