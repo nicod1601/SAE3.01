@@ -2,6 +2,7 @@
 
 ## Description
 L'objectif de ce projet est d'élaborer un outil de Retro-Conception Java-UML.
+En d'autres termes de générer des Diagrammes de classes respectant le formalisme UML, à partir de classes écrits en
 Java. 
 
 ## Développeurs
