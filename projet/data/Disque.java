@@ -1,24 +1,23 @@
 package projet.data;
 
-public class Disque 
+public class Disque extends Rond
 {
 	private Point centre;
-	private double rayon;
 	
 	public Disque(Point centre, double rayon)
 	{
+		super(rayon);
 		this.centre = centre;
-		this.rayon  = rayon;
 	}
 
 	public double calculerAire()
 	{
-		return Math.PI * rayon * rayon;
+		return Math.PI * super.getRayon() * super.getRayon();
 	}
 
 	public double calculerPerimetre() 
 	{
-		return 2 * Math.PI * rayon;
+		return 2 * Math.PI * super.getRayon();
 	}
 
 	public void setX(int x) 
@@ -38,6 +37,6 @@ public class Disque
 
 	public double getRayon()
 	{
-		return rayon;
+		return super.getRayon();
 	}
 }
