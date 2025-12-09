@@ -3,6 +3,7 @@ package projet.metier;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Lien
 {
@@ -16,7 +17,7 @@ public class Lien
 	public Lien(List<CreeClass> lstClass, CreeClass creeClass)
 	{
 		this.creeClass = creeClass;
-		this.multiplicitee = null;
+		this.multiplicitee = new HashMap<CreeClass, String>();
 		this.lienAttribut = new ArrayList<CreeClass>();
 		this.lienHeritage = new ArrayList<CreeClass>();
 		this.lienInterface = new ArrayList<CreeClass>();
@@ -31,21 +32,43 @@ public class Lien
 		{
 			List<Attribut> lstAtt = lstClass.get(cpt2).getLstAttribut();
 			if (lstAtt == null) continue;
-		
+			
+			int countAttributes = 0;
+			String multiplicity = "";
+
 			// iterate over a copy because we may remove elements
 			for (Attribut att : new ArrayList<Attribut>(lstAtt))
 			{
 				if (this.creeClass.getNom().equals(att.getType()))
 				{
+					countAttributes++;
 					// add the class that has an attribute of type creeClass
 					if (!lienAttribut.contains(lstClass.get(cpt2)))
 					{
-						lienAttribut.add(lstClass.get(cpt2));
+						this.lienAttribut.add(lstClass.get(cpt2));
+
+						// Determine multiplicity: 0..1 for single, 0..* for List/Collection
+						multiplicity = att.getType().toLowerCase().contains("list")              ||
+						                      att.getType().toLowerCase().contains("collection") ||
+						                      att.getType().toLowerCase().contains("set")        ||
+											  att.getType().              contains("[]")         ||
+						                      att.getType().toLowerCase().contains("array") ? "0..*" : "0..1";
+						multiplicitee.put(lstClass.get(cpt2), multiplicity);
 					}
+					
 
 					lstClass.get(cpt2).supprimerAttribut(att);
 					}
 				}
+				// If attributes were found, determine multiplicity based on count
+				if (multiplicity.equals("0..1"))
+				{
+					if (countAttributes != 1)
+					{
+						multiplicity = "0.." + countAttributes;
+					}
+					multiplicitee.put(lstClass.get(cpt2), multiplicity);
+			}
 		}
 	}
 
