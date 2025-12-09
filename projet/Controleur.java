@@ -1,6 +1,7 @@
 package projet;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import projet.ihm.IhmCui;
@@ -14,63 +15,76 @@ public class Controleur
 	/*╔════════════════════════╗*/
 	/*║       Attribut         ║*/
 	/*╚════════════════════════╝*/
-	private CreeClass metier;
-
-	private IhmCui    ihmCui;
-	//private IhmGui    ihmGui;
-
-	private LectureRepertoire lectureRepertoire;
+	private int             niv;
+	private List<CreeClass> lstMetiers;
+	private IhmCui          ihmCui;
 
 	/*╔════════════════════════╗*/
 	/*║     Constructeur       ║*/
 	/*╚════════════════════════╝*/
-	public Controleur(String nomFichier, int niv) 
+
+	public Controleur()
 	{
-		this.metier = CreeClass.factoryCreeClass(nomFichier);
-
-		if (niv >= 1 && niv <= 4) 
-		{
-			if (niv >2)
-			{
-				File repertoire        = new File("../data");
-				this.lectureRepertoire = new LectureRepertoire(repertoire);
-			}
-			
-			this.ihmCui = new IhmCui(this, niv);
-
-		}
-		else
-		{
-			if (niv >= 5 && niv <= 7) 
-			{
-				//this.ihmGui = new IhmGui(this, niv);
-			}
-		}
+		this.niv        = choixNiv();
+		this.lstMetiers = initCreeClass(this.niv);
+		this.ihmCui     = new IhmCui(this, this.niv);
 	}
+
+	public List<CreeClass> initCreeClass(int niv)
+	{
+		String data = "";
+		Scanner sc = new Scanner(System.in);
+		
+		List<CreeClass> lstMetiers = new ArrayList<CreeClass>();
+		
+
+		if (niv == 1 || niv== 2)
+		{
+			System.out.println("Quel fichier choisis tu ?");
+			data = sc.next();
+			lstMetiers.add(CreeClass.factoryCreeClass(data));
+		}
+		else if (niv > 2 && niv < 5)
+		{
+			System.out.println("Quel dossier choisis tu ?");
+			data = sc.next();
+			LectureRepertoire lectureRepertoire = new LectureRepertoire(new File(data));
+			for ( CreeClass c :lectureRepertoire.getLstClass() )
+					lstMetiers.add(c);
+		}
+		sc.close();
+
+		return lstMetiers;
+	}
+
 	/*╔════════════════════════╗*/
 	/*║       Getters          ║*/
 	/*╚════════════════════════╝*/
 	//Getter Metier
-	public List<Methode>   getMethode () { return this.metier.getLstMethode (); }
-	public List<Attribut>  getAttribut() { return this.metier.getLstAttribut(); }
-	public String          getNom()      { return this.metier.getNom();         }
+	public List<Methode>   getMethode (int id)    { return this.lstMetiers.get(id).getLstMethode (); }
+	public List<Attribut>  getAttribut(int id)    { return this.lstMetiers.get(id).getLstAttribut(); }
+	public List<String>    getNoms()
+	{
+		List<String> lstNomCreeClass = new ArrayList<String>();
 
-	//Getter LectureRepertoire
-	public List<CreeClass>                 getLstClass() { return this.lectureRepertoire.getLstClass(); };
+		for (CreeClass metier : lstMetiers)
+			lstNomCreeClass.add(metier.getNom());
+
+		return lstNomCreeClass;         
+	}
+	public List<CreeClass>                 getLstClass() { return this.lstMetiers; };
+	
 
 	/*╔════════════════════════╗*/
 	/*║          Main          ║*/
 	/*╚════════════════════════╝*/
-	public static void main(String[] args)
+	public int choixNiv()
 	{
-		int     niv;
-
+		Scanner sc = new Scanner(System.in);
+		int     niv = -1;
 		boolean saisieValide = false;
 
-		Scanner sc           = new Scanner(System.in);
-
-		do 
-		{
+		
 			String blue     = "\u001B[0m" +"\u001B[36m";
 			String vert     = "\u001B[32m";
 			String jaune    = "\u001B[33m";
@@ -85,24 +99,24 @@ public class Controleur
 			                   blue + "║" + vert    + "  3 = IHM CUI Formalisme UML (Plusieur Classe) " + blue + "║\n" +
 			                   blue + "║" + indispo + "  4 = IHM CUI Héritage                         " + blue + "║\n" +
 			                          "╚═══════════════════════════════════════════════╝" + reset);
+		
+		do 
+		{
 			System.out.print(jaune + "Entrez un entier : " + reset);
-
-			if (sc.hasNextInt()) 
-			{
+			try {
 				niv = sc.nextInt();
 				saisieValide = true;
-			} 
-			else 
-			{
-				niv = -1;
+			} catch (Exception e) {
 				System.out.println("Ce n'est pas un entier valide. Réessayez.");
-				
 				sc.next();
 			}
-		} while (!saisieValide);
+		} while (!(saisieValide && niv > 0 && niv < 8));
 
-		Controleur app = new Controleur("../data/Point.java", niv);
-		sc.close();
+		return niv;
+	}
+
+	public static void main(String[] args) {
+		new Controleur();
 	}
 	
 }
