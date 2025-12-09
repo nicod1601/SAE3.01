@@ -1,13 +1,13 @@
 package projet;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import projet.ihm.IhmCui;
 import projet.metier.Attribut;
 import projet.metier.CreeClass;
+import projet.metier.LectureRepertoire;
 import projet.metier.Methode;
-
-
 
 public class Controleur 
 {
@@ -18,6 +18,8 @@ public class Controleur
 
 	private IhmCui    ihmCui;
 	//private IhmGui    ihmGui;
+
+	private LectureRepertoire lectureRepertoire;
 
 	/*╔════════════════════════╗*/
 	/*║     Constructeur       ║*/
@@ -41,9 +43,14 @@ public class Controleur
 	/*╔════════════════════════╗*/
 	/*║       Getters          ║*/
 	/*╚════════════════════════╝*/
-	public List<Methode>  getMethode () { return this.metier.getLstMethode (); }
-	public List<Attribut> getAttribut() { return this.metier.getLstAttribut(); }
-	public String         getNom()      { return this.metier.getNom();         }
+	//Getter Metier
+	public List<Methode>   getMethode () { return this.metier.getLstMethode (); }
+	public List<Attribut>  getAttribut() { return this.metier.getLstAttribut(); }
+	public String          getNom()      { return this.metier.getNom();         }
+
+	//Getter LectureRepertoire
+	public List<CreeClass>                 getLstClass() { return this.lectureRepertoire.getLstClass(); };
+	public Map<CreeClass, List<CreeClass>> getLien()     { return this.lectureRepertoire.getLien();     };
 
 	/*╔════════════════════════╗*/
 	/*║          Main          ║*/

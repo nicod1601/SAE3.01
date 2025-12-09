@@ -137,7 +137,8 @@ public class IhmCui
 		// Affichage des méthodes
 		for (Methode methode : methodes)
 		{
-			String symbole = "";
+			String signature = "";
+			String symbole;
 
 			switch (methode.getVisibilite().trim()) 
 			{
@@ -159,7 +160,7 @@ public class IhmCui
 			}
 
 			// Construction de la signature de la méthode
-			String signature = symbole + " " + methode.getNom() + " (";
+			signature += symbole + " " + methode.getNom() + "(";
 
 			// Ajout des paramètres
 			List<String[]> params = methode.getLstParametres();
@@ -171,15 +172,17 @@ public class IhmCui
 				signature += nomParam + " : " + typeParam;
 				
 				if (i < params.size() - 1)
-					signature += " ,";
+					signature += ", ";
 			}
 
-			signature += " )";
+			signature += ")";
 
 			// Ajout du type de retour
 			if (methode.getType() != null && !methode.getType().isEmpty())
 			{
-				signature += String.format("%5s", " : " + methode.getType());
+
+				int longeur = signature.length() < 30 ? 30 - signature.length() :  1;
+				signature += String.format("%"+ longeur +"s : %-5s", "", methode.getType());
 			}
 
 			res += signature + "\n";
@@ -192,9 +195,6 @@ public class IhmCui
 
 	public void affichageNiv3()
 	{
-		System.err.println("Affichage niveau 3 ");
-
-
 		File repertoire = new File("../data");
 		LectureRepertoire lr = new LectureRepertoire(repertoire);
 
@@ -204,9 +204,9 @@ public class IhmCui
 		// reprendre les liens entre les classes
 		Map<CreeClass, List<CreeClass>> liens = lr.getLien();
 
+		lr.lienClasse();
+
 		/* création des classes */
-
-
 		for(CreeClass c : classes)
 		{
 			String res = "";
@@ -215,13 +215,14 @@ public class IhmCui
 
 			res += "------------------------------------------------\n";
 			int centre = (48 + c.getNom().length()) / 2;
-			res += String.format("%" + centre + "s\n", ctrl.getNom());
+			res += String.format("%" + centre + "s\n", c.getNom());
 			res += "------------------------------------------------\n";
 
 			// Affichage des attributs
 			for (Attribut attribut : attributs)
 			{
 				String symbole = "";
+				
 
 				switch (attribut.getVisibilite().trim()) 
 				{
@@ -251,7 +252,8 @@ public class IhmCui
 			// Affichage des méthodes
 			for (Methode methode : methodes)
 			{
-				String symbole = "";
+				String symbole;
+				String signature = "";
 
 				switch (methode.getVisibilite().trim()) 
 				{
@@ -273,7 +275,7 @@ public class IhmCui
 				}
 
 				// Construction de la signature de la méthode
-				String signature = symbole + " " + methode.getNom() + " (";
+				signature += symbole + " " + methode.getNom() + " (";
 
 				// Ajout des paramètres
 				List<String[]> params = methode.getLstParametres();
@@ -285,19 +287,21 @@ public class IhmCui
 					signature += nomParam + " : " + typeParam;
 					
 					if (i < params.size() - 1)
-						signature += " ,";
+						signature += ", ";
 				}
 
-				signature += " )";
+				signature += ")";
 
 				// Ajout du type de retour
 				if (methode.getType() != null && !methode.getType().isEmpty())
 				{
-					signature += String.format("%5s", " : " + methode.getType());
+
+					int longeur = signature.length() < 30 ? 30 - signature.length() :  1;
+					signature += String.format("%"+ longeur +"s : %-5s", "", methode.getType());
 				}
 
-				res += signature + "\n";
-			}
+					res += signature + "\n";
+				}
 
 			res += "------------------------------------------------";
 			System.out.println(res);

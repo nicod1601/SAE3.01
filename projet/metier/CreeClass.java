@@ -20,7 +20,12 @@ public class CreeClass
 
 	private CreeClass(String data )
 	{
-		this.nom = data.substring(data.lastIndexOf("/")+1, data.length()-5);
+		String nomComplet = data.substring(data.lastIndexOf("/") + 1);
+		if (nomComplet.indexOf("/") == -1) 
+		{
+			nomComplet = data.substring(data.lastIndexOf("\\") + 1);
+		}
+		this.nom = nomComplet.substring(0, nomComplet.length() - 5);
 		this.lstAttribut = new ArrayList<Attribut>();
 		this.lstMethode = new ArrayList<Methode>();
 		try
@@ -28,7 +33,7 @@ public class CreeClass
 			Scanner sc = new Scanner(new FileInputStream(data), "UTF8");
 			while (sc.hasNext())
 			{
-				String line = sc.nextLine();
+				String line = sc.nextLine().trim();
 
 				if (line.contains("class ") && !line.contains("("))
 				{
@@ -36,30 +41,32 @@ public class CreeClass
 					//{
 					//	infosClass(line);
 					//}
-					continue;
 				}
-
-				if (line.contains("private") || line.contains("protected")|| line.contains("public"))
+				else
 				{
-					if(line.contains(this.nom))
+					if (line.contains("private") || line.contains("protected")|| line.contains("public"))
 					{
-						this.ajouterConstructeur(line);
-					}
-					else
-					{
-						if (line.contains(")"))
+						if(line.contains(this.nom+"("))
 						{
-							this.ajouterMethode(line);
+							this.ajouterConstructeur(line);
+							System.err.println("Constructeur ajouté : " + line);
+						}
+						else
+						{
+							if (line.contains("(") && line.contains(")"))
+							{
+								this.ajouterMethode(line);
+								System.err.println("Méthode ajoutée : " + line);
+							}
+							else if (line.contains(";"))
+							{
+								this.ajouterAttribut(line);
+							}
 						}
 					}
-
-					if (line.contains(";"))
-					{
-						this.ajouterAttribut(line);
-					}
-					
-					
 				}
+
+
 			}
 
 		}catch (Exception e)
@@ -69,52 +76,55 @@ public class CreeClass
 		}
 	}
 
+	
 	private void ajouterConstructeur(String constructeur)
 	{
 		constructeur = constructeur.trim();
 
-		String[] mots = constructeur.split(" ");
-		String visibilite = mots[0];
-
 		int posOuv = constructeur.indexOf("(");
 		int posFerm = constructeur.indexOf(")");
 
-		if (posOuv == -1 || posFerm == -1) 
+		if (posOuv == -1 || posFerm == -1 || posFerm <= posOuv) 
 		{
-			System.out.println("Problème de parenthèse");
+			System.out.println("Problème de parenthèse dans le constructeur : " + constructeur);
 			return;
 		}
 
-
+		// Extraire la partie avant la parenthèse pour avoir visibilité et nom
 		String avantParenthese = constructeur.substring(0, posOuv).trim();
 		String[] morceaux = avantParenthese.split(" ");
+		
+		String visibilite = morceaux[0];
 		String nom = morceaux[morceaux.length - 1];
 
-		// paramBrut -> "typeParam1 nomPram1, typeParam2 nomPram2, ..."
+		// Extraire les paramètres
 		String paramBrut = constructeur.substring(posOuv + 1, posFerm).trim();
 
-		// lstLstParamInfo -> [param1 -> ["type", nom]; param2 -> [type, nom]; ...]"
-		List<String[]> lstLstParamInfo  = new ArrayList<>();
+		List<String[]> lstLstParamInfo = new ArrayList<>();
 
 		if (!paramBrut.isEmpty()) {
-			//tabParams -> ["param1", "param2", ...] param -> "typeParam1 nomPram1"
+			// Séparer les paramètres par la virgule
 			String[] tabParams = paramBrut.split(",");
 
-			//param -> "typeParam nomPram"
-			for (String param : tabParams) {
-
-				// infoParam -> [type, nom] type -> "typeParam1" et nom -> "nomPram1"
-				String[] tabInfoParam = param.trim().split(" ");
-
-				lstLstParamInfo.add(tabInfoParam);
+			for (String param : tabParams)
+			{
+				param = param.trim();
+				
+				// Trouver le dernier espace pour séparer type et nom
+				int dernierEspace = param.lastIndexOf(" ");
+				
+				if (dernierEspace != -1) {
+					String typeParam = param.substring(0, dernierEspace).trim();
+					String nomParam = param.substring(dernierEspace + 1).trim();
+					
+					lstLstParamInfo.add(new String[]{typeParam, nomParam});
+				}
 			}
 		}
-
 
 		Methode c = new Methode(visibilite, null, nom, false, lstLstParamInfo);
 		this.lstMethode.add(c);
 	}
-
 
 	private void ajouterAttribut(String attribut)
 	{
@@ -131,7 +141,7 @@ public class CreeClass
 				estStatic = true;
 				indexType++;
 			}
-			if (line[1].equals("final"))
+			if (line[indexType].equals("final"))
 			{
 				estFinal = true;
 				indexType++;
@@ -147,80 +157,88 @@ public class CreeClass
 
 	private void ajouterMethode(String methode)
 	{
-		String[] line = methode.split(" ");
-		String visibilite = line[0];
-		boolean estStatic = false;
-		int indexType = 1;
+		methode = methode.trim();
+		
+		int posOuv = methode.indexOf("(");
+		int posFerm = methode.indexOf(")");
 
-		if(line.length >= 3)
+		if (posOuv == -1 || posFerm == -1 || posFerm <= posOuv) 
 		{
-			if (line[1].equals("static"))
-			{
-				estStatic = true;
-				indexType++;
-			}
-
-			String type = line[indexType];
-			String reste = "";
-
-			for (int i = indexType + 1; i < line.length; i++)
-			{
-				reste += line[i] + " ";
-			}
-
-			int posOuv = reste.indexOf("(");
-			int posFerm = reste.indexOf(")");
-
-			String nom = reste.substring(0, posOuv);
-
-			// paramBrut -> "typeParam1 nomPram1, typeParam2 nomPram2, ..."
-			String paramBrut = reste.substring(posOuv + 1, posFerm).trim();
-
-			// lstLstParamInfo -> [param1 -> ["type", nom]; param2 -> [type, nom]; ...]"
-			List<String[]> lstLstParamInfo  = new ArrayList<>();
-
-			if (!paramBrut.isEmpty()) {
-				//tabParams -> ["param1", "param2", ...] param -> "typeParam1 nomPram1"
-				String[] tabParams = paramBrut.split(",");
-
-				//param -> "typeParam nomPram"
-				for (String param : tabParams) {
-
-					// infoParam -> [type, nom] type -> "typeParam1" et nom -> "nomPram1"
-					String[] tabInfoParam = param.trim().split(" ");
-
-					lstLstParamInfo.add(tabInfoParam);
-				}
-			}
-
-			Methode meth = new Methode(visibilite, type, nom, estStatic, lstLstParamInfo);
-			this.lstMethode.add(meth);
+			System.out.println("Problème de parenthèse dans la méthode : " + methode);
+			return;
 		}
 
+		// Extraire la partie avant la parenthèse
+		String avantParenthese = methode.substring(0, posOuv).trim();
+		String[] morceaux = avantParenthese.split(" ");
 		
+		// Récupérer visibilité
+		String visibilite = morceaux[0];
+		
+		// Vérifier si static
+		boolean estStatic = false;
+		int indexType = 1;
+		
+		if (morceaux.length > 1 && morceaux[1].equals("static")) {
+			estStatic = true;
+			indexType = 2;
+		}
+		
+		// Type de retour
+		String type = (morceaux.length > indexType) ? morceaux[indexType] : "";
+		
+		// Nom de la méthode (dernier élément avant la parenthèse)
+		String nom = morceaux[morceaux.length - 1];
+
+		// Extraire les paramètres
+		String paramBrut = methode.substring(posOuv + 1, posFerm).trim();
+
+		List<String[]> lstLstParamInfo = new ArrayList<>();
+
+		if (!paramBrut.isEmpty()) {
+			// Séparer les paramètres par la virgule
+			String[] tabParams = paramBrut.split(",");
+
+			for (String param : tabParams)
+			{
+				param = param.trim();
+				
+				// Trouver le dernier espace pour séparer type et nom
+				int dernierEspace = param.lastIndexOf(" ");
+				
+				if (dernierEspace != -1) {
+					String typeParam = param.substring(0, dernierEspace).trim();
+					String nomParam = param.substring(dernierEspace + 1).trim();
+					
+					lstLstParamInfo.add(new String[]{typeParam, nomParam});
+				}
+			}
+		}
+
+		Methode meth = new Methode(visibilite, type, nom, estStatic, lstLstParamInfo);
+		this.lstMethode.add(meth);
 	}
 
 	private static boolean verifdata(String data)
 	{
-		// on vérifie que le ficher est en .java
-		if (data.substring(data.length()-5).equals( ".java"))
+		if (data.length() >= 5 && data.substring(data.length() - 5).equals(".java"))
 		{
 			return true;
 		}
 		return false;
 	}
 
-    public String getNom() {
-        return nom;
-    }
+	public String getNom() {
+		return nom;
+	}
 
-    public List<Attribut> getLstAttribut() {
-        return lstAttribut;
-    }
+	public List<Attribut> getLstAttribut() {
+		return lstAttribut;
+	}
 
-    public List<Methode> getLstMethode() {
-        return lstMethode;
-    }
+	public List<Methode> getLstMethode() {
+		return lstMethode;
+	}
 
 	public void supprimerAttribut(Attribut att)
 	{

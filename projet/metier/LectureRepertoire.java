@@ -69,12 +69,12 @@ public class LectureRepertoire
 
 	public List<CreeClass> getLstClass()
 	{
-		return lstClass;
+		return this.lstClass;
 	}
 
 	public Map<CreeClass, List<CreeClass>> getLien()
 	{
-		return lien;
+		return this.lien;
 	}
 
 }
