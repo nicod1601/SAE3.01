@@ -1,5 +1,5 @@
 # Dossier contenant les fichiers .class compilés
-class/
+/projet/class
 
 # Fichiers .class individuels
 *.class
