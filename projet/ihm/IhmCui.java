@@ -1,10 +1,10 @@
 package projet.ihm;
 
-import projet.Controleur;
-import projet.metier.Attribut;
-import projet.metier.Methode;
-
+import java.io.File;
 import java.util.List;
+import java.util.Map;
+import projet.Controleur;
+import projet.metier.*;
 
 public class IhmCui
 {
@@ -29,8 +29,8 @@ public class IhmCui
 				this.affichageNiv2();
 				break;
 			case 3 :
-				//this.affichageNiv3();
-				//break;
+				this.affichageNiv3();
+				break;
 			case 4 :
 				//this.affichageNiv4();
 				//break;
@@ -100,52 +100,207 @@ public class IhmCui
 		String res = "";
 
 		res += "------------------------------------------------\n";
-		int centre = (49 + ctrl.getNom().length()) / 2;
+		int centre = (48 + ctrl.getNom().length()) / 2;
 		res += String.format("%" + centre + "s\n", ctrl.getNom());
 		res += "------------------------------------------------\n";
 
+		// Affichage des attributs
 		for (Attribut attribut : attributs)
 		{
-			String type = "";
+			String symbole = "";
 
 			switch (attribut.getVisibilite().trim()) 
 			{
 				case "private": 
-					type ="-";
+					symbole = "-";
 					break;
 
 				case "public":
-					type = "+";
+					symbole = "+";
+					break;
+
+				case "protected":
+					symbole = "#";
 					break;
 	
 				default:
-					type = "?";
+					symbole = "~";
 					break;
 			}
 
-			res += String.format("%s %s : %s\n",type, attribut.getNom(), attribut.getType());
+			res += String.format("%s %s : %s\n", symbole, attribut.getNom(), attribut.getType());
 		}
 
+		// Séparateur entre attributs et méthodes
+		res += "------------------------------------------------\n";
+
+		// Affichage des méthodes
 		for (Methode methode : methodes)
 		{
-			
+			String symbole = "";
+
+			switch (methode.getVisibilite().trim()) 
+			{
+				case "private": 
+					symbole = "-";
+					break;
+
+				case "public":
+					symbole = "+";
+					break;
+
+				case "protected":
+					symbole = "#";
+					break;
+	
+				default:
+					symbole = "~";
+					break;
+			}
+
+			// Construction de la signature de la méthode
+			String signature = symbole + " " + methode.getNom() + " (";
+
+			// Ajout des paramètres
+			List<String[]> params = methode.getLstParametres();
+			for (int i = 0; i < params.size(); i++)
+			{
+				String nomParam = params.get(i)[1];
+				String typeParam = params.get(i)[0];
+				
+				signature += nomParam + " : " + typeParam;
+				
+				if (i < params.size() - 1)
+					signature += " ,";
+			}
+
+			signature += " )";
+
+			// Ajout du type de retour
+			if (methode.getType() != null && !methode.getType().isEmpty())
+			{
+				signature += String.format("%5s", " : " + methode.getType());
+			}
+
+			res += signature + "\n";
 		}
 
+		res += "------------------------------------------------";
 
 		System.out.println(res);
-		/*
-		------------------------------------------------
-		                        Point
-		------------------------------------------------
-		- x : int
-		- y : int
-		------------------------------------------------
-		+ Point ( nom : String, x : int , y : int )
-		+ getX () : int
-		+ getY () : int
-		+ setX ( x : int )
-		+ setY ( y : int )
-		------------------------------------------------ 
-		*/
+	}
+
+	public void affichageNiv3()
+	{
+		System.err.println("Affichage niveau 3 ");
+
+
+		File repertoire = new File("../data");
+		LectureRepertoire lr = new LectureRepertoire(repertoire);
+
+		// reprendre la liste des classes qui se trouvent dans le répertoire
+		List<CreeClass> classes = lr.getLstClass();
+
+		// reprendre les liens entre les classes
+		Map<CreeClass, List<CreeClass>> liens = lr.getLien();
+
+		/* création des classes */
+
+
+		for(CreeClass c : classes)
+		{
+			String res = "";
+			List<Methode>  methodes  = c.getLstMethode ();
+			List<Attribut> attributs = c.getLstAttribut();
+
+			res += "------------------------------------------------\n";
+			int centre = (48 + c.getNom().length()) / 2;
+			res += String.format("%" + centre + "s\n", ctrl.getNom());
+			res += "------------------------------------------------\n";
+
+			// Affichage des attributs
+			for (Attribut attribut : attributs)
+			{
+				String symbole = "";
+
+				switch (attribut.getVisibilite().trim()) 
+				{
+					case "private": 
+						symbole = "-";
+						break;
+
+					case "public":
+						symbole = "+";
+						break;
+
+					case "protected":
+						symbole = "#";
+						break;
+		
+					default:
+						symbole = "~";
+						break;
+				}
+
+				res += String.format("%s %s : %s\n", symbole, attribut.getNom(), attribut.getType());
+			}
+
+			// Séparateur entre attributs et méthodes
+			res += "------------------------------------------------\n";
+
+			// Affichage des méthodes
+			for (Methode methode : methodes)
+			{
+				String symbole = "";
+
+				switch (methode.getVisibilite().trim()) 
+				{
+					case "private": 
+						symbole = "-";
+						break;
+
+					case "public":
+						symbole = "+";
+						break;
+
+					case "protected":
+						symbole = "#";
+						break;
+		
+					default:
+						symbole = "~";
+						break;
+				}
+
+				// Construction de la signature de la méthode
+				String signature = symbole + " " + methode.getNom() + " (";
+
+				// Ajout des paramètres
+				List<String[]> params = methode.getLstParametres();
+				for (int i = 0; i < params.size(); i++)
+				{
+					String nomParam = params.get(i)[1];
+					String typeParam = params.get(i)[0];
+					
+					signature += nomParam + " : " + typeParam;
+					
+					if (i < params.size() - 1)
+						signature += " ,";
+				}
+
+				signature += " )";
+
+				// Ajout du type de retour
+				if (methode.getType() != null && !methode.getType().isEmpty())
+				{
+					signature += String.format("%5s", " : " + methode.getType());
+				}
+
+				res += signature + "\n";
+			}
+
+			res += "------------------------------------------------";
+			System.out.println(res);
+		}
 	}
 }

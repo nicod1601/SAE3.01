@@ -1,12 +1,11 @@
 package projet;
 
+import java.util.List;
+import java.util.Scanner;
+import projet.ihm.IhmCui;
 import projet.metier.Attribut;
 import projet.metier.CreeClass;
 import projet.metier.Methode;
-
-import projet.ihm.IhmCui;
-import java.util.List;
-import java.util.Scanner;
 
 
 
@@ -69,7 +68,7 @@ public class Controleur
 				                      "║       Choisissez un niveau d'affichage :      ║\n" +
 				                      "╠═══════════════════════════════════════════════╣\n" +
 				               blue + "║" + vert    + "  1 = IHM CUI simple                           " + blue + "║\n" +
-				               blue + "║" + indispo +"  2 = IHM CUI Formalisme UML                   "  + blue + "║\n" +
+				               blue + "║" + vert    +"  2 = IHM CUI Formalisme UML                   "  + blue + "║\n" +
 				               blue + "║" + indispo + "  3 = IHM CUI Formalisme UML (Plusieur Classe) " + blue + "║\n" +
 				               blue + "║" + indispo + "  4 = IHM CUI Héritage                         " + blue + "║\n" +
 				                      "╚═══════════════════════════════════════════════╝" + reset);

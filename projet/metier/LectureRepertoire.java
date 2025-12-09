@@ -11,11 +11,14 @@ import java.util.Map;
 public class LectureRepertoire
 {
 	private List<CreeClass> lstClass;
-	private Map<CreeClass, List<CreeClass>> lien = new HashMap<>();
+	private Map<CreeClass, List<CreeClass>> lien;
 
 	public LectureRepertoire(File rep)
 	{
 		File[] fichiers = rep.listFiles();
+
+		this.lstClass = new ArrayList<>();
+		this.lien = new HashMap<>();
 
 		if (fichiers != null)
 		{
@@ -54,7 +57,7 @@ public class LectureRepertoire
 								this.lien.put(this.lstClass.get(cpt), new ArrayList<CreeClass>());
 							}
 							
-							this.lien.get(cpt).add(this.lstClass.get(cpt2));
+							this.lien.get(this.lstClass.get(cpt)).add(this.lstClass.get(cpt2));
 
 							this.lstClass.get(cpt2).supprimerAttribut(att);
 						}
@@ -62,6 +65,16 @@ public class LectureRepertoire
 				}
 			}
 		}
+	}
+
+	public List<CreeClass> getLstClass()
+	{
+		return lstClass;
+	}
+
+	public Map<CreeClass, List<CreeClass>> getLien()
+	{
+		return lien;
 	}
 
 }

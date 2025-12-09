@@ -2,7 +2,6 @@ package projet.metier;
 
 
 import java.io.FileInputStream;
-import java.lang.reflect.Method;
 import java.util.*;
 
 public class CreeClass
@@ -30,9 +29,19 @@ public class CreeClass
 			while (sc.hasNext())
 			{
 				String line = sc.nextLine();
+
+				if (line.contains("class ") && !line.contains("("))
+				{
+					//if(line.contains("extends") || line.contains("implements"))
+					//{
+					//	infosClass(line);
+					//}
+					continue;
+				}
+
 				if (line.contains("private") || line.contains("protected")|| line.contains("public"))
 				{
-					if(line.contains(nom))
+					if(line.contains(this.nom))
 					{
 						this.ajouterConstructeur(line);
 					}
@@ -72,7 +81,7 @@ public class CreeClass
 
 		if (posOuv == -1 || posFerm == -1) 
 		{
-			System.out.println("Constructeur mal formaté : " + constructeur);
+			System.out.println("Problème de parenthèse");
 			return;
 		}
 
