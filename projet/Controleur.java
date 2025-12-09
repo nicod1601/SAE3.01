@@ -78,13 +78,13 @@ public class Controleur
 			String reset    = "\u001B[0m";
 
 			System.out.println(blue + "╔═══════════════════════════════════════════════╗\n" +
-									  "║       Choisissez un niveau d'affichage :      ║\n" +
-									  "╠═══════════════════════════════════════════════╣\n" +
-							   blue + "║" + vert    + "  1 = IHM CUI simple                           " + blue + "║\n" +
-							   blue + "║" + vert    +"  2 = IHM CUI Formalisme UML                   "  + blue + "║\n" +
-							   blue + "║" + indispo + "  3 = IHM CUI Formalisme UML (Plusieur Classe) " + blue + "║\n" +
-							   blue + "║" + indispo + "  4 = IHM CUI Héritage                         " + blue + "║\n" +
-									  "╚═══════════════════════════════════════════════╝" + reset);
+			                          "║       Choisissez un niveau d'affichage :      ║\n" +
+			                          "╠═══════════════════════════════════════════════╣\n" +
+			                   blue + "║" + vert    + "  1 = IHM CUI simple                           " + blue + "║\n" +
+			                   blue + "║" + vert    +"  2 = IHM CUI Formalisme UML                   "  + blue + "║\n" +
+			                   blue + "║" + vert    + "  3 = IHM CUI Formalisme UML (Plusieur Classe) " + blue + "║\n" +
+			                   blue + "║" + indispo + "  4 = IHM CUI Héritage                         " + blue + "║\n" +
+			                          "╚═══════════════════════════════════════════════╝" + reset);
 			System.out.print(jaune + "Entrez un entier : " + reset);
 
 			if (sc.hasNextInt()) 
