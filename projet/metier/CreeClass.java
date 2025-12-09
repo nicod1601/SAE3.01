@@ -1,9 +1,7 @@
 package projet.metier;
 
-
 import java.io.FileInputStream;
 import java.util.*;
-import projet.Controleur;
 
 public class CreeClass
 {
@@ -23,7 +21,7 @@ public class CreeClass
 			return null;
 	}
 
-	private CreeClass(String data )
+	private CreeClass(String data)
 	{
 		String nomComplet = new java.io.File(data).getName();
 		if (nomComplet.endsWith(".java"))
@@ -44,23 +42,30 @@ public class CreeClass
 				{
 					if(line.contains("extends") || line.contains("implements"))
 					{
-						String[] mots = Controleur.split(line," ");
-						for (int i = 0; i < mots.length; i++)
+						// Utiliser Scanner pour parser la ligne
+						Scanner lineSc = new Scanner(line);
+						while (lineSc.hasNext())
 						{
-							if (mots[i].equals("extends"))
+							String mot = lineSc.next();
+							
+							if (mot.equals("extends") && lineSc.hasNext())
 							{
-								this.mere = mots[i+1];
+								this.mere = lineSc.next();
 							}
-							if (mots[i].equals("implements"))
+							else if (mot.equals("implements"))
 							{
 								this.interfaces = new ArrayList<String>();
-								for (int j = i+1; j < mots.length; j++)
+								while (lineSc.hasNext())
 								{
-									String inter = mots[j].replace(",", "").trim();
-									this.interfaces.add(inter);
+									String inter = lineSc.next().replace(",", "").trim();
+									if (!inter.isEmpty())
+									{
+										this.interfaces.add(inter);
+									}
 								}
 							}
 						}
+						lineSc.close();
 					}
 					continue;
 				}
@@ -83,10 +88,9 @@ public class CreeClass
 					{
 						this.ajouterAttribut(line);
 					}
-					
-					
 				}
 			}
+			sc.close();
 
 		}catch (Exception e)
 		{
@@ -98,9 +102,6 @@ public class CreeClass
 	{
 		constructeur = constructeur.trim();
 
-		String[] mots = Controleur.split(constructeur," ");
-		String visibilite = mots[0];
-
 		int posOuv = constructeur.indexOf("(");
 		int posFerm = constructeur.indexOf(")");
 
@@ -110,119 +111,211 @@ public class CreeClass
 			return;
 		}
 
-
+		// Parser la partie avant les parenthèses
 		String avantParenthese = constructeur.substring(0, posOuv).trim();
-		String[] morceaux = Controleur.split(avantParenthese," ");
-		String nom = morceaux[morceaux.length - 1];
-
-		// paramBrut -> "typeParam1 nomPram1, typeParam2 nomPram2, ..."
-		String paramBrut = constructeur.substring(posOuv + 1, posFerm).trim();
-
-		// lstLstParamInfo -> [param1 -> ["type", nom]; param2 -> [type, nom]; ...]"
-		List<String[]> lstLstParamInfo  = new ArrayList<>();
-
-		if (!paramBrut.isEmpty()) {
-			//tabParams -> ["param1", "param2", ...] param -> "typeParam1 nomPram1"
-			String[] tabParams = Controleur.split(paramBrut,",");
-
-			//param -> "typeParam nomPram"
-			for (String param : tabParams) {
-
-				// infoParam -> [type, nom] type -> "typeParam1" et nom -> "nomPram1"
-				String[] tabInfoParam = Controleur.split(param.trim()," ");
-
-				lstLstParamInfo.add(tabInfoParam);
-			}
+		Scanner avantSc = new Scanner(avantParenthese);
+		
+		String visibilite = avantSc.next(); // premier mot = visibilité
+		String nom = "";
+		
+		// Lire jusqu'au dernier mot (le nom du constructeur)
+		while (avantSc.hasNext())
+		{
+			nom = avantSc.next();
 		}
+		avantSc.close();
 
+		// Parser les paramètres
+		String paramBrut = constructeur.substring(posOuv + 1, posFerm).trim();
+		List<String[]> lstLstParamInfo = new ArrayList<>();
+
+		if (!paramBrut.isEmpty())
+		{
+			// Utiliser Scanner avec délimiteur virgule
+			Scanner paramSc = new Scanner(paramBrut);
+			paramSc.useDelimiter(",");
+			
+			while (paramSc.hasNext())
+			{
+				String param = paramSc.next().trim();
+				
+				// Parser chaque paramètre (type nom)
+				Scanner motSc = new Scanner(param);
+				List<String> infos = new ArrayList<>();
+				
+				while (motSc.hasNext())
+				{
+					infos.add(motSc.next());
+				}
+				motSc.close();
+				
+				// Convertir en tableau pour compatibilité
+				if (infos.size() >= 2)
+				{
+					String[] tabInfo = new String[infos.size()];
+					for (int i = 0; i < infos.size(); i++)
+					{
+						tabInfo[i] = infos.get(i);
+					}
+					lstLstParamInfo.add(tabInfo);
+				}
+			}
+			paramSc.close();
+		}
 
 		Methode c = new Methode(visibilite, null, nom, false, lstLstParamInfo);
 		this.lstMethode.add(c);
 	}
 
-
 	private void ajouterAttribut(String attribut)
 	{
-		String[] line = Controleur.split(attribut," ");
-		if (line.length >= 3)
+		Scanner sc = new Scanner(attribut);
+		
+		if (!sc.hasNext()) 
 		{
-			String visibilite = line[0];
-			boolean estStatic = false;
-			boolean estFinal = false;
-			int indexType = 1;
-
-			if (line[1].equals("static"))
+			sc.close();
+			return;
+		}
+		
+		String visibilite = sc.next();
+		boolean estStatic = false;
+		boolean estFinal = false;
+		
+		if (!sc.hasNext()) 
+		{
+			sc.close();
+			return;
+		}
+		
+		String motSuivant = sc.next();
+		
+		// Vérifier les modificateurs
+		if (motSuivant.equals("static"))
+		{
+			estStatic = true;
+			if (sc.hasNext())
 			{
-				estStatic = true;
-				indexType++;
+				motSuivant = sc.next();
 			}
-			if (line[1].equals("final"))
+		}
+		else if (motSuivant.equals("final"))
+		{
+			estFinal = true;
+			if (sc.hasNext())
 			{
-				estFinal = true;
-				indexType++;
+				motSuivant = sc.next();
 			}
-
-			String type = line[indexType];
-			String nom = line[line.length -1].replace(";", "");
-
+		}
+		
+		String type = motSuivant;
+		
+		// Lire jusqu'au dernier mot (le nom de l'attribut)
+		String nom = "";
+		while (sc.hasNext())
+		{
+			nom = sc.next();
+		}
+		
+		if (!nom.isEmpty())
+		{
+			nom = nom.replace(";", "");
 			Attribut attr = new Attribut(visibilite, type, nom, estStatic, estFinal);
 			this.lstAttribut.add(attr);
 		}
+		
+		sc.close();
 	}
 
 	private void ajouterMethode(String methode)
 	{
-		String[] line = Controleur.split(methode," ");
-		String visibilite = line[0];
-		boolean estStatic = false;
-		int indexType = 1;
-
-		if(line.length >= 3)
+		Scanner sc = new Scanner(methode);
+		
+		if (!sc.hasNext()) 
 		{
-			if (line[1].equals("static"))
+			sc.close();
+			return;
+		}
+		
+		String visibilite = sc.next();
+		boolean estStatic = false;
+		
+		if (!sc.hasNext()) 
+		{
+			sc.close();
+			return;
+		}
+		
+		String motSuivant = sc.next();
+		
+		if (motSuivant.equals("static"))
+		{
+			estStatic = true;
+			if (sc.hasNext())
 			{
-				estStatic = true;
-				indexType++;
+				motSuivant = sc.next();
 			}
-
-			String type = line[indexType];
-			String reste = "";
-
-			for (int i = indexType + 1; i < line.length; i++)
+		}
+		
+		String type = motSuivant;
+		
+		// Reconstruire le reste pour trouver le nom et les paramètres
+		StringBuilder reste = new StringBuilder();
+		while (sc.hasNext())
+		{
+			reste.append(sc.next()).append(" ");
+		}
+		sc.close();
+		
+		String resteStr = reste.toString().trim();
+		int posOuv = resteStr.indexOf("(");
+		int posFerm = resteStr.indexOf(")");
+		
+		if (posOuv == -1 || posFerm == -1)
+		{
+			return;
+		}
+		
+		String nom = resteStr.substring(0, posOuv).trim();
+		String paramBrut = resteStr.substring(posOuv + 1, posFerm).trim();
+		
+		List<String[]> lstLstParamInfo = new ArrayList<>();
+		
+		if (!paramBrut.isEmpty())
+		{
+			// Utiliser Scanner avec délimiteur virgule
+			Scanner paramSc = new Scanner(paramBrut);
+			paramSc.useDelimiter(",");
+			
+			while (paramSc.hasNext())
 			{
-				reste += line[i] + " ";
-			}
-
-			int posOuv = reste.indexOf("(");
-			int posFerm = reste.indexOf(")");
-
-			String nom = reste.substring(0, posOuv);
-
-			// paramBrut -> "typeParam1 nomPram1, typeParam2 nomPram2, ..."
-			String paramBrut = reste.substring(posOuv + 1, posFerm).trim();
-
-			// lstLstParamInfo -> [param1 -> ["type", nom]; param2 -> [type, nom]; ...]"
-			List<String[]> lstLstParamInfo  = new ArrayList<>();
-
-			if (!paramBrut.isEmpty()) {
-				//tabParams -> ["param1", "param2", ...] param -> "typeParam1 nomPram1"
-				String[] tabParams = Controleur.split(paramBrut,",");
-
-				//param -> "typeParam nomPram"
-				for (String param : tabParams) {
-
-					// infoParam -> [type, nom] type -> "typeParam1" et nom -> "nomPram1"
-					String[] tabInfoParam = Controleur.split(param.trim()," ");
-
-					lstLstParamInfo.add(tabInfoParam);
+				String param = paramSc.next().trim();
+				
+				// Parser chaque paramètre (type nom)
+				Scanner motSc = new Scanner(param);
+				List<String> infos = new ArrayList<>();
+				
+				while (motSc.hasNext())
+				{
+					infos.add(motSc.next());
+				}
+				motSc.close();
+				
+				// Convertir en tableau pour compatibilité
+				if (infos.size() >= 2)
+				{
+					String[] tabInfo = new String[infos.size()];
+					for (int i = 0; i < infos.size(); i++)
+					{
+						tabInfo[i] = infos.get(i);
+					}
+					lstLstParamInfo.add(tabInfo);
 				}
 			}
-
-			Methode meth = new Methode(visibilite, type, nom, estStatic, lstLstParamInfo);
-			this.lstMethode.add(meth);
+			paramSc.close();
 		}
-
 		
+		Methode meth = new Methode(visibilite, type, nom, estStatic, lstLstParamInfo);
+		this.lstMethode.add(meth);
 	}
 
 	public void creelien(List<CreeClass> lstClass)
@@ -232,16 +325,15 @@ public class CreeClass
 
 	private static boolean verifdata(String data)
 	{
-		// on vérifie que le ficher est en .java
 		try
 		{
-			if (data.substring(data.length()-5).equals( ".java"))
+			if (data.substring(data.length()-5).equals(".java"))
 			{
 				return true;
 			}
 		} catch (Exception e)
 		{
-			System.out.println("\u001B[31m Erreur : le fichier spécifié n'est pas un fichier .Java.Erreur : le fichier spécifié ( " + data + " ) n'existe pas ou n'est pas un fichier .Java.\u001B[0m");
+			System.out.println("\u001B[31m Erreur : le fichier spécifié ( " + data + " ) n'existe pas ou n'est pas un fichier .Java.\u001B[0m");
 		}
 		return false;
 	}

@@ -9,5 +9,9 @@ metier/LectureRepertoire.java
 metier/Lien.java
 
 ihm/IhmCui.java
+ihm/FrameAppli.java
+ihm/PanneauMenu.java
+ihm/PanneauPrincipal.java
+ihm/PanneauFichier.java
 
 Controleur.java

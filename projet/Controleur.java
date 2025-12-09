@@ -1,5 +1,6 @@
 package projet;
 
+import java.awt.Frame;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import projet.metier.Attribut;
 import projet.metier.CreeClass;
 import projet.metier.LectureRepertoire;
 import projet.metier.Methode;
+import projet.ihm.FrameAppli;
 
 public class Controleur 
 {
@@ -18,6 +20,7 @@ public class Controleur
 	private int             niv;
 	private List<CreeClass> lstMetiers;
 	private IhmCui          ihmCui;
+	private FrameAppli      frameAppli;
 
 	/*╔════════════════════════╗*/
 	/*║     Constructeur       ║*/
@@ -25,6 +28,7 @@ public class Controleur
 
 	public Controleur()
 	{
+		this.frameAppli = new FrameAppli(this);
 		this.niv = choixNiv();
 		
 		do 
@@ -34,6 +38,8 @@ public class Controleur
 		while (this.lstMetiers.get(0) == null);
 
 		this.ihmCui     = new IhmCui(this, this.niv);
+
+		
 	}
 
 	public List<CreeClass> initCreeClass(int niv)
@@ -78,6 +84,17 @@ public class Controleur
 	}
 	public List<CreeClass>                 getLstClass() { return this.lstMetiers; };
 	
+	public void LectureRepertoire(File dossier)
+	{
+		LectureRepertoire lecture = new LectureRepertoire(dossier);
+		this.lstMetiers = lecture.getLstClass();
+	}
+
+	public CreeClass CreerClass(String chemin)
+	{
+		return CreeClass.factoryCreeClass(chemin);
+	}
+
 
 	/*╔════════════════════════╗*/
 	/*║          Main          ║*/
@@ -118,31 +135,6 @@ public class Controleur
 
 		return niv;
 	}
-
-
-	public static String[] split(String sh, String sep)
-	{
-		try
-		{
-			ArrayList<String> list = new ArrayList<>();
-			Scanner sc = new Scanner(sh);
-			sc.useDelimiter(sep);
-
-			while (sc.hasNext())
-			{
-				list.add(sc.next());
-			}
-
-			sc.close();
-
-			return list.toArray(new String[0]);
-		}catch(Exception e)
-		{
-			System.out.println("erreur de Split");
-		}
-		return null;
-	}
-
 
 	public static void main(String[] args) {
 		new Controleur();
