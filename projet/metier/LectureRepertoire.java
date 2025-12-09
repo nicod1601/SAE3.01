@@ -13,8 +13,9 @@ public class LectureRepertoire
 	public LectureRepertoire(File rep)
 	{
 		File[] fichiers = rep.listFiles();
+		System.out.println("");
 
-		this.lstClass = new ArrayList<>();
+		this.lstClass = new ArrayList<CreeClass>();
 
 		if (fichiers != null)
 		{
@@ -29,11 +30,12 @@ public class LectureRepertoire
 					}
 				}
 			}
+			
 		}
-
+		this.creeLien();
 	}
 	
-	public void creelien()
+	public void creeLien()
 	{
 		for(int cpt = 0; cpt < this.lstClass.size(); cpt++ )
 		{
@@ -56,7 +58,7 @@ public class LectureRepertoire
 
 	public List<CreeClass> getLstClass()
 	{
-		return lstClass;
+		return this.lstClass;
 	}
 
 }

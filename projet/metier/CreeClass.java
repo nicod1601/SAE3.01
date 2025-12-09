@@ -24,7 +24,12 @@ public class CreeClass
 
 	private CreeClass(String data )
 	{
-		this.nom = data.substring(data.lastIndexOf("/")+1, data.length()-5);
+		String nomComplet = new java.io.File(data).getName();
+		if (nomComplet.endsWith(".java"))
+		{
+			this.nom = nomComplet.substring(0, nomComplet.length() - 5);
+		}
+
 		this.lstAttribut = new ArrayList<Attribut>();
 		this.lstMethode = new ArrayList<Methode>();
 		try

@@ -1,7 +1,7 @@
 package projet;
 
+import java.io.File;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import projet.ihm.IhmCui;
 import projet.metier.Attribut;
@@ -30,8 +30,15 @@ public class Controleur
 
 		if (niv >= 1 && niv <= 4) 
 		{
+			if (niv >2)
+			{
+				File repertoire        = new File("../data");
+				this.lectureRepertoire = new LectureRepertoire(repertoire);
+			}
+			
 			this.ihmCui = new IhmCui(this, niv);
-		} 
+
+		}
 		else
 		{
 			if (niv >= 5 && niv <= 7) 
@@ -50,12 +57,11 @@ public class Controleur
 
 	//Getter LectureRepertoire
 	public List<CreeClass>                 getLstClass() { return this.lectureRepertoire.getLstClass(); };
-	public Map<CreeClass, List<CreeClass>> getLien()     { return this.lectureRepertoire.getLien();     };
 
 	/*╔════════════════════════╗*/
 	/*║          Main          ║*/
 	/*╚════════════════════════╝*/
-	public static void main(String[] args) 
+	public static void main(String[] args)
 	{
 		int     niv;
 
@@ -72,13 +78,13 @@ public class Controleur
 			String reset    = "\u001B[0m";
 
 			System.out.println(blue + "╔═══════════════════════════════════════════════╗\n" +
-				                      "║       Choisissez un niveau d'affichage :      ║\n" +
-				                      "╠═══════════════════════════════════════════════╣\n" +
-				               blue + "║" + vert    + "  1 = IHM CUI simple                           " + blue + "║\n" +
-				               blue + "║" + vert    +"  2 = IHM CUI Formalisme UML                   "  + blue + "║\n" +
-				               blue + "║" + indispo + "  3 = IHM CUI Formalisme UML (Plusieur Classe) " + blue + "║\n" +
-				               blue + "║" + indispo + "  4 = IHM CUI Héritage                         " + blue + "║\n" +
-				                      "╚═══════════════════════════════════════════════╝" + reset);
+									  "║       Choisissez un niveau d'affichage :      ║\n" +
+									  "╠═══════════════════════════════════════════════╣\n" +
+							   blue + "║" + vert    + "  1 = IHM CUI simple                           " + blue + "║\n" +
+							   blue + "║" + vert    +"  2 = IHM CUI Formalisme UML                   "  + blue + "║\n" +
+							   blue + "║" + indispo + "  3 = IHM CUI Formalisme UML (Plusieur Classe) " + blue + "║\n" +
+							   blue + "║" + indispo + "  4 = IHM CUI Héritage                         " + blue + "║\n" +
+									  "╚═══════════════════════════════════════════════╝" + reset);
 			System.out.print(jaune + "Entrez un entier : " + reset);
 
 			if (sc.hasNextInt()) 

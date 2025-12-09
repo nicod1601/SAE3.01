@@ -1,8 +1,6 @@
 package projet.ihm;
 
-import java.io.File;
 import java.util.List;
-import java.util.Map;
 import projet.Controleur;
 import projet.metier.*;
 
@@ -195,16 +193,9 @@ public class IhmCui
 
 	public void affichageNiv3()
 	{
-		File repertoire = new File("../data");
-		LectureRepertoire lr = new LectureRepertoire(repertoire);
-
 		// reprendre la liste des classes qui se trouvent dans le répertoire
-		List<CreeClass> classes = lr.getLstClass();
+		List<CreeClass> classes = this.ctrl.getLstClass();
 
-		// reprendre les liens entre les classes
-		Map<CreeClass, List<CreeClass>> liens = lr.getLien();
-
-		lr.lienClasse();
 
 		/* création des classes */
 		for(CreeClass c : classes)
