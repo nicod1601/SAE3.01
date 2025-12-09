@@ -40,10 +40,11 @@ public class LectureRepertoire
 		for(int cpt = 0; cpt < this.lstClass.size(); cpt++ )
 		{
 			List<String> interfaces = this.lstClass.get(cpt).getInterfaces();
-				for(int cpt2 = 0; cpt2 < this.lstClass.size(); cpt2++ )
-				{
-							this.lstClass.get(cpt2).creelien(this.lstClass);
-				}
+		}
+
+		for(int cpt2 = 0; cpt2 < this.lstClass.size(); cpt2++ )
+		{
+			this.lstClass.get(cpt2).creelien(this.lstClass);
 		}
 	}
 

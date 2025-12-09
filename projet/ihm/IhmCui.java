@@ -184,7 +184,10 @@ public class IhmCui
 	{
 		// reprendre la liste des classes qui se trouvent dans le répertoire
 		List<CreeClass> classes = this.ctrl.getLstClass();
-		int id = 0;
+
+		String strLiens         = "";
+
+		int id                  = 0;
 
 		/* création des classes */
 		for(CreeClass c : classes)
@@ -192,13 +195,13 @@ public class IhmCui
 			List<Methode>  methodes  = c.getLstMethode ();
 			List<Attribut> attributs = c.getLstAttribut();
 
-			String res = structAffichageNiv2Niv3(attributs, methodes, id++);
+			String res        = structAffichageNiv2Niv3(attributs, methodes, id++);
+			
+			Lien   lien       = c.getLien();
+
+			int    cpt        = 0;
 			
 			System.out.println(res);
-
-			Lien lien       = c.getLien();
-			String strLiens = "";
-			int cpt         = 0;
 
 			if (lien != null && lien.getLienAttribut() != null)
 			{
@@ -213,5 +216,6 @@ public class IhmCui
 				}
 			}
 		}
+		System.out.println(strLiens);
 	}
 }

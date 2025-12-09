@@ -28,17 +28,22 @@ public class Controleur
 
 	public Controleur()
 	{
-		this.frameAppli = new FrameAppli(this);
 		this.niv = choixNiv();
 		
-		do 
+		if (niv < 5)
 		{
-			this.lstMetiers = initCreeClass(this.niv);
+			do 
+			{
+				this.lstMetiers = initCreeClass(this.niv);
+			}
+			while (this.lstMetiers.get(0) == null);
+
+			this.ihmCui     = new IhmCui(this, this.niv);
 		}
-		while (this.lstMetiers.get(0) == null);
-
-		this.ihmCui     = new IhmCui(this, this.niv);
-
+		else
+		{
+			this.frameAppli = new FrameAppli(this);
+		}
 		
 	}
 
@@ -116,9 +121,11 @@ public class Controleur
 			                          "║       Choisissez un niveau d'affichage :      ║\n" +
 			                          "╠═══════════════════════════════════════════════╣\n" +
 			                   blue + "║" + vert    + "  1 = IHM CUI simple                           " + blue + "║\n" +
-			                   blue + "║" + vert    +"  2 = IHM CUI Formalisme UML                   "  + blue + "║\n" +
+			                   blue + "║" + vert    + "  2 = IHM CUI Formalisme UML                   " + blue + "║\n" +
 			                   blue + "║" + vert    + "  3 = IHM CUI Formalisme UML (Plusieur Classe) " + blue + "║\n" +
 			                   blue + "║" + indispo + "  4 = IHM CUI Héritage                         " + blue + "║\n" +
+			                          "╠-----------------------------------------------╣\n" +
+			                   blue + "║" + vert    + "  5 = IHM GUI                                  " + blue + "║\n" +
 			                          "╚═══════════════════════════════════════════════╝" + reset);
 		
 		do 
