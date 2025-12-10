@@ -1,6 +1,8 @@
 package projet.ihm;
 
 import java.util.List;
+import java.util.Map;
+
 import projet.Controleur;
 import projet.metier.*;
 
@@ -199,22 +201,31 @@ public class IhmCui
 			String res        = structAffichageNiv2Niv3(attributs, methodes, id++);
 			
 			Lien   lien       = c.getLien();
+			Map<CreeClass,String> mapMultipl = lien.multiplicitee();
 
 			
 			System.out.println(res);
+			// Affichage de la HashMap de CreeClass,String
+			for (Map.Entry<CreeClass, String> entry : mapMultipl.entrySet())
+			{
+				System.out.println("Classe: " + entry.getKey().getNom() + " -> Multiplicité: " + entry.getValue());
+			}
 
+			//Exemple : Association 1 : unidirectionnelle de Disque(0..*) vers Point(1..1) 
 			if (lien != null && lien.getLienAttribut() != null)
 			{
 				for (CreeClass c2 : lien.getLienAttribut())
 				{
-					strLiens += String.format("Association %d : %17s de %10s (0..0) vers %10s(1..1)\n", 
-					                          cpt++,
+					String multiplC  = mapMultipl.get(c)  == null ? "1..1" : mapMultipl.get(c);
+					String multiplC2 = mapMultipl.get(c2) == null ? "1..1" : mapMultipl.get(c2);
+
+					strLiens += String.format("Association %d : %s de %s(%s) vers %s(%s)\n", 
+											  cpt++,
 											  "\"Unidirectionnelle\"", 
-											  c.getNom().trim(), 
-											  c2.getNom()                                             );
-					//Association 1 : unidirectionnelle de Disque(0..*) vers Point(1..1) 
+											  c2.getNom().trim(), multiplC2,
+											  c .getNom().trim(), multiplC);
 				}
-			}
+			}    
 		}
 		System.out.println(strLiens);
 	}
