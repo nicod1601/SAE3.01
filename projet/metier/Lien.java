@@ -138,35 +138,36 @@ public class Lien
 	/*╚════════════════════════╝*/
 	public void creerMutiplisite(List<CreeClass> lstClass)
 	{
-		List<String> lst = new ArrayList<String>();
-		
 		for (CreeClass autreClass : lstClass)
 		{
 			List<Attribut> lstAtt = autreClass.getLstAttribut();
 			if (lstAtt == null) continue;
 
-			int nbLiens = 0;
+			List<String> lst = new ArrayList<String>();
 
 			for (Attribut att : new ArrayList<Attribut>(lstAtt))
 			{
 				// Si l'attribut pointe vers la classe courante
 				if (att.getType().contains(this.creeClass.getNom()))
 				{
-					nbLiens++;
-					lst.add( determinerMultiplicite(att));
+					lst.add("1..1");
 					autreClass.supprimerAttribut(att);
 				}
-				
+
+				// Si aucun lien attribut trouvé, vérifier si elle a un lien vers nous
+				if (lst.isEmpty() && autreClass.getLien() != null && autreClass.getLien().getLstLienAttribut().contains(creeClass))
+				{
+					lst.add(determinerMultiplicite(att));
+				}
 			}
 
-			// vérifi si d'autre 
-			if (nbLiens == 0 && autreClass.getLien() != null && autreClass.getLien().getLstLienAttribut().contains(creeClass))
+			
+			
+			// Ajouter à la map seulement si des multiplicités ont été trouvées
+			if (!lst.isEmpty())
 			{
-				lst.add("(1..1)");
+				this.mapMultiplicites.put(autreClass, lst);
 			}
-			
-			this.mapMultiplicites.put(autreClass, lst);
-			
 		}
 	}
 
