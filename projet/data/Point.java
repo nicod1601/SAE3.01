@@ -5,18 +5,26 @@ public class Point
 /*╔════════════════════════╗*/
 /*║       Attribut         ║*/
 /*╚════════════════════════╝*/
-	private String nom;
+	private String nom;//Nom du Point
 	private int x;
 	private int y;
+	private Disque centre;
 
 /*╔════════════════════════╗*/
 /*║      Constructeur      ║*/
 /*╚════════════════════════╝*/
-
+/*
 	public Point(String nom, int x, int y) 
 	{
 		this.nom = nom;
 		this.x   = x;
+		this.y   = y;
+	}
+*/
+	public Point(String nom, int x, int y) 
+	{
+		this.nom = nom;
+		this.x   = x;/* public String getNom()*/
 		this.y   = y;
 	}
 
@@ -24,7 +32,7 @@ public class Point
 /*╔════════════════════════╗*/
 /*║   Getters & Setters    ║*/
 /*╚════════════════════════╝*/
-	public String  getNom()        
+	public String getNom()
 	{
 		return this.nom;
 	}
@@ -34,24 +42,24 @@ public class Point
 		this.nom = nom;
 	}
 
-	public int  getX()          
+	public int getX()
 	{ 
 		return this.x;
 	}
 
-	public void setX(int x)     
+	public void /*boolean*/ setX(int x)
 	{ 
-		this.x = x;    
+		this.x = x;
 	}
 
-	public int  getY()          
-	{ 
+	public int getY()
+	{
 		return this.y;
 	}
 
-	public void setY(int y)     
+	public void setY(int y)
 	{ 
-		this.y = y;    
+		this.y = y;
 	}
 
 }

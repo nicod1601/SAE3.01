@@ -40,13 +40,30 @@ public class CreeClass
 		}
 
 		this.lstAttribut = new ArrayList<Attribut>();
-		this.lstMethode = new ArrayList<Methode>();
+		this.lstMethode  = new ArrayList<Methode>();
 		try
 		{
 			Scanner sc = new Scanner(new FileInputStream(data), "UTF8");
 			while (sc.hasNext())
 			{
 				String line = sc.nextLine();
+
+				// Si /* Sur plusieurs lignes */
+				if (line.contains("/*"))
+					while (!line.contains("*/")) 
+						line = sc.nextLine();
+
+				//Si this.x   = x; //public String getX()
+				if (line.contains("//"))
+				{
+					line = line.substring(0, line.indexOf("//"));
+				}				
+				
+				//Si this.x   = x;/* public String getX()*/
+				if (line.contains("/*") && line.contains("*/"))
+				{
+					line = line.substring(0, line.indexOf("/*")) + line.substring( line.indexOf("*/")+2);
+				}
 
 				if (line.contains("class ") && !line.contains("("))
 				{
