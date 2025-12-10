@@ -1,3 +1,13 @@
+/**
+ * Classe métier qui nous permet de creer une classe via la lecture de fichier(s) / un dossier.
+ * Cette classe nous permet alors d'ajouter des méthodes, des attributs, ainsi que les liens qu'elle a :<br>
+ * - Liens en fonction de ses attributs (par exemple si dans ses attributs elle a une autre classe (lienAttribut)).
+ * - Liens en fonction de son héritage (par exemple si la dite classe hérite d'une autre classe (lienHeritage)).
+ * - Liens en fonction de son interface (par exemple si la classe courante implemente une autre class (lienInterface)).
+ * <br>
+ * @author : {nos noms}
+ * 
+ */
 package projet.metier;
 
 import java.io.FileInputStream;
