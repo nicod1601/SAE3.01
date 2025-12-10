@@ -188,6 +188,7 @@ public class IhmCui
 		String strLiens         = "";
 
 		int id                  = 0;
+		int    cpt              = 1;
 
 		/* création des classes */
 		for(CreeClass c : classes)
@@ -199,7 +200,6 @@ public class IhmCui
 			
 			Lien   lien       = c.getLien();
 
-			int    cpt        = 0;
 			
 			System.out.println(res);
 
@@ -207,7 +207,7 @@ public class IhmCui
 			{
 				for (CreeClass c2 : lien.getLienAttribut())
 				{
-					strLiens += String.format("Association %d : %17s de %10s (0..0) vers %10s(1..1)", 
+					strLiens += String.format("Association %d : %17s de %10s (0..0) vers %10s(1..1)\n", 
 					                          cpt++,
 											  "\"Unidirectionnelle\"", 
 											  c.getNom().trim(), 

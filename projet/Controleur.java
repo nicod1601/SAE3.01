@@ -36,7 +36,7 @@ public class Controleur
 			{
 				this.lstMetiers = initCreeClass(this.niv);
 			}
-			while (this.lstMetiers.get(0) == null);
+			while (this.lstMetiers.isEmpty() || this.lstMetiers.get(0) == null);
 
 			this.ihmCui     = new IhmCui(this, this.niv);
 		}
@@ -122,7 +122,7 @@ public class Controleur
 			                          "╠═══════════════════════════════════════════════╣\n" +
 			                   blue + "║" + vert    + "  1 = IHM CUI simple                           " + blue + "║\n" +
 			                   blue + "║" + vert    + "  2 = IHM CUI Formalisme UML                   " + blue + "║\n" +
-			                   blue + "║" + vert    + "  3 = IHM CUI Formalisme UML (Plusieur Classe) " + blue + "║\n" +
+			                   blue + "║" + vert    + "  3 = IHM CUI Formalisme UML (Plusieurs Classes) " + blue + "║\n" +
 			                   blue + "║" + indispo + "  4 = IHM CUI Héritage                         " + blue + "║\n" +
 			                          "╠-----------------------------------------------╣\n" +
 			                   blue + "║" + vert    + "  5 = IHM GUI                                  " + blue + "║\n" +
