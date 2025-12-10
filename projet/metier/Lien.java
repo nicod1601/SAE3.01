@@ -22,7 +22,7 @@ public class Lien
 	public Lien(CreeClass creeClass)
 	{
 		this.creeClass     = creeClass;
-		this.mapMultiplicites = new HashMap<CreeClass, List<String> >();
+		this.mapMultiplicites = new HashMap<CreeClass, List<String>>();
 		this.lstLienAttribut  = new ArrayList<CreeClass>();
 		this.lstLienHeritage  = new ArrayList<CreeClass>();
 		this.lstLienInterface = new ArrayList<CreeClass>();
@@ -43,6 +43,7 @@ public class Lien
 
 	private void lienClasseParAttribut(List<CreeClass> lstClass)
 	{
+		// Ajouter les classes qui ont un attribut de type creeClass (liens entrants)
 		for (int cpt2 = 0; cpt2 < lstClass.size(); cpt2++)
 		{
 			List<Attribut> lstAtt = lstClass.get(cpt2).getLstAttribut();
@@ -52,12 +53,26 @@ public class Lien
 			{
 				if (this.creeClass.getNom().equals(att.getType()))
 				{
-					// add the class that has an attribute of type creeClass
 					if (!this.lstLienAttribut.contains(lstClass.get(cpt2)))
 					{
 						this.lstLienAttribut.add(lstClass.get(cpt2));
 					}
-					
+				}
+			}
+		}
+
+		// Ajouter les classes que creeClass référence (liens sortants)
+		List<Attribut> lstAttCourant = this.creeClass.getLstAttribut();
+		if (lstAttCourant != null)
+		{
+			for (Attribut att : new ArrayList<Attribut>(lstAttCourant))
+			{
+				for (CreeClass classe : lstClass)
+				{
+					if (classe.getNom().equals(att.getType()) && !this.lstLienAttribut.contains(classe))
+					{
+						this.lstLienAttribut.add(classe);
+					}
 				}
 			}
 		}
@@ -138,36 +153,36 @@ public class Lien
 	/*╚════════════════════════╝*/
 	public void creerMutiplisite(List<CreeClass> lstClass)
 	{
+		
+		List<Attribut> lstAtt = this.creeClass.getLstAttribut();
+
+		//verifie si la class quon traite a des attributs
 		for (CreeClass autreClass : lstClass)
 		{
-			List<Attribut> lstAtt = autreClass.getLstAttribut();
-			if (lstAtt == null) continue;
+			int cptLiaison = 0;
 
-			List<String> lst = new ArrayList<String>();
+			List<String> lstMultipl = new ArrayList<String>();
 
-			for (Attribut att : new ArrayList<Attribut>(lstAtt))
+			for (Attribut att : lstAtt)
 			{
 				// Si l'attribut pointe vers la classe courante
-				if (att.getType().contains(this.creeClass.getNom()))
+				if (att.getType().contains(autreClass.getNom()))
 				{
-					lst.add("1..1");
-					autreClass.supprimerAttribut(att);
-				}
-
-				// Si aucun lien attribut trouvé, vérifier si elle a un lien vers nous
-				if (lst.isEmpty() && autreClass.getLien() != null && autreClass.getLien().getLstLienAttribut().contains(creeClass))
-				{
-					lst.add(determinerMultiplicite(att));
+					lstMultipl.add(determinerMultiplicite(att));
+					cptLiaison ++;
 				}
 			}
 
-			
-			
-			// Ajouter à la map seulement si des multiplicités ont été trouvées
-			if (!lst.isEmpty())
+			// Si aucun lien attribut trouvé, vérifier si elle a un lien vers nous
+			if (cptLiaison == 0 && autreClass.getLien() != null && autreClass.getLien().getLstLienAttribut().contains(this.creeClass))
 			{
-				this.mapMultiplicites.put(autreClass, lst);
+				lstMultipl.add("1..1");
 			}
+
+			
+
+			// Ajouter à la map seulement si des multiplicités ont été trouvées
+			this.mapMultiplicites.put(autreClass, lstMultipl);
 		}
 	}
 

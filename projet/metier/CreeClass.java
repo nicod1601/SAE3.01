@@ -34,7 +34,6 @@ public class CreeClass
 
 	private CreeClass(String data)
 	{
-		this.lien = new Lien(this);
 		String nomComplet = new java.io.File(data).getName();
 		if (nomComplet.endsWith(".java"))
 		{
@@ -124,6 +123,8 @@ public class CreeClass
 					
 				}
 			}
+			this.lien = new Lien(this);
+			
 			sc.close();
 
 		}catch (Exception e)

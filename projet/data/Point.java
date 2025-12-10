@@ -8,7 +8,6 @@ public class Point
 	private String nom;//Nom du Point
 	private int x;
 	private int y;
-	private Disque centre;
 
 /*╔════════════════════════╗*/
 /*║      Constructeur      ║*/

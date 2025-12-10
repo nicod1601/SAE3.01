@@ -185,41 +185,48 @@ public class IhmCui
 
 	public void affichageNiv3()
 	{
-		
 		// reprendre la liste des classes qui se trouvent dans le répertoire
-		List<CreeClass> classes = this.ctrl.getLstClass();
+		List<CreeClass> lstClass = this.ctrl.getLstClass();
 
 		String strLiens         = "";
 
-		int id                  = 0;
+		int    id               = 0;
 		int    cpt              = 1;
 
 		/* création des classes */
-		for(CreeClass c : classes)
+		for(CreeClass c : lstClass)
 		{
 			List<Methode>  methodes  = c.getLstMethode ();
 			List<Attribut> attributs = c.getLstAttribut();
 
-			String res        = structAffichageNiv2Niv3(attributs, methodes, id++);
-			
 			Lien   lien       = c.getLien();
+
 			Map<CreeClass, List<String>> mapMultiplC = lien.getMapMultiplicites();
 
 			
-			System.out.println(res);
+			System.out.println(structAffichageNiv2Niv3(attributs, methodes, id++));
 
 			//Exemple : Association 1 : unidirectionnelle de Disque(0..*) vers Point(1..1) 
-			if (lien != null && lien.getLstLienAttribut() != null)
+			if (mapMultiplC != null)
 			{
 				for (CreeClass clef : mapMultiplC.keySet())
 				{
-					Map<CreeClass, List<String>> mapMultiplClef  = clef.getLien().getMapMultiplicites() ;
+					for (String multC : mapMultiplC.get(clef))
+					{
+						Map<CreeClass, List<String>> mapMultiplClef = clef.getLien().getMapMultiplicites();
+						
+						if (mapMultiplClef != null && mapMultiplClef.get(c) != null)
+						{
+							for (String multClef : mapMultiplClef.get(c))
+								strLiens += String.format(	"Association %d : %s de %s(%s) vers %s(%s)\n", 
+															cpt++,
+															"\"Unidirectionnelle\"", 
+															c.getNom().trim(), multC,
+															clef.getNom().trim(), multClef);
+						}
+					}
 
-					strLiens += String.format("Association %d : %s de %s(%s) vers %s(%s)\n", 
-											  cpt++,
-											  "\"Unidirectionnelle\"", 
-											  c.getNom().trim(), mapMultiplC.get(clef),
-											  clef.getNom().trim(), mapMultiplClef.get(c));
+					
 				}
 			}
 		}
