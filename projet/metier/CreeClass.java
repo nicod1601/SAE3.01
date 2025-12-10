@@ -5,7 +5,7 @@
  * - Liens en fonction de son héritage (par exemple si la dite classe hérite d'une autre classe (lienHeritage)).
  * - Liens en fonction de son interface (par exemple si la classe courante implemente une autre class (lienInterface)).
  * <br>
- * @author : {nos noms}
+ * @author : MARTIN Erwan, DELPECH Nicolas, GRICOURT Paul, PREVOST Donovan, MILLEREUX-BIENVAULT William  
  * 
  */
 package projet.metier;
