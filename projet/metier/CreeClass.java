@@ -102,7 +102,7 @@ public class CreeClass
 					continue;
 				}
 
-				//Méthode / Constructeur / Attribut
+				//Méthode / Constructeur / Attribut / Abstract
 				if (line.contains("private") || line.contains("protected")|| line.contains("public") || line.contains("abstract"))
 				{
 					if(line.contains(this.nom))
