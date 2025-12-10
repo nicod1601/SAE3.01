@@ -10,12 +10,11 @@ public class Lien
 	/*╔════════════════════════╗*/
 	/*║       Attribut         ║*/
 	/*╚════════════════════════╝*/
-	private List<CreeClass>        lienAttribut;
-	private List<CreeClass>        lienHeritage;
-	private List<CreeClass>        lienInterface;
+	private List<CreeClass>        lstLienAttribut;
+	private List<CreeClass>        lstLienHeritage;
+	private List<CreeClass>        lstLienInterface;
 	private CreeClass              creeClass;
-	private Map<CreeClass, String> multiplicitee;
-
+	private Map<CreeClass, List<String>>    mapMultiplicites;
 
 	/*╔════════════════════════╗*/
 	/*║     Constructeur       ║*/
@@ -23,12 +22,12 @@ public class Lien
 	public Lien(List<CreeClass> lstClass, CreeClass creeClass)
 	{
 		this.creeClass     = creeClass;
-		this.multiplicitee = new HashMap<CreeClass, String>();
-		this.lienAttribut  = new ArrayList<CreeClass>();
-		this.lienHeritage  = new ArrayList<CreeClass>();
-		this.lienInterface = new ArrayList<CreeClass>();
-		
-		this.lienClasseParAttribut(lstClass);
+		this.mapMultiplicites = new HashMap<CreeClass, List<String> >();
+		this.lstLienAttribut  = new ArrayList<CreeClass>();
+		this.lstLienHeritage  = new ArrayList<CreeClass>();
+		this.lstLienInterface = new ArrayList<CreeClass>();
+
+		this.creerMutiplisite(lstClass);
 		this.lienClasseParMere(lstClass);
 		this.lienClasseParInterface(lstClass);
 	}
@@ -36,66 +35,27 @@ public class Lien
 	/*╔════════════════════════╗*/
 	/*║       Methode          ║*/
 	/*╚════════════════════════╝*/
+
 	private void lienClasseParAttribut(List<CreeClass> lstClass)
 	{
-		for (CreeClass otherClass : lstClass)
+		for (int cpt2 = 0; cpt2 < lstClass.size(); cpt2++)
 		{
-			List<Attribut> lstAtt = otherClass.getLstAttribut();
+			List<Attribut> lstAtt = lstClass.get(cpt2).getLstAttribut();
 			if (lstAtt == null) continue;
 
-			int nbLiens = 0;
-			boolean multiple = false;
-
-			for (Attribut att : lstAtt)
+			for (Attribut att : new ArrayList<Attribut>(lstAtt))
 			{
-				// Si l'attribut pointe vers la classe courante
-				if (att.getType().contains(this.creeClass.getNom()))
+				if (this.creeClass.getNom().equals(att.getType()))
 				{
-					nbLiens++;
-
-					if (determinerMultiplicite(att).equals("0..*"))
+					// add the class that has an attribute of type creeClass
+					if (!this.lstLienAttribut.contains(lstClass.get(cpt2)))
 					{
-						multiple = true;
+						this.lstLienAttribut.add(lstClass.get(cpt2));
 					}
+					lstClass.get(cpt2).supprimerAttribut(att);
 				}
 			}
-
-			if (nbLiens > 0)
-			{
-				lienAttribut.add(otherClass);
-
-				String multiplicite;
-				if (multiple)
-				{
-					multiplicite = "0..*";
-				}
-				else if (nbLiens == 1)
-				{
-					multiplicite = "0..1";
-				}
-				else
-				{
-					multiplicite = "0.." + nbLiens;
-				}
-
-				multiplicitee.put(otherClass, multiplicite);
-			}
 		}
-	}
-
-	private String determinerMultiplicite(Attribut att)
-	{
-		String type = att.getType().toLowerCase();
-
-		if (type.contains("list")       ||
-			type.contains("set")        ||
-			type.contains("collection") ||
-			type.contains("[]"))
-		{
-			return "0..*";
-		}
-
-		return "0..1";
 	}
 
 
@@ -113,9 +73,9 @@ public class Lien
 			if (this.creeClass.getMere().equals( lstClass.get(cpt2).getNom()))
 			{
 				// ajouter la classe qui a un attribut de type creeClass
-				if (!this.lienHeritage.contains(lstClass.get(cpt2)))
+				if (!this.lstLienHeritage.contains(lstClass.get(cpt2)))
 				{
-					this.lienHeritage.add(lstClass.get(cpt2));
+					this.lstLienHeritage.add(lstClass.get(cpt2));
 				}
 			}
 		}
@@ -137,9 +97,9 @@ public class Lien
 				if (inter.equals( lstClass.get(cpt2).getNom()))
 				{
 					// ajouter la classe qui a un attribut de type creeClass
-					if (!this.lienInterface.contains(lstClass.get(cpt2)))
+					if (!this.lstLienInterface.contains(lstClass.get(cpt2)))
 					{
-						this.lienInterface.add(lstClass.get(cpt2));
+						this.lstLienInterface.add(lstClass.get(cpt2));
 					}
 				}
 			}
@@ -149,22 +109,71 @@ public class Lien
 	/*╔════════════════════════╗*/
 	/*║      Accesseur         ║*/
 	/*╚════════════════════════╝*/
-	public List<CreeClass> getLienAttribut()
+	public List<CreeClass> getLstLienAttribut()
 	{
-		return this.lienAttribut;
+		return this.lstLienAttribut;
 	}
 
-	public List<CreeClass> getLienHeritage()
+	public List<CreeClass> getLstLienHeritage()
 	{
-		return this.lienHeritage;
+		return this.lstLienHeritage;
 	}
 
-	public List<CreeClass> getLienInterface()
+	public List<CreeClass> getLstLienInterface()
 	{
-		return this.lienInterface;
+		return this.lstLienInterface;
 	}
-	public Map<CreeClass,String> multiplicitee()
+	public Map<CreeClass, List<String>> getMapMultiplicites()
 	{
-		return this.multiplicitee;
+		return this.mapMultiplicites;
+	}
+
+	/*╔════════════════════════╗*/
+	/*║      Multiplicité      ║*/
+	/*╚════════════════════════╝*/
+	public void creerMutiplisite(List<CreeClass> lstClass)
+	{
+		List<String> lst = new ArrayList<String>();
+		
+		for (CreeClass autreClass : lstClass)
+		{
+			List<Attribut> lstAtt = autreClass.getLstAttribut();
+			if (lstAtt == null) continue;
+
+			int nbLiens = 0;
+
+			for (Attribut att : lstAtt)
+			{
+				// Si l'attribut pointe vers la classe courante
+				if (att.getType().contains(this.creeClass.getNom()))
+				{
+					nbLiens++;
+					lst.add( determinerMultiplicite(att));
+				}
+			}
+
+			// vérifi si d'autre 
+			if (nbLiens == 0 && autreClass.getLien().getLstLienAttribut().contains(creeClass))
+			{
+				lst.add("(1..1)");
+			}
+			
+			this.mapMultiplicites.put(autreClass, lst);
+		}
+	}
+
+	private String determinerMultiplicite(Attribut att)
+	{
+		String type = att.getType().toLowerCase();
+
+		if (type.contains("list")       ||
+			type.contains("set")        ||
+			type.contains("collection") ||
+			type.contains("[]"))
+		{
+			return "0..*";
+		}
+
+		return "0..1";
 	}
 }

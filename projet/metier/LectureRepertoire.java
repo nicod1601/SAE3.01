@@ -30,9 +30,9 @@ public class LectureRepertoire
 					}
 				}
 			}
-			
 		}
 		this.creeLien();
+		this.creerMultiplicite();
 	}
 	
 	public void creeLien()
@@ -42,6 +42,14 @@ public class LectureRepertoire
 			this.lstClass.get(cpt2).creelien(this.lstClass);
 		}
 	}
+	public void creerMultiplicite()
+	{
+		for(int cpt2 = 0; cpt2 < this.lstClass.size(); cpt2++ )
+		{
+			this.lstClass.get(cpt2).creerMultiplicite(this.lstClass);
+		}
+	}
+	
 
 	public List<CreeClass> getLstClass()
 	{

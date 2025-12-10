@@ -40,7 +40,7 @@ public class CreeClass
 		}
 
 		this.lstAttribut = new ArrayList<Attribut>();
-		this.lstMethode  = new ArrayList<Methode>();
+		this.lstMethode = new ArrayList<Methode>();
 		try
 		{
 			Scanner sc = new Scanner(new FileInputStream(data), "UTF8");
@@ -48,24 +48,7 @@ public class CreeClass
 			{
 				String line = sc.nextLine();
 
-				// Si /* Sur plusieurs lignes */
-				if (line.contains("/*"))
-					while (!line.contains("*/")) 
-						line = sc.nextLine();
-
-				//Si this.x   = x; //public String getX()
-				if (line.contains("//"))
-				{
-					line = line.substring(0, line.indexOf("//"));
-				}				
-				
-				//Si this.x   = x;/* public String getX()*/
-				if (line.contains("/*") && line.contains("*/"))
-				{
-					line = line.substring(0, line.indexOf("/*")) + line.substring( line.indexOf("*/")+2);
-				}
-
-				if (line.contains("class") || line.contains("interface") )
+				if (line.contains("class ") && !line.contains("("))
 				{
 					if(line.contains("extends") || line.contains("implements"))
 					{
@@ -92,12 +75,12 @@ public class CreeClass
 								}
 							}
 						}
-						
 						lineSc.close();
 					}
 					continue;
 				}
-				if (line.contains("private") || line.contains("protected")|| line.contains("public") || line.contains("abstract"))
+
+				if (line.contains("private") || line.contains("protected")|| line.contains("public"))
 				{
 					if(line.contains(this.nom))
 					{
@@ -348,6 +331,10 @@ public class CreeClass
 	public void creelien(List<CreeClass> lstClass)
 	{
 		this.lien = new Lien(lstClass, this);
+	}
+	public void creerMultiplicite(List<CreeClass> lstClass)
+	{
+		this.lien.creerMutiplisite(lstClass);
 	}
 
 	private static boolean verifdata(String data)

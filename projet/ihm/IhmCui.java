@@ -2,7 +2,6 @@ package projet.ihm;
 
 import java.util.List;
 import java.util.Map;
-
 import projet.Controleur;
 import projet.metier.*;
 
@@ -186,6 +185,7 @@ public class IhmCui
 
 	public void affichageNiv3()
 	{
+		
 		// reprendre la liste des classes qui se trouvent dans le répertoire
 		List<CreeClass> classes = this.ctrl.getLstClass();
 
@@ -203,24 +203,23 @@ public class IhmCui
 			String res        = structAffichageNiv2Niv3(attributs, methodes, id++);
 			
 			Lien   lien       = c.getLien();
-			Map<CreeClass,String> mapMultipl = lien.multiplicitee();
+			Map<CreeClass, List<String>> mapMultiplC = lien.getMapMultiplicites();
 
 			
 			System.out.println(res);
 
 			//Exemple : Association 1 : unidirectionnelle de Disque(0..*) vers Point(1..1) 
-			if (lien != null && lien.getLienAttribut() != null)
+			if (lien != null && lien.getLstLienAttribut() != null)
 			{
-				for (CreeClass c2 : lien.getLienAttribut())
+				for (CreeClass clef : mapMultiplC.keySet())
 				{
-					String multiplC  = mapMultipl.get(c)  == null ? "1..1" : mapMultipl.get(c);
-					String multiplC2 = mapMultipl.get(c2) == null ? "1..1" : mapMultipl.get(c2);
+					Map<CreeClass, List<String>> mapMultiplClef  = clef.getLien().getMapMultiplicites() ;
 
 					strLiens += String.format("Association %d : %s de %s(%s) vers %s(%s)\n", 
 											  cpt++,
 											  "\"Unidirectionnelle\"", 
-											  c2.getNom().trim(), multiplC2,
-											  c .getNom().trim(), multiplC);
+											  c.getNom().trim(), mapMultiplC.get(clef),
+											  clef.getNom().trim(), mapMultiplClef.get(c));
 				}
 			}
 		}
@@ -246,14 +245,14 @@ public class IhmCui
 		for (CreeClass c : classes)
 		{
 			Lien   lien       = c.getLien();
-			for (CreeClass c2 : lien.getLienHeritage())
+			for (CreeClass c2 : lien.getLstLienHeritage())
 			{
 				heritage += String.format("%-10s hérite de %s\n",
 							c.getNom().trim(),
 							c2 .getNom().trim());
 			}
 
-			for (CreeClass c2 : lien.getLienInterface())
+			for (CreeClass c2 : lien.getLstLienInterface())
 			{
 				inter += String.format("%s implémente %s\n",
 							c.getNom().trim(),
