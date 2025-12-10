@@ -35,7 +35,7 @@ public class Lien
 
 	public void initialiser(List<CreeClass> lstClass)
 	{
-		this.creerMutiplisite(lstClass);
+		this.lienClasseParAttribut(lstClass);
 		this.lienClasseParMere(lstClass);
 		this.lienClasseParInterface(lstClass);
 	}
@@ -57,7 +57,7 @@ public class Lien
 					{
 						this.lstLienAttribut.add(lstClass.get(cpt2));
 					}
-					lstClass.get(cpt2).supprimerAttribut(att);
+					
 				}
 			}
 		}
@@ -147,14 +147,16 @@ public class Lien
 
 			int nbLiens = 0;
 
-			for (Attribut att : lstAtt)
+			for (Attribut att : new ArrayList<Attribut>(lstAtt))
 			{
 				// Si l'attribut pointe vers la classe courante
 				if (att.getType().contains(this.creeClass.getNom()))
 				{
 					nbLiens++;
 					lst.add( determinerMultiplicite(att));
+					autreClass.supprimerAttribut(att);
 				}
+				
 			}
 
 			// vérifi si d'autre 
@@ -164,6 +166,7 @@ public class Lien
 			}
 			
 			this.mapMultiplicites.put(autreClass, lst);
+			
 		}
 	}
 
