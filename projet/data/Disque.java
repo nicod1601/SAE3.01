@@ -1,13 +1,12 @@
 package projet.data;
 
 import java.util.List;
+import projet.data.ISurface;
 
-public class Disque extends Rond
+public class Disque  extends Rond implements ISurface
 {
 	private Point       centre;
 	private Rond        decentre;
-	private List<Point> lstpoint;
-	private Point[]     tabPoints;
 	
 	public Disque(Point centre, double rayon)
 	{
@@ -40,8 +39,8 @@ public class Disque extends Rond
 		return centre;
 	}
 
-	public double getRayon()
+	public double calculerSurface()
 	{
-		return super.getRayon();
+		return Math.PI * Math.pow(super.getRayon(), 2);
 	}
 }

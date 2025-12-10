@@ -32,8 +32,8 @@ public class IhmCui
 				this.affichageNiv3();
 				break;
 			case 4 :
-				//this.affichageNiv4();
-				//break;
+				this.affichageNiv4();
+				break;
 		}
 	}
 	/*╔════════════════════════╗*/
@@ -205,11 +205,6 @@ public class IhmCui
 
 			
 			System.out.println(res);
-			// Affichage de la HashMap de CreeClass,String
-			for (Map.Entry<CreeClass, String> entry : mapMultipl.entrySet())
-			{
-				System.out.println("Classe: " + entry.getKey().getNom() + " -> Multiplicité: " + entry.getValue());
-			}
 
 			//Exemple : Association 1 : unidirectionnelle de Disque(0..*) vers Point(1..1) 
 			if (lien != null && lien.getLienAttribut() != null)
@@ -225,8 +220,47 @@ public class IhmCui
 											  c2.getNom().trim(), multiplC2,
 											  c .getNom().trim(), multiplC);
 				}
-			}    
+			}
 		}
 		System.out.println(strLiens);
 	}
+
+
+	public void affichageNiv4()
+	{
+		String          heritage = "";
+		String          inter    = "";
+
+		List<CreeClass> classes = this.ctrl.getLstClass();
+
+
+		this.affichageNiv3();
+		
+		/*Carre hérite de Rectangle 
+		Disque implémente ISurface
+		Rectangle implémente ISurface 
+		*/
+
+		for (CreeClass c : classes)
+		{
+			Lien   lien       = c.getLien();
+			for (CreeClass c2 : lien.getLienHeritage())
+			{
+				heritage += String.format("%-10s hérite de %s\n",
+							c.getNom().trim(),
+							c2 .getNom().trim());
+			}
+
+			for (CreeClass c2 : lien.getLienInterface())
+			{
+				inter += String.format("%s implémente %s\n",
+							c.getNom().trim(),
+							c2 .getNom().trim());
+			}
+		}
+
+		System.out.println("\n" + heritage + "\n" + inter);
+	}
+
+
 }
