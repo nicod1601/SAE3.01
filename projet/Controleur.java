@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import javax.swing.JPanel;
 
 import projet.ihm.FrameAppli;
 import projet.ihm.IhmCui;
@@ -13,6 +14,7 @@ import projet.metier.Attribut;
 import projet.metier.CreeClass;
 import projet.metier.LectureRepertoire;
 import projet.metier.Methode;
+import projet.metier.ClassUMLPanel;
 
 
 public class Controleur 
@@ -102,6 +104,11 @@ public class Controleur
 	public CreeClass CreerClass(String chemin)
 	{
 		return CreeClass.factoryCreeClass(chemin);
+	}
+
+	public JPanel UML(CreeClass cl)
+	{
+		return new ClassUMLPanel(cl);
 	}
 
 

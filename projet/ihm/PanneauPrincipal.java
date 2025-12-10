@@ -10,22 +10,24 @@ public class PanneauPrincipal extends JPanel
 {
 
     private Controleur ctrl;
-    private List<CreeClass> listeClasses;
+    private List<CreeClass> lstClass;
+    private List<JPanel> lstPanel;
 
 
     public PanneauPrincipal(Controleur ctrl) 
     {
         this.ctrl = ctrl;
-        this.listeClasses = new ArrayList<CreeClass>();
+        this.lstClass = new ArrayList<CreeClass>();
+        this.lstPanel = new ArrayList<JPanel>();
     }
 
     public void majListeClasses(boolean dossier , String nomFichier)
     {
         if (dossier)
         {
-            this.listeClasses = this.ctrl.getLstClass();
+            this.lstClass = this.ctrl.getLstClass();
 
-            for (CreeClass classe : this.listeClasses)
+            for (CreeClass classe : this.lstClass)
             {
                 System.out.println(classe.getNom());
             }
@@ -37,7 +39,7 @@ public class PanneauPrincipal extends JPanel
             CreeClass nouvelleClasse = this.ctrl.CreerClass(nomFichier);
 
             // Vérifier si elle existe déjà
-            for (CreeClass classe : this.listeClasses)
+            for (CreeClass classe : this.lstClass)
             {
                 if (classe.getNom().equals(nouvelleClasse.getNom()))
                 {
@@ -46,9 +48,9 @@ public class PanneauPrincipal extends JPanel
                 }
             }
 
-            this.listeClasses.add(nouvelleClasse);
+            this.lstClass.add(nouvelleClasse);
 
-            for (CreeClass classe : this.listeClasses)
+            for (CreeClass classe : this.lstClass)
             {
                 System.out.println(classe.getNom());
             }
@@ -58,6 +60,14 @@ public class PanneauPrincipal extends JPanel
 
     public void viderListeClasses()
     {
-        this.listeClasses.clear();
+        this.lstClass.clear();
+    }
+
+    public void dessinerUML()
+    {
+        for(int cpt = 0; cpt < this.lstClass.size(); cpt++)
+        {
+            this.lstPanel.add(this.ctrl.UML(this.lstClass.get(cpt)));
+        }
     }
 }

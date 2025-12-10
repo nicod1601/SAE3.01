@@ -9,18 +9,18 @@ import javax.swing.JPanel;
 
 public class ClassUMLPanel extends JPanel 
 {
-    private CreeClass class;
+    private CreeClass creeClass;
 
-    public ClassUMLPanel(CreeClass class) 
+    public ClassUMLPanel(CreeClass creeClass) 
     {
-        this.class = class;
+        this.creeClass = creeClass;
     }
 
     protected void paintComponent(Graphics g) 
     {
         super.paintComponent(g);
-        List<Attribut> lstAttributs = this.class.getLstAttribut();
-        List<Methode> lstMethodes = this.class.getLstMethode();
+        List<Attribut> lstAttributs = this.creeClass.getLstAttribut();
+        List<Methode> lstMethodes = this.creeClass.getLstMethode();
 
         // Pour un meilleur rendu (lissage du texte)
         Graphics2D g2 = (Graphics2D) g;
@@ -71,7 +71,7 @@ public class ClassUMLPanel extends JPanel
 
             str += ")";
 
-            if (!this.class.getNom().equals(meth.getNom()))
+            if (!this.creeClass.getNom().equals(meth.getNom()))
             {
                 str += " : " + meth.getType();
             }
@@ -93,7 +93,7 @@ public class ClassUMLPanel extends JPanel
         g2.drawLine(x, y + heightTitre + heightAttributs, x + width, y + heightTitre + heightAttributs); // ligne attributs
 
         // Texte : nom de la classe
-        g2.drawString(this.class.getNom(), x + width / 2, y + 25);
+        g2.drawString(this.creeClass.getNom(), x + width / 2, y + 25);
 
         // Attributs
         for(Attribut attr : lstAttributs) 
@@ -179,7 +179,7 @@ public class ClassUMLPanel extends JPanel
             String finP = ")";
 
             String type = "";
-            if (!this.class.getNom().equals(meth.getNom()))
+            if (!this.creeClass.getNom().equals(meth.getNom()))
             {
                 type = " : " + meth.getType();
             }
