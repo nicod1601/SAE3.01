@@ -16,6 +16,7 @@ import java.util.*;
 public class CreeClass
 {
 	private String nom;
+	private String type;
 	private List<Attribut> lstAttribut;
 	private List<Methode> lstMethode;
 
@@ -67,7 +68,7 @@ public class CreeClass
 				}
 
 				//Si class ou interface
-				if (line.contains("class") || line.contains("interface"))
+				if (line.contains("class") || line.contains("interface") || line.contains("enum"))
 				{
 					if(line.contains("extends") || line.contains("implements"))
 					{
@@ -76,6 +77,8 @@ public class CreeClass
 						while (lineSc.hasNext())
 						{
 							String mot = lineSc.next();
+							if(mot.equals("class") || mot.equals("interface") || mot.equals("enum"))
+								this.type = mot;
 							
 							if (mot.equals("extends") && lineSc.hasNext())
 							{
@@ -94,6 +97,10 @@ public class CreeClass
 								}
 							}
 						}
+
+
+						System.out.println( "Type de la classe : " + this.type);
+
 						lineSc.close();
 					}
 					continue;
