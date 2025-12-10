@@ -57,7 +57,7 @@ public class CreeClass
 				if (line.contains("//"))
 				{
 					line = line.substring(0, line.indexOf("//"));
-				}				
+				}
 				
 				//Si this.x   = x;/* public String getX()*/
 				if (line.contains("/*") && line.contains("*/"))
@@ -65,10 +65,8 @@ public class CreeClass
 					line = line.substring(0, line.indexOf("/*")) + line.substring( line.indexOf("*/")+2);
 				}
 
-				if (line.contains("class") || line.contains("interface") )
-
-
-				if (line.contains("class ") && !line.contains("("))
+				//Si class ou interface
+				if (line.contains("class") || line.contains("interface"))
 				{
 					if(line.contains("extends") || line.contains("implements"))
 					{
@@ -100,6 +98,7 @@ public class CreeClass
 					continue;
 				}
 
+				//Méthode / Constructeur / Attribut
 				if (line.contains("private") || line.contains("protected")|| line.contains("public") || line.contains("abstract"))
 				{
 					if(line.contains(this.nom))
@@ -138,6 +137,7 @@ public class CreeClass
 		if (posOuv == -1 || posFerm == -1) 
 		{
 			System.out.println("Problème de parenthèse");
+			System.out.println(constructeur);
 			return;
 		}
 
