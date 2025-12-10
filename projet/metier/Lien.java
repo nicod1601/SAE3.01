@@ -19,7 +19,7 @@ public class Lien
 	/*╔════════════════════════╗*/
 	/*║     Constructeur       ║*/
 	/*╚════════════════════════╝*/
-	public Lien(List<CreeClass> lstClass, CreeClass creeClass)
+	public Lien(CreeClass creeClass)
 	{
 		this.creeClass     = creeClass;
 		this.mapMultiplicites = new HashMap<CreeClass, List<String> >();
@@ -27,14 +27,19 @@ public class Lien
 		this.lstLienHeritage  = new ArrayList<CreeClass>();
 		this.lstLienInterface = new ArrayList<CreeClass>();
 
-		this.creerMutiplisite(lstClass);
-		this.lienClasseParMere(lstClass);
-		this.lienClasseParInterface(lstClass);
 	}
 
 	/*╔════════════════════════╗*/
 	/*║       Methode          ║*/
 	/*╚════════════════════════╝*/
+
+	public void initialiser(List<CreeClass> lstClass)
+	{
+		this.creerMutiplisite(lstClass);
+		this.lienClasseParMere(lstClass);
+		this.lienClasseParInterface(lstClass);
+	}
+
 
 	private void lienClasseParAttribut(List<CreeClass> lstClass)
 	{
@@ -153,7 +158,7 @@ public class Lien
 			}
 
 			// vérifi si d'autre 
-			if (nbLiens == 0 && autreClass.getLien().getLstLienAttribut().contains(creeClass))
+			if (nbLiens == 0 && autreClass.getLien() != null && autreClass.getLien().getLstLienAttribut().contains(creeClass))
 			{
 				lst.add("(1..1)");
 			}

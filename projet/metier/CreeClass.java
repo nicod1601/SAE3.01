@@ -33,6 +33,7 @@ public class CreeClass
 
 	private CreeClass(String data)
 	{
+		this.lien = new Lien(this);
 		String nomComplet = new java.io.File(data).getName();
 		if (nomComplet.endsWith(".java"))
 		{
@@ -350,7 +351,7 @@ public class CreeClass
 
 	public void creelien(List<CreeClass> lstClass)
 	{
-		this.lien = new Lien(lstClass, this);
+		this.lien.initialiser(lstClass);
 	}
 	public void creerMultiplicite(List<CreeClass> lstClass)
 	{
