@@ -1,16 +1,19 @@
 package projet;
 
-import java.awt.Frame;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+
+import projet.ihm.FrameAppli;
 import projet.ihm.IhmCui;
+
 import projet.metier.Attribut;
 import projet.metier.CreeClass;
 import projet.metier.LectureRepertoire;
 import projet.metier.Methode;
-import projet.ihm.FrameAppli;
+
 
 public class Controleur 
 {
@@ -87,6 +90,7 @@ public class Controleur
 
 		return lstNomCreeClass;         
 	}
+
 	public List<CreeClass>                 getLstClass() { return this.lstMetiers; };
 	
 	public void LectureRepertoire(File dossier)
@@ -117,16 +121,16 @@ public class Controleur
 			String indispo  = "\u001B[9m" +"\u001B[31m";
 			String reset    = "\u001B[0m";
 
-			System.out.println(blue + "╔═══════════════════════════════════════════════╗\n" +
-			                          "║       Choisissez un niveau d'affichage :      ║\n" +
-			                          "╠═══════════════════════════════════════════════╣\n" +
-			                   blue + "║" + vert    + "  1 = IHM CUI simple                           " + blue + "║\n" +
-			                   blue + "║" + vert    + "  2 = IHM CUI Formalisme UML                   " + blue + "║\n" +
+			System.out.println(blue + "╔═════════════════════════════════════════════════╗\n" +
+			                          "║       Choisissez un niveau d'affichage :        ║\n" +
+			                          "╠═════════════════════════════════════════════════╣\n" +
+			                   blue + "║" + vert    + "  1 = IHM CUI simple                             " + blue + "║\n" +
+			                   blue + "║" + vert    + "  2 = IHM CUI Formalisme UML                     " + blue + "║\n" +
 			                   blue + "║" + vert    + "  3 = IHM CUI Formalisme UML (Plusieurs Classes) " + blue + "║\n" +
-			                   blue + "║" + indispo + "  4 = IHM CUI Héritage                         " + blue + "║\n" +
-			                          "╠-----------------------------------------------╣\n" +
-			                   blue + "║" + vert    + "  5 = IHM GUI                                  " + blue + "║\n" +
-			                          "╚═══════════════════════════════════════════════╝" + reset);
+			                   blue + "║" + indispo + "  4 = IHM CUI Héritage                           " + blue + "║\n" +
+			                          "╠-------------------------------------------------╣\n" +
+			                   blue + "║" + vert    + "  5 = IHM GUI                                    " + blue + "║\n" +
+			                          "╚═════════════════════════════════════════════════╝" + reset);
 		
 		do 
 		{

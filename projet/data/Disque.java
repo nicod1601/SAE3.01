@@ -1,8 +1,13 @@
 package projet.data;
 
+import java.util.List;
+
 public class Disque extends Rond
 {
-	private Point centre;
+	private Point       centre;
+	private Rond        decentre;
+	private List<Point> lstpoint;
+	private Point[]     tabPoints;
 	
 	public Disque(Point centre, double rayon)
 	{
