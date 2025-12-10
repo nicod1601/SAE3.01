@@ -97,10 +97,6 @@ public class CreeClass
 								}
 							}
 						}
-
-
-						System.out.println( "Type de la classe : " + this.type);
-
 						lineSc.close();
 					}
 					continue;
