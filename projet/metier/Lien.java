@@ -54,7 +54,7 @@ public class Lien
 				{
 					countAttributes++;
 					// ajouter la classe qui a un attribut de type creeClass
-					if (!lienAttribut.contains(lstClass.get(cpt2)))
+					if (!this.lienAttribut.contains(lstClass.get(cpt2)))
 					{
 						this.lienAttribut.add(lstClass.get(cpt2));
 
@@ -79,7 +79,7 @@ public class Lien
 				{
 					multiplicity = "0.." + countAttributes;
 				}
-				multiplicitee.put(lstClass.get(cpt2), multiplicity);
+				this.multiplicitee.put(lstClass.get(cpt2), multiplicity);
 			}
 		}
 	}
@@ -97,9 +97,9 @@ public class Lien
 			if (this.creeClass.getMere().equals( lstClass.get(cpt2).getNom()))
 			{
 				// ajouter la classe qui a un attribut de type creeClass
-				if (!lienHeritage.contains(lstClass.get(cpt2)))
+				if (!this.lienHeritage.contains(lstClass.get(cpt2)))
 				{
-					lienHeritage.add(lstClass.get(cpt2));
+					this.lienHeritage.add(lstClass.get(cpt2));
 				}
 			}
 		}
@@ -121,9 +121,9 @@ public class Lien
 				if (inter.equals( lstClass.get(cpt2).getNom()))
 				{
 					// ajouter la classe qui a un attribut de type creeClass
-					if (!lienInterface.contains(lstClass.get(cpt2)))
+					if (!this.lienInterface.contains(lstClass.get(cpt2)))
 					{
-						lienInterface.add(lstClass.get(cpt2));
+						this.lienInterface.add(lstClass.get(cpt2));
 					}
 				}
 			}
@@ -135,16 +135,20 @@ public class Lien
 	/*╚════════════════════════╝*/
 	public List<CreeClass> getLienAttribut()
 	{
-		return lienAttribut;
+		return this.lienAttribut;
 	}
 
 	public List<CreeClass> getLienHeritage()
 	{
-		return lienHeritage;
+		return this.lienHeritage;
 	}
 
 	public List<CreeClass> getLienInterface()
 	{
-		return lienInterface;
+		return this.lienInterface;
+	}
+	public Map<CreeClass,String> multiplicitee()
+	{
+		return this.multiplicitee;
 	}
 }
