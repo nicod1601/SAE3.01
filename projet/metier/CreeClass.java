@@ -48,6 +48,26 @@ public class CreeClass
 			{
 				String line = sc.nextLine();
 
+				// Si /* Sur plusieurs lignes */
+				if (line.contains("/*"))
+					while (!line.contains("*/")) 
+						line = sc.nextLine();
+
+				//Si this.x   = x; //public String getX()
+				if (line.contains("//"))
+				{
+					line = line.substring(0, line.indexOf("//"));
+				}				
+				
+				//Si this.x   = x;/* public String getX()*/
+				if (line.contains("/*") && line.contains("*/"))
+				{
+					line = line.substring(0, line.indexOf("/*")) + line.substring( line.indexOf("*/")+2);
+				}
+
+				if (line.contains("class") || line.contains("interface") )
+
+
 				if (line.contains("class ") && !line.contains("("))
 				{
 					if(line.contains("extends") || line.contains("implements"))
@@ -80,7 +100,7 @@ public class CreeClass
 					continue;
 				}
 
-				if (line.contains("private") || line.contains("protected")|| line.contains("public"))
+				if (line.contains("private") || line.contains("protected")|| line.contains("public") || line.contains("abstract"))
 				{
 					if(line.contains(this.nom))
 					{

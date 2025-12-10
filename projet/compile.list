@@ -1,11 +1,3 @@
-data/Point.java
-data/Disque.java
-data/Rond.java
-data/Carre.java
-data/ISurface.java
-data/ISurface2.java
-data/Rectangle.java
-
 metier/Attribut.java
 metier/Methode.java
 metier/CreeClass.java

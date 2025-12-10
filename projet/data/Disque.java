@@ -1,9 +1,8 @@
 package projet.data;
 
 import java.util.List;
-import projet.data.ISurface;
 
-public class Disque  extends Rond implements ISurface
+public class Disque  extends Rond
 {
 	private Point       centre;
 	private Rond        decentre;
