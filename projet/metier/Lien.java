@@ -16,6 +16,7 @@ public class Lien
 	private CreeClass              creeClass;
 	private Map<CreeClass, String> multiplicitee;
 
+
 	/*╔════════════════════════╗*/
 	/*║     Constructeur       ║*/
 	/*╚════════════════════════╝*/
@@ -37,52 +38,67 @@ public class Lien
 	/*╚════════════════════════╝*/
 	private void lienClasseParAttribut(List<CreeClass> lstClass)
 	{
-		// Parcourir toutes les classes pour trouver des liens d'attributs
-		for (int cpt2 = 0; cpt2 < lstClass.size(); cpt2++)
+		for (CreeClass otherClass : lstClass)
 		{
-			List<Attribut> lstAtt = lstClass.get(cpt2).getLstAttribut();
+			List<Attribut> lstAtt = otherClass.getLstAttribut();
 			if (lstAtt == null) continue;
-			
-			int countAttributes = 0;
-			String multiplicity = "";
 
-			// itérer sur une copie car nous pouvons supprimer des éléments
-			for (Attribut att : new ArrayList<Attribut>(lstAtt))
+			int nbLiens = 0;
+			boolean multiple = false;
+
+			for (Attribut att : lstAtt)
 			{
-				// Vérifier si le type de l'attribut correspond à la classe actuelle
-				if (this.creeClass.getNom().equals(att.getType()))
+				// Si l'attribut pointe vers la classe courante
+				if (att.getType().contains(this.creeClass.getNom()))
 				{
-					countAttributes++;
-					// ajouter la classe qui a un attribut de type creeClass
-					if (!this.lienAttribut.contains(lstClass.get(cpt2)))
+					nbLiens++;
+
+					if (determinerMultiplicite(att).equals("0..*"))
 					{
-						this.lienAttribut.add(lstClass.get(cpt2));
-
-						// Déterminer la multiplicité : 0..1 pour un seul, 0..* pour Liste/Collection
-						multiplicity = att.getType().toLowerCase().contains("list")              ||
-						               att.getType().toLowerCase().contains("collection") ||
-						               att.getType().toLowerCase().contains("set")        ||
-						               att.getType().              contains("[]")         ||
-						               att.getType().toLowerCase().contains("array") ? "0..*" : "0..1";
-						multiplicitee.put(lstClass.get(cpt2), multiplicity);
+						multiple = true;
 					}
-
-					// Supprimer l'attribut de la liste pour éviter de le traiter à nouveau
-					lstClass.get(cpt2).supprimerAttribut(att);
 				}
 			}
-			
-			// Si des attributs ont été trouvés, déterminer la multiplicité en fonction du nombre
-			if (multiplicity.equals("0..1"))
+
+			if (nbLiens > 0)
 			{
-				if (countAttributes != 1)
+				lienAttribut.add(otherClass);
+
+				String multiplicite;
+				if (multiple)
 				{
-					multiplicity = "0.." + countAttributes;
+					multiplicite = "0..*";
 				}
-				this.multiplicitee.put(lstClass.get(cpt2), multiplicity);
+				else if (nbLiens == 1)
+				{
+					multiplicite = "0..1";
+				}
+				else
+				{
+					multiplicite = "0.." + nbLiens;
+				}
+
+				multiplicitee.put(otherClass, multiplicite);
 			}
 		}
 	}
+
+	private String determinerMultiplicite(Attribut att)
+	{
+		String type = att.getType().toLowerCase();
+
+		if (type.contains("list")       ||
+			type.contains("set")        ||
+			type.contains("collection") ||
+			type.contains("[]"))
+		{
+			return "0..*";
+		}
+
+		return "0..1";
+	}
+
+
 	private void lienClasseParMere(List<CreeClass> lstClass)
 	{
 		// Parcourir toutes les classes pour trouver des liens d'héritage
