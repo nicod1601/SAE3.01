@@ -115,16 +115,17 @@ public class CreeClass
 					}
 					else
 					{
-						if (line.contains(")"))
+						if (line.contains(")") || ( line.contains(")") && line.contains(";") ))
 						{
 							this.ajouterMethode(line);
 						}
 					}
 
-					if (line.contains(";"))
+					if (line.contains(";") && !line.contains("("))
 					{
 						this.ajouterAttribut(line);
 					}
+					
 				}
 			}
 			sc.close();
@@ -276,6 +277,7 @@ public class CreeClass
 		
 		String visibilite = sc.next();
 		boolean estStatic = false;
+		boolean estAbstract = false;
 		
 		if (!sc.hasNext()) 
 		{
@@ -285,9 +287,13 @@ public class CreeClass
 		
 		String motSuivant = sc.next();
 		
-		if (motSuivant.equals("static"))
+		if (motSuivant.equals("static") ||motSuivant.equals("abstract"))
 		{
-			estStatic = true;
+			if(motSuivant.equals("static"))
+				estStatic = true;
+			else if ( motSuivant.equals("abstract"))
+				estAbstract = true;
+
 			if (sc.hasNext())
 			{
 				motSuivant = sc.next();
