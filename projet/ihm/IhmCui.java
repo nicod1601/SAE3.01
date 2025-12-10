@@ -49,8 +49,10 @@ public class IhmCui
 				return "+";
 			case "protected":
 				return "#";
+			case "abstract":
+				return "<<abstract>>";
 			default:
-				return "~";
+				return "?";
 		}
 	}
 

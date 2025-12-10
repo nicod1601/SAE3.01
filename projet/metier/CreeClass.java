@@ -65,7 +65,7 @@ public class CreeClass
 					line = line.substring(0, line.indexOf("/*")) + line.substring( line.indexOf("*/")+2);
 				}
 
-				if (line.contains("class ") && !line.contains("("))
+				if (line.contains("class") || line.contains("interface") )
 				{
 					if(line.contains("extends") || line.contains("implements"))
 					{
@@ -92,12 +92,12 @@ public class CreeClass
 								}
 							}
 						}
+						
 						lineSc.close();
 					}
 					continue;
 				}
-
-				if (line.contains("private") || line.contains("protected")|| line.contains("public"))
+				if (line.contains("private") || line.contains("protected")|| line.contains("public") || line.contains("abstract"))
 				{
 					if(line.contains(this.nom))
 					{
