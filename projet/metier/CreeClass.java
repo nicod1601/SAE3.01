@@ -493,7 +493,8 @@ public class CreeClass
 
 	public void deplacerAttribut(Attribut att)
 	{
-			this.lstClassAttribut.add(att);
+		this.lstClassAttribut.add(att);
+		this.lstAttribut.remove(att);
 	}
 
 	public String getMere()

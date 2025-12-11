@@ -28,13 +28,14 @@ public class Multiplicite {
 			int cptLiaison      = 0;
 			int cptLiaisonAutre = 0;
 
-			for (Attribut att : lstAtt)
+			for (Attribut att : new ArrayList<Attribut>(lstAtt) )
 			{
 				// Si l'attribut pointe vers la classe courante
 				if (att.getType().contains(autreClass.getNom()) )
 				{
 					lstMultiplC.add(determinerMultiplicite(att));
 					cptLiaison++;
+					creeClass.deplacerAttribut(att);
 				}
 			}
 

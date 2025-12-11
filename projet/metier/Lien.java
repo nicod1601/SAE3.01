@@ -43,17 +43,16 @@ public class Lien
 	{
 		// Ajouter les classes que creeClass référence (liens sortants)
 		List<Attribut> lstAtt = this.creeClass.getLstAttribut();
-        for(Attribut att : new ArrayList<Attribut>(lstAtt))
-        {
-            for(CreeClass c : lstClass)
-            {
-                if(c.getNom().equals(att.getType()) && !this.lstLienAttribut.contains(c))
-                {
-                    this.lstLienAttribut.add(c);
-					this.creeClass.deplacerAttribut(att);
-                }
-            }
-        }
+		for(Attribut att : new ArrayList<Attribut>(lstAtt))
+		{
+			for(CreeClass c : lstClass)
+			{
+				if(c.getNom().equals(att.getType()) && !this.lstLienAttribut.contains(c))
+				{
+					this.lstLienAttribut.add(c);
+				}
+			}
+		}
 	}
 
 
