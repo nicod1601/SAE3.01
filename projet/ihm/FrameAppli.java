@@ -1,6 +1,7 @@
 package projet.ihm;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import javax.swing.*;
 import projet.Controleur;
 
@@ -24,9 +25,9 @@ public class FrameAppli extends JFrame
         /* Création des Composants */
         /*-------------------------*/
         this.ctrl             = ctrl;
-        this.panneauFichier   = new PanneauFichier(ctrl);
+        this.panneauFichier   = new PanneauFichier(ctrl, this);
         this.panneauMenu      = new PanneauMenu(ctrl, this);
-        this.panneauPrincipal = new PanneauPrincipal(ctrl);
+        this.panneauPrincipal = new PanneauPrincipal(ctrl, this);
 
 
         /*-------------------------*/
@@ -57,5 +58,20 @@ public class FrameAppli extends JFrame
     public void viderListe()
     {
         this.panneauFichier.viderListe();
+    }
+
+    public void selectionner(int index)
+    {
+        this.panneauPrincipal.selectionner(index);
+    }
+
+    public void selectionnerList(int index)
+    {
+        this.panneauFichier.selectionnerList(index);
+    }
+
+    public void lstSelectionner(ArrayList<Integer> lst)
+    {
+        this.panneauPrincipal.lstSelectionner(lst);
     }
 }

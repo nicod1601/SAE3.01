@@ -106,12 +106,6 @@ public class Controleur
 		return CreeClass.factoryCreeClass(chemin);
 	}
 
-	public JPanel UML(CreeClass cl)
-	{
-		return new ClassUMLPanel(cl);
-	}
-
-
 	/*╔════════════════════════╗*/
 	/*║          Main          ║*/
 	/*╚════════════════════════╝*/

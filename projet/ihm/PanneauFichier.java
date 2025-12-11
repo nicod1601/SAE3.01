@@ -6,18 +6,28 @@ import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 import projet.Controleur;
 
-public class PanneauFichier extends JPanel 
+public class PanneauFichier extends JPanel
 {
+    private static final Color COULEUR_FOND = new Color(45, 52, 54);
+    private static final Color COULEUR_LISTE = new Color(52, 73, 94);
+    private static final Color COULEUR_TEXTE = new Color(236, 240, 241);
+    private static final Color COULEUR_TEXTE_SECONDAIRE = new Color(189, 195, 199);
+    private static final Color COULEUR_SELECTION = new Color(74, 105, 189);
+    private static final Color COULEUR_HOVER = new Color(52, 152, 219);
+    private static final Color COULEUR_BORDURE = new Color(55, 66, 77);
+    
+
     private Controleur ctrl;
     private JList<String> listeFichiers;
     private DefaultListModel<String> modeleFichiers;
-    
-    public PanneauFichier(Controleur ctrl) 
+    private FrameAppli frame;
+
+    public PanneauFichier(Controleur ctrl, FrameAppli frame) 
     {
         this.ctrl = ctrl;
+        this.frame = frame;
         
         this.configurerPanneau();
         this.creerComposants();
@@ -27,8 +37,8 @@ public class PanneauFichier extends JPanel
     {
         this.setLayout(new BorderLayout());
         this.setPreferredSize(new Dimension(250, 0));
-        this.setBackground(Color.WHITE);
-        this.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, new Color(200, 200, 200)));
+        this.setBackground(COULEUR_FOND);
+        this.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, COULEUR_BORDURE));
     }
     
     private void creerComposants()
@@ -41,24 +51,32 @@ public class PanneauFichier extends JPanel
         this.listeFichiers = this.creerListeFichiers();
         
         JScrollPane scrollFichiers = new JScrollPane(listeFichiers);
-        scrollFichiers.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        scrollFichiers.getViewport().setBackground(Color.WHITE);
+        scrollFichiers.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        scrollFichiers.getViewport().setBackground(COULEUR_LISTE);
+        scrollFichiers.setBackground(COULEUR_FOND);
         
         // Ajout des composants
         this.add(lblFichiers, BorderLayout.NORTH);
         this.add(scrollFichiers, BorderLayout.CENTER);
+
+        //Activation des composants
+
+        //this.listeFichiers.addMouseListener(this);
+
     }
     
     private JLabel creerLabelEnTete()
     {
-        JLabel label = new JLabel("<html><center>Affichage des fichiers<br>" +
-                                  "qui se trouvent dans le<br>" +
-                                  "dossier qu'on a<br>" +
-                                  "ouvert</center></html>");
-        label.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        label.setBorder(new EmptyBorder(10, 10, 10, 10));
+        JLabel label = new JLabel("<html><center>📁 Fichiers chargés<br><br>" +
+                                  "<span style='font-size:10px; color:#bdc3c7;'>" +
+                                  "Fichiers du dossier<br>sélectionné" +
+                                  "</span></center></html>");
+        label.setFont(new Font("Segoe UI Emoji", Font.BOLD, 13));
+        label.setBorder(new EmptyBorder(15, 10, 15, 10));
         label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setForeground(new Color(70, 70, 70));
+        label.setForeground(COULEUR_TEXTE);
+        label.setBackground(COULEUR_FOND);
+        label.setOpaque(true);
         
         return label;
     }
@@ -69,12 +87,15 @@ public class PanneauFichier extends JPanel
         liste.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         liste.setFont(new Font("Consolas", Font.PLAIN, 12));
         liste.setBorder(new EmptyBorder(5, 5, 5, 5));
-        liste.setBackground(Color.WHITE);
-        liste.setSelectionBackground(new Color(230, 240, 255));
-        liste.setSelectionForeground(new Color(50, 50, 50));
+        liste.setBackground(COULEUR_LISTE);
+        liste.setForeground(COULEUR_TEXTE);
+        liste.setSelectionBackground(COULEUR_SELECTION);
+        liste.setSelectionForeground(Color.WHITE);
+        liste.setFixedCellHeight(28);
         
         return liste;
     }
+
     
     /**
      * Retourne le modèle de liste pour permettre au PanneauMenu d'ajouter des fichiers
@@ -122,5 +143,10 @@ public class PanneauFichier extends JPanel
             fichiers.add(this.modeleFichiers.getElementAt(i));
         }
         return fichiers;
+    }
+
+    public void selectionnerList(int index)
+    {
+        this.listeFichiers.setSelectedIndex(index);
     }
 }

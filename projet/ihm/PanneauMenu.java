@@ -6,10 +6,19 @@ import java.awt.Font;
 import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import projet.Controleur;
 
 public class PanneauMenu extends JPanel implements ActionListener
 {
+    // Palette de couleurs moderne
+    private static final Color COULEUR_FOND = new Color(45, 52, 54);
+    private static final Color COULEUR_MENU = new Color(55, 66, 77);
+    private static final Color COULEUR_TEXTE = new Color(236, 240, 241);
+    private static final Color COULEUR_HOVER = new Color(74, 105, 189);
+    private static final Color COULEUR_ACCENT = new Color(52, 152, 219);
+    private static final Color COULEUR_DANGER = new Color(231, 76, 60);
+
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JMenu editMenu;
@@ -21,7 +30,8 @@ public class PanneauMenu extends JPanel implements ActionListener
 
     public PanneauMenu(Controleur ctrl, FrameAppli frameAppli) 
     {
-        this.setLayout(new FlowLayout(FlowLayout.LEFT));
+        this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        this.setBackground(COULEUR_FOND);
         
         /*-------------------------*/
         /* Création des Composants */
@@ -46,30 +56,38 @@ public class PanneauMenu extends JPanel implements ActionListener
     private void creerMenus()
     {
         this.menuBar = new JMenuBar();
-        this.fileMenu = new JMenu("File");
-        this.editMenu = new JMenu("Edit");
-        this.quitter  = new JButton("Quitter");
+        this.fileMenu = new JMenu("  📁 File  ");
+        this.editMenu = new JMenu("  ✏️ Edit  ");
+        this.quitter  = new JButton("✖ Quitter");
 
         /* Composants File */
-        this.fileMenu.add(new JMenuItem("Open File"));
-        this.fileMenu.add(new JMenuItem("Open Folder"));
+        this.fileMenu.add(new JMenuItem("📄 Open File"));
+        this.fileMenu.add(new JMenuItem("📂 Open Folder"));
         this.fileMenu.addSeparator();
-        this.fileMenu.add(new JMenuItem("Clear List"));
+        this.fileMenu.add(new JMenuItem("🗑️ Clear List"));
+
+        /*Composants Edit */
+        
 
         this.menuBar.add(fileMenu);
         this.menuBar.add(editMenu);
+        this.menuBar.add(Box.createHorizontalGlue()); // Pousse le bouton quitter à droite
         this.menuBar.add(quitter);
     }
 
     private void appliquerStyle()
     {
         // Style de la barre de menu
-        this.menuBar.setBackground(new Color(240, 240, 245));
-        this.menuBar.setBorderPainted(true);
+        this.menuBar.setBackground(COULEUR_FOND);
+        this.menuBar.setBorder(new EmptyBorder(5, 10, 5, 10));
+        this.menuBar.setBorderPainted(false);
         
         // Style des menus
         this.stylerMenu(this.fileMenu);
         this.stylerMenu(this.editMenu);
+        
+        // Style du bouton quitter
+        this.stylerBoutonQuitter();
         
         // Style des items du menu File
         for (int i = 0; i < this.fileMenu.getItemCount(); i++) 
@@ -84,27 +102,83 @@ public class PanneauMenu extends JPanel implements ActionListener
 
     private void stylerMenu(JMenu menu)
     {
-        menu.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        menu.setForeground(new Color(50, 50, 50));
-    }
-
-    private void stylerMenuItem(JMenuItem item)
-    {
-        item.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        item.setBackground(Color.WHITE);
-        item.setForeground(new Color(50, 50, 50));
+        menu.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14));
+        menu.setForeground(COULEUR_TEXTE);
+        menu.setBackground(COULEUR_FOND);
+        menu.setOpaque(true);
+        menu.setBorder(new EmptyBorder(8, 12, 8, 12));
         
-        // Effet hover
-        item.addMouseListener(new MouseAdapter() 
+        // Effet hover sur le menu
+        menu.addMouseListener(new MouseAdapter() 
         {
             public void mouseEntered(MouseEvent e) 
             {
-                item.setBackground(new Color(230, 240, 255));
+                menu.setBackground(COULEUR_HOVER);
             }
             
             public void mouseExited(MouseEvent e) 
             {
-                item.setBackground(Color.WHITE);
+                if (!menu.isSelected())
+                {
+                    menu.setBackground(COULEUR_FOND);
+                }
+            }
+        });
+        
+        // Personnaliser le popup
+        JPopupMenu popup = menu.getPopupMenu();
+        popup.setBackground(COULEUR_MENU);
+        popup.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 10));
+        popup.setBorder(BorderFactory.createLineBorder(COULEUR_HOVER, 1));
+    }
+
+    private void stylerMenuItem(JMenuItem item)
+    {
+        item.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12));
+        item.setBackground(COULEUR_MENU);
+        item.setForeground(COULEUR_TEXTE);
+        item.setBorder(new EmptyBorder(8, 20, 8, 20));
+        item.setOpaque(true);
+        
+        // Effet hover avec animation
+        item.addMouseListener(new MouseAdapter() 
+        {
+            public void mouseEntered(MouseEvent e) 
+            {
+                item.setBackground(COULEUR_HOVER);
+                item.setForeground(Color.WHITE);
+            }
+            
+            public void mouseExited(MouseEvent e) 
+            {
+                item.setBackground(COULEUR_MENU);
+                item.setForeground(COULEUR_TEXTE);
+            }
+        });
+    }
+
+    private void stylerBoutonQuitter()
+    {
+        this.quitter.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 12));
+        this.quitter.setForeground(Color.WHITE);
+        this.quitter.setBackground(COULEUR_DANGER);
+        this.quitter.setBorder(new EmptyBorder(8, 16, 8, 16));
+        this.quitter.setFocusPainted(false);
+        this.quitter.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        this.quitter.setOpaque(true);
+        this.quitter.setBorderPainted(false);
+        
+        // Effet hover
+        this.quitter.addMouseListener(new MouseAdapter() 
+        {
+            public void mouseEntered(MouseEvent e) 
+            {
+                quitter.setBackground(new Color(192, 57, 43));
+            }
+            
+            public void mouseExited(MouseEvent e) 
+            {
+                quitter.setBackground(COULEUR_DANGER);
             }
         });
     }
@@ -126,6 +200,10 @@ public class PanneauMenu extends JPanel implements ActionListener
     public void actionPerformed(ActionEvent e) 
     {
         String command = e.getActionCommand();
+        
+        // Nettoyer la commande (enlever les emojis)
+        command = command.replaceAll("[^a-zA-Z\\s]", "").trim();
+        
         switch (command) 
         {
             case "Open File":
@@ -149,8 +227,7 @@ public class PanneauMenu extends JPanel implements ActionListener
 
     public void ouvrirFichier() 
     {
-        JFileChooser chooser = this.creerFileChooser(JFileChooser.FILES_ONLY, 
-                                                      "Sélectionner un fichier .java");
+        JFileChooser chooser = this.creerFileChooser(JFileChooser.FILES_ONLY, "Sélectionner un fichier .java");
         
         int resultat = chooser.showOpenDialog(this);
         if (resultat == JFileChooser.APPROVE_OPTION) 
@@ -161,39 +238,41 @@ public class PanneauMenu extends JPanel implements ActionListener
             if (this.estFichierJava(fichierSelectionne))
             {
                 this.frameAppli.ajouterFichier(fichierSelectionne.getName());
-                this.afficherMessageSucces("Fichier " + fichierSelectionne.getName() + 
-                                          " chargé avec succès", "Chargement du fichier");
+                this.afficherMessageSucces("Fichier " + fichierSelectionne.getName() + " chargé avec succès", "Chargement du fichier");
                 this.frameAppli.majListeClasses(false, nomFichier);
             }
             else
             {
-                this.afficherMessageErreur("Veuillez sélectionner un fichier .java", 
-                                          "Format invalide");
+                this.afficherMessageErreur("Veuillez sélectionner un fichier .java", "Format invalide");
             }
         }
     }
 
     private void ouvrirDossier() 
     {
-        JFileChooser chooser = this.creerFileChooser(JFileChooser.DIRECTORIES_ONLY, 
-                                                      "Sélectionner un dossier contenant des fichiers .java");
+        this.frameAppli.viderListe();
+
+        JFileChooser chooser = this.creerFileChooser(JFileChooser.DIRECTORIES_ONLY, "Sélectionner un dossier contenant des fichiers .java");
         
         int resultat = chooser.showOpenDialog(this);
         if (resultat == JFileChooser.APPROVE_OPTION)
         {
-            dossierOuvert = chooser.getSelectedFile();
+            this.dossierOuvert = chooser.getSelectedFile();
             chargerFichiersDossier();
-            this.ctrl.LectureRepertoire(dossierOuvert);
+            this.ctrl.LectureRepertoire(this.dossierOuvert);
             this.frameAppli.majListeClasses(true, null);
+        }
+        else //si on annule il faut remettre les anciens fichiers
+        {
+            this.chargerFichiersDossier();
         }
     }
 
-
     private void chargerFichiersDossier()
     {        
-        if (dossierOuvert != null && dossierOuvert.isDirectory())
+        if (this.dossierOuvert != null && this.dossierOuvert.isDirectory())
         {
-            File[] fichiers = dossierOuvert.listFiles();
+            File[] fichiers = this.dossierOuvert.listFiles();
             
             if (fichiers != null && fichiers.length > 0)
             {
@@ -210,13 +289,11 @@ public class PanneauMenu extends JPanel implements ActionListener
                 
                 if (compteur > 0)
                 {
-                    this.afficherMessageSucces(compteur + " fichier(s) .java trouvé(s)", 
-                                              "Chargement du dossier");
+                    this.afficherMessageSucces(compteur + " fichier(s) .java trouvé(s)", "Chargement du dossier");
                 }
                 else
                 {
-                    this.afficherMessageAvertissement("Aucun fichier .java trouvé dans ce dossier", 
-                                                     "Dossier vide");
+                    this.afficherMessageAvertissement("Aucun fichier .java trouvé dans ce dossier", "Dossier vide");
                 }
             }
             else
@@ -225,7 +302,6 @@ public class PanneauMenu extends JPanel implements ActionListener
             }
         }
     }
-
 
     private void viderListe()
     {
@@ -246,7 +322,7 @@ public class PanneauMenu extends JPanel implements ActionListener
     private JFileChooser creerFileChooser(int mode, String titre)
     {
         JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(new File("."));
+        chooser.setCurrentDirectory(new File("../data"));
         chooser.setFileSelectionMode(mode);
         chooser.setDialogTitle(titre);
         return chooser;

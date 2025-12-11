@@ -13,8 +13,7 @@ package projet.metier;
 import java.io.FileInputStream;
 import java.util.*;
 
-public class CreeClass
-{
+public class CreeClass {
 	private String nom;
 	private String type;
 	private List<Attribut> lstAttribut;
@@ -24,73 +23,69 @@ public class CreeClass
 	private List<String> interfaces = null;
 	private Lien lien;
 
-	public static CreeClass factoryCreeClass(String data)
-	{
+	private int posX;
+	private int posY;
+	private int hauteur;
+	private int largeur;
+
+	public static CreeClass factoryCreeClass(String data) {
 		if (CreeClass.verifdata(data))
 			return new CreeClass(data);
 		else
 			return null;
 	}
 
-	private CreeClass(String data)
-	{
+	private CreeClass(String data) {
+		this.posX = 0;
+		this.posY = 0;
+		this.hauteur = 0;
+		this.largeur = 0;
+
+
 		String nomComplet = new java.io.File(data).getName();
-		if (nomComplet.endsWith(".java"))
-		{
+		if (nomComplet.endsWith(".java")) {
 			this.nom = nomComplet.substring(0, nomComplet.length() - 5);
 		}
 
 		this.lstAttribut = new ArrayList<Attribut>();
 		this.lstMethode = new ArrayList<Methode>();
-		try
-		{
+		try {
 			Scanner sc = new Scanner(new FileInputStream(data), "UTF8");
-			while (sc.hasNext())
-			{
+			while (sc.hasNext()) {
 				String line = sc.nextLine();
 
 				// Si /* Sur plusieurs lignes */
 				if (line.contains("/*"))
-					while (!line.contains("*/")) 
+					while (!line.contains("*/"))
 						line = sc.nextLine();
 
-				//Si this.x   = x; //public String getX()
-				if (line.contains("//"))
-				{
+				// Si this.x = x; //public String getX()
+				if (line.contains("//")) {
 					line = line.substring(0, line.indexOf("//"));
 				}
-				
-				//Si this.x   = x;/* public String getX()*/
-				if (line.contains("/*") && line.contains("*/"))
-				{
-					line = line.substring(0, line.indexOf("/*")) + line.substring( line.indexOf("*/")+2);
+
+				// Si this.x = x;/* public String getX()*/
+				if (line.contains("/*") && line.contains("*/")) {
+					line = line.substring(0, line.indexOf("/*")) + line.substring(line.indexOf("*/") + 2);
 				}
 
-				//Si class ou interface
-				if (line.contains("class") || line.contains("interface") || line.contains("enum"))
-				{
-					if(line.contains("extends") || line.contains("implements"))
-					{
+				// Si class ou interface
+				if (line.contains("class") || line.contains("interface") || line.contains("enum")) {
+					if (line.contains("extends") || line.contains("implements")) {
 						// Utiliser Scanner pour parser la ligne
 						Scanner lineSc = new Scanner(line);
-						while (lineSc.hasNext())
-						{
+						while (lineSc.hasNext()) {
 							String mot = lineSc.next();
-							if(mot.equals("class") || mot.equals("interface") || mot.equals("enum"))
+							if (mot.equals("class") || mot.equals("interface") || mot.equals("enum"))
 								this.type = mot;
-							
-							if (mot.equals("extends") && lineSc.hasNext())
-							{
+
+							if (mot.equals("extends") && lineSc.hasNext()) {
 								this.mere = lineSc.next();
-							}
-							else if (mot.equals("implements"))
-							{
+							} else if (mot.equals("implements")) {
 								this.interfaces = new ArrayList<String>();
-								while (lineSc.hasNext())
-								{
+								while (lineSc.hasNext()) {
 									String inter = lineSc.next().replace(",", "").trim();
-									if (!inter.isEmpty())
-									{
+									if (!inter.isEmpty()) {
 										this.interfaces.add(inter);
 									}
 								}
@@ -101,47 +96,39 @@ public class CreeClass
 					continue;
 				}
 
-				//Méthode / Constructeur / Attribut / Abstract
-				if (line.contains("private") || line.contains("protected")|| line.contains("public") || line.contains("abstract"))
-				{
-					if(line.contains(this.nom))
-					{
+				// Méthode / Constructeur / Attribut / Abstract
+				if (line.contains("private") || line.contains("protected") || line.contains("public")
+						|| line.contains("abstract")) {
+					if (line.contains(this.nom)) {
 						this.ajouterConstructeur(line);
-					}
-					else
-					{
-						if (line.contains(")") || ( line.contains(")") && line.contains(";") ))
-						{
+					} else {
+						if (line.contains(")") || (line.contains(")") && line.contains(";"))) {
 							this.ajouterMethode(line);
 						}
 					}
 
-					if (line.contains(";") && !line.contains("("))
-					{
+					if (line.contains(";") && !line.contains("(")) {
 						this.ajouterAttribut(line);
 					}
-					
+
 				}
 			}
 			this.lien = new Lien(this);
-			
+
 			sc.close();
 
-		}catch (Exception e)
-		{
+		} catch (Exception e) {
 			System.out.println("\u001B[31m Erreur : le fichier spécifié ( " + data + " ) n'existe pas.\u001B[0m");
 		}
 	}
 
-	private void ajouterConstructeur(String constructeur)
-	{
+	private void ajouterConstructeur(String constructeur) {
 		constructeur = constructeur.trim();
 
 		int posOuv = constructeur.indexOf("(");
 		int posFerm = constructeur.indexOf(")");
 
-		if (posOuv == -1 || posFerm == -1) 
-		{
+		if (posOuv == -1 || posFerm == -1) {
 			System.out.println("Problème de parenthèse");
 			System.out.println(constructeur);
 			return;
@@ -150,13 +137,12 @@ public class CreeClass
 		// Parser la partie avant les parenthèses
 		String avantParenthese = constructeur.substring(0, posOuv).trim();
 		Scanner avantSc = new Scanner(avantParenthese);
-		
+
 		String visibilite = avantSc.next(); // premier mot = visibilité
 		String nom = "";
-		
+
 		// Lire jusqu'au dernier mot (le nom du constructeur)
-		while (avantSc.hasNext())
-		{
+		while (avantSc.hasNext()) {
 			nom = avantSc.next();
 		}
 		avantSc.close();
@@ -165,32 +151,27 @@ public class CreeClass
 		String paramBrut = constructeur.substring(posOuv + 1, posFerm).trim();
 		List<String[]> lstLstParamInfo = new ArrayList<>();
 
-		if (!paramBrut.isEmpty())
-		{
+		if (!paramBrut.isEmpty()) {
 			// Utiliser Scanner avec délimiteur virgule
 			Scanner paramSc = new Scanner(paramBrut);
 			paramSc.useDelimiter(",");
-			
-			while (paramSc.hasNext())
-			{
+
+			while (paramSc.hasNext()) {
 				String param = paramSc.next().trim();
-				
+
 				// Parser chaque paramètre (type nom)
 				Scanner motSc = new Scanner(param);
 				List<String> infos = new ArrayList<>();
-				
-				while (motSc.hasNext())
-				{
+
+				while (motSc.hasNext()) {
 					infos.add(motSc.next());
 				}
 				motSc.close();
-				
+
 				// Convertir en tableau pour compatibilité
-				if (infos.size() >= 2)
-				{
+				if (infos.size() >= 2) {
 					String[] tabInfo = new String[infos.size()];
-					for (int i = 0; i < infos.size(); i++)
-					{
+					for (int i = 0; i < infos.size(); i++) {
 						tabInfo[i] = infos.get(i);
 					}
 					lstLstParamInfo.add(tabInfo);
@@ -203,150 +184,128 @@ public class CreeClass
 		this.lstMethode.add(c);
 	}
 
-	private void ajouterAttribut(String attribut)
-	{
+	private void ajouterAttribut(String attribut) {
 		Scanner sc = new Scanner(attribut);
-		
-		if (!sc.hasNext()) 
-		{
+
+		if (!sc.hasNext()) {
 			sc.close();
 			return;
 		}
-		
+
 		String visibilite = sc.next();
 		boolean estStatic = false;
 		boolean estFinal = false;
-		
-		if (!sc.hasNext()) 
-		{
+
+		if (!sc.hasNext()) {
 			sc.close();
 			return;
 		}
-		
+
 		String motSuivant = sc.next();
-		
+
 		// Vérifier les modificateurs
-		if (motSuivant.equals("static"))
-		{
+		if (motSuivant.equals("static")) {
 			estStatic = true;
-			if (sc.hasNext())
-			{
+			if (sc.hasNext()) {
 				motSuivant = sc.next();
 			}
-		}
-		else if (motSuivant.equals("final"))
-		{
+		} else if (motSuivant.equals("final")) {
 			estFinal = true;
-			if (sc.hasNext())
-			{
+			if (sc.hasNext()) {
 				motSuivant = sc.next();
 			}
 		}
-		
+
 		String type = motSuivant;
-		
+
 		// Lire jusqu'au dernier mot (le nom de l'attribut)
 		String nom = "";
-		while (sc.hasNext())
-		{
+		while (sc.hasNext()) {
 			nom = sc.next();
 		}
-		
-		if (!nom.isEmpty())
-		{
+
+		if (!nom.isEmpty()) {
 			nom = nom.replace(";", "");
 			Attribut attr = new Attribut(visibilite, type, nom, estStatic, estFinal);
 			this.lstAttribut.add(attr);
 		}
-		
+
 		sc.close();
 	}
 
-	private void ajouterMethode(String methode)
-	{
+	private void ajouterMethode(String methode) {
 		Scanner sc = new Scanner(methode);
-		
-		if (!sc.hasNext()) 
-		{
+
+		if (!sc.hasNext()) {
 			sc.close();
 			return;
 		}
-		
+
 		String visibilite = sc.next();
 		boolean estStatic = false;
 		boolean estAbstract = false;
-		
-		if (!sc.hasNext()) 
-		{
+
+		if (!sc.hasNext()) {
 			sc.close();
 			return;
 		}
-		
+
 		String motSuivant = sc.next();
-		
-		if (motSuivant.equals("static") ||motSuivant.equals("abstract"))
-		{
-			if(motSuivant.equals("static"))
+
+		if (motSuivant.equals("static") || motSuivant.equals("abstract")) {
+			if (motSuivant.equals("static"))
 				estStatic = true;
-			else if ( motSuivant.equals("abstract"))
+			else if (motSuivant.equals("abstract"))
 				estAbstract = true;
 
-			if (sc.hasNext())
-			{
+			if (sc.hasNext()) {
 				motSuivant = sc.next();
 			}
 		}
-		
+
 		String type = motSuivant;
-		
+
 		// Reconstruire le reste pour trouver le nom et les paramètres
 		StringBuilder reste = new StringBuilder();
-		while (sc.hasNext())
-		{
+		while (sc.hasNext()) {
 			reste.append(sc.next()).append(" ");
 		}
 		sc.close();
-		
+
 		String resteStr = reste.toString().trim();
 		int posOuv = resteStr.indexOf("(");
 		int posFerm = resteStr.indexOf(")");
-		
-		if (posOuv == -1 || posFerm == -1)
-		{
+
+		if (posOuv == -1 || posFerm == -1) {
 			return;
 		}
-		
+
 		String nom = resteStr.substring(0, posOuv).trim();
 		String paramBrut = resteStr.substring(posOuv + 1, posFerm).trim();
-		
+
 		List<String[]> lstLstParamInfo = new ArrayList<>();
-		
-		if (!paramBrut.isEmpty())
-		{
+
+		if (!paramBrut.isEmpty()) {
 			// Utiliser Scanner avec délimiteur virgule
 			Scanner paramSc = new Scanner(paramBrut);
 			paramSc.useDelimiter(",");
-			
-			while (paramSc.hasNext())
-			{
+
+			while (paramSc.hasNext()) {
 				String param = paramSc.next().trim();
-				
+
 				// Parser chaque paramètre (type nom)
 				Scanner motSc = new Scanner(param);
 				List<String> infos = new ArrayList<>();
-				
-				while (motSc.hasNext())
-				{
+
+				while (motSc.hasNext()) {
 					infos.add(motSc.next());
 				}
 				motSc.close();
-				
+
 				// Convertir en tableau pour compatibilité
-				if (infos.size() >= 2)
-				{
+				if (infos.size() >= 2) {
 					String[] tabInfo = new String[infos.size()];
-					for (int i = 0; i < infos.size(); i++)
-					{
+					for (int i = 0; i < infos.size(); i++) {
 						tabInfo[i] = infos.get(i);
 					}
 					lstLstParamInfo.add(tabInfo);
@@ -354,31 +313,27 @@ public class CreeClass
 			}
 			paramSc.close();
 		}
-		
+
 		Methode meth = new Methode(visibilite, type, nom, estStatic, lstLstParamInfo);
 		this.lstMethode.add(meth);
 	}
 
-	public void creelien(List<CreeClass> lstClass)
-	{
+	public void creelien(List<CreeClass> lstClass) {
 		this.lien.initialiser(lstClass);
 	}
-	public void creerMultiplicite(List<CreeClass> lstClass)
-	{
+
+	public void creerMultiplicite(List<CreeClass> lstClass) {
 		this.lien.creerMutiplisite(lstClass);
 	}
 
-	private static boolean verifdata(String data)
-	{
-		try
-		{
-			if (data.substring(data.length()-5).equals(".java"))
-			{
+	private static boolean verifdata(String data) {
+		try {
+			if (data.substring(data.length() - 5).equals(".java")) {
 				return true;
 			}
-		} catch (Exception e)
-		{
-			System.out.println("\u001B[31m Erreur : le fichier spécifié ( " + data + " ) n'existe pas ou n'est pas un fichier .Java.\u001B[0m");
+		} catch (Exception e) {
+			System.out.println("\u001B[31m Erreur : le fichier spécifié ( " + data
+					+ " ) n'existe pas ou n'est pas un fichier .Java.\u001B[0m");
 		}
 		return false;
 	}
@@ -395,23 +350,59 @@ public class CreeClass
 		return lstMethode;
 	}
 
-	public void supprimerAttribut(Attribut att)
-	{
+	public void supprimerAttribut(Attribut att) {
 		this.lstAttribut.remove(att);
 	}
 
-	public String getMere()
-	{
+	public String getMere() {
 		return this.mere;
 	}
 
-	public List<String> getInterfaces()
-	{
+	public List<String> getInterfaces() {
 		return this.interfaces;
-	} 
+	}
 
-	public Lien getLien()
-	{
+	public Lien getLien() {
 		return this.lien;
+	}
+
+	public int getPosX()
+	{
+		return this.posX;
+	}
+
+	public int getPosY()
+	{
+		return this.posY;
+	}
+
+	public int getLargeur()
+	{
+		return this.largeur;
+	}
+
+	public int getHauteur()
+	{
+		return this.hauteur;
+	}
+
+	public void setPosX(int x)
+	{
+		this.posX = x;
+	}
+
+	public void setPosY(int y)
+	{
+		this.posY = y;
+	}
+
+	public void setHauteur(int h)
+	{
+		this.hauteur = h;
+	}
+
+	public void setLargeur(int l)
+	{
+		this.largeur = l;
 	}
 }
