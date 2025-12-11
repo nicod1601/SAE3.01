@@ -11,14 +11,16 @@ public class Methode
 	private String nom;
 
 	private boolean estStatic;
+	private boolean estAbstract;
 	private List<String[]> lstParametres;
 
-	public Methode(String visibilite, String type, String nom, boolean estStatic, List<String[]> lstParametres)
+	public Methode(String visibilite, String type, String nom, boolean estStatic,boolean estAbstract, List<String[]> lstParametres)
 	{
 		this.visibilite   = visibilite;
 		this.type         = type;
 		this.nom          = nom;
 		this.estStatic    = estStatic;
+		this.estAbstract  = estAbstract;
 		
 		this.lstParametres = lstParametres;
 	}
@@ -41,6 +43,11 @@ public class Methode
 	public boolean isEstStatic()
 	{
 		return this.estStatic;
+	}
+
+	public boolean estAbstract()
+	{
+		return this.estAbstract;
 	}
 
 	public List<String[]> getLstParametres()
