@@ -17,7 +17,9 @@ public class CreeClass {
 	private String nom;
 	private String type;
 	private List<Attribut> lstAttribut;
+	private List<Attribut> lstClassAttribut;
 	private List<Methode> lstMethode;
+
 
 	private String mere = null;
 	private List<String> interfaces = null;
@@ -41,7 +43,6 @@ public class CreeClass {
 		this.hauteur = 0;
 		this.largeur = 0;
 
-
 		String nomComplet = new java.io.File(data).getName();
 		if (nomComplet.endsWith(".java")) {
 			this.nom = nomComplet.substring(0, nomComplet.length() - 5);
@@ -49,6 +50,7 @@ public class CreeClass {
 
 		this.lstAttribut = new ArrayList<Attribut>();
 		this.lstMethode = new ArrayList<Methode>();
+		this.lstClassAttribut = new ArrayList<Attribut>();
 		try {
 			Scanner sc = new Scanner(new FileInputStream(data), "UTF8");
 			while (sc.hasNext()) {
@@ -350,7 +352,8 @@ public class CreeClass {
 		return lstMethode;
 	}
 
-	public void supprimerAttribut(Attribut att) {
+	public void deplacerAttribut(Attribut att) {
+		this.lstClassAttribut.add(att);
 		this.lstAttribut.remove(att);
 	}
 

@@ -163,13 +163,14 @@ public class Lien
 
 			List<String> lstMultipl = new ArrayList<String>();
 
-			for (Attribut att : lstAtt)
+			for (Attribut att : new ArrayList<Attribut>(lstAtt))
 			{
 				// Si l'attribut pointe vers la classe courante
 				if (att.getType().contains(autreClass.getNom()))
 				{
 					lstMultipl.add(determinerMultiplicite(att));
 					cptLiaison ++;
+					this.creeClass.deplacerAttribut(att);
 				}
 			}
 
