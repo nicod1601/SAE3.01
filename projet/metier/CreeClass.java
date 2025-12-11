@@ -30,7 +30,13 @@ public class CreeClass
 	private int posY;
 	private int hauteur;
 	private int largeur;
-
+	/**
+	 * Factory qui crée des objets {@link CreeClass}.
+	 * <p>
+	 * Ce pattern permet d'instancier différentes implémentations
+	 * sans exposer leur logique de création.
+	 * </p>
+	 */
 	public static CreeClass factoryCreeClass(String data)
 	{
 		if (CreeClass.verifdata(data))
@@ -39,6 +45,11 @@ public class CreeClass
 			return null;
 	}
 
+	/**
+     * Crée d'une nouvelle CreeClass.
+     *
+     * @param data     le nom du fichier qu'on vas traitee
+     */
 	private CreeClass(String data)
 	{
 		this.posX = 0;
@@ -166,6 +177,13 @@ public class CreeClass
 		}
 	}
 
+	/**
+	 * ajoute le constructeur dans lstMethodes
+	 *
+	 * @param constructeur la ligne du constructeur
+	 * @return void
+	 * @throws NomException Problème de parenthèse
+	 */
 	private void ajouterConstructeur(String constructeur)
 	{
 		constructeur = constructeur.trim();
@@ -195,17 +213,30 @@ public class CreeClass
 		// Parser les paramètres
 		String paramBrut = constructeur.substring(posOuv + 1, posFerm).trim();
 		List<String[]> lstLstParamInfo = new ArrayList<>();
-
+		String[] tabInfo = null;
 		if (!paramBrut.isEmpty())
 		{
-			String[] tabInfo = paramBrut.split(",");
+			Scanner sc = new Scanner(paramBrut);
+			sc.useDelimiter(",");
+			while (sc.hasNext())
+			{
+				String sh= sc.next().trim();
+				tabInfo = sh.split(" ");
+			}
 			lstLstParamInfo.add(tabInfo);
+			sc.close();
 		}
 
 		Methode c = new Methode(visibilite, null, nom, false,false, lstLstParamInfo);
 		this.lstMethode.add(c);
 	}
 
+	/**
+	 * ajoute l'Attribut dans lstAttribut.
+	 *
+	 * @param attribut ligne de l'attribut
+	 * @return void
+	 */
 	private void ajouterAttribut(String attribut)
 	{
 		Scanner sc = new Scanner(attribut);
@@ -260,6 +291,12 @@ public class CreeClass
 		sc.close();
 	}
 
+	/**
+	 * ajoute la Methode dans lstMethodes
+	 *
+	 * @param methode ligne de la Methode
+	 * @return void
+	 */
 	private void ajouterMethode(String methode)
 	{
 		Scanner sc = new Scanner(methode);
@@ -330,17 +367,31 @@ public class CreeClass
 		String paramBrut = resteStr.substring(posOuv + 1, posFerm).trim();
 
 		List<String[]> lstLstParamInfo = new ArrayList<>();
-
+		String[] tabInfo = null;
 		if (!paramBrut.isEmpty())
 		{
-			String[] tabInfo = paramBrut.split(",");
+			sc = new Scanner(paramBrut);
+			sc.useDelimiter(",");
+			while (sc.hasNext())
+			{
+				String sh= sc.next().trim();
+				tabInfo = sh.split(" ");
+			}
 			lstLstParamInfo.add(tabInfo);
+			sc.close();
 		}
 
 		Methode meth = new Methode(visibilite, type, nom, estStatic,estAbstract, lstLstParamInfo);
 		this.lstMethode.add(meth);
 	}
 
+	/**
+	 * ça ajoute le constructeur et ces methode cacher dans lstMethodes
+	 * et ajoute tous ces attribut dans lstAttribut
+	 *
+	 * @param record ligne de la record
+	 * @return void
+	 */
 	private void creeRecord(String record)
 	{
 		record = record.trim();
@@ -357,19 +408,25 @@ public class CreeClass
 		String paramBrut = record.substring(posOuv + 1, posFerm).trim();
 		List<String[]> lstLstParamInfo = new ArrayList<>();
 
+		String[] tabInfo = null;
 		if (!paramBrut.isEmpty())
 		{
-			String[] tabInfo = paramBrut.split(",");
+			Scanner sc = new Scanner(paramBrut);
+			sc.useDelimiter(",");
+			while (sc.hasNext())
+			{
+				String sh= sc.next().trim();
+				tabInfo = sh.split(" ");
+			}
 			lstLstParamInfo.add(tabInfo);
+			sc.close();
 		}
-
-		//------------------------------------------------------
 		//cree constructeur
 		this.lstMethode.add(new Methode("public",null,this.nom,false,false,lstLstParamInfo) );
 		// cree les attribut
-		for (String[] tabInfo : lstLstParamInfo)
+		for (String[] sh : lstLstParamInfo)
 		{
-			this.lstAttribut.add(new Attribut("private",tabInfo[0],tabInfo[1],false,false) );
+			this.lstAttribut.add(new Attribut("private",sh[0],sh[1],false,false) );
 		}
 		// crée les getter
 		for (Attribut att : lstAttribut)
