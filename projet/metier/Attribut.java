@@ -1,3 +1,7 @@
+/**
+ * Cette classe représente une Attribut.
+ * Elle contient les informations de base et quelques utilitaires.
+ */
 package projet.metier;
 
 public class Attribut
@@ -9,6 +13,15 @@ public class Attribut
 	private boolean estStatic;
 	private boolean estFinal;
 
+	/**
+     * Crée d'une nouvelle methode.
+     *
+     * @param visibilite     la visibilite
+	 * @param type           son type
+	 * @param nom           son nom
+	 * @param estStatic     savoir si elle est static
+	 * @param estFinal   savoir si c'est une constante 
+     */
 	public Attribut(String visibilite, String type, String nom, boolean estStatic, boolean estFinal)
 	{
 		this.visibilite = visibilite;
@@ -18,22 +31,53 @@ public class Attribut
 		this.estFinal = estFinal;
 	}
 
+	/**
+	 * Retourne la visibilite.
+	 *
+	 * @return la visibilite
+	 */
 	public String getVisibilite()
 	{
 		return visibilite;
 	}
 
-	public String getType() {return type;}
+	/**
+	 * Retourne la type.
+	 *
+	 * @return la type
+	 */
+	public String getType()
+	{
+		return type;
+	}
 
-	public String getNom() {
+	/**
+	 * Retourne le nom.
+	 *
+	 * @return le nom
+	 */
+	public String getNom()
+	{
 		return nom;
 	}
 
-	public boolean isEstStatic() {
+	/**
+	 * Retourne vrai si Static.
+	 *
+	 * @return un boolean
+	 */
+	public boolean isEstStatic()
+	{
 		return estStatic;
 	}
 
-	public boolean isEstFinal() {
+	/**
+	 * Retourne vrai si final.
+	 *
+	 * @return un boolean
+	 */
+	public boolean isEstFinal()
+	{
 		return estFinal;
 	}
 
