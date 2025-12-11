@@ -4,8 +4,10 @@ import java.util.List;
 
 public class Disque  extends Rond
 {
+	private Point[]	    points;
+	private Point       reponsable;
 	private Point       centre;
-	private Rond        decentre;
+	
 	
 	public Disque(Point centre, double rayon)
 	{

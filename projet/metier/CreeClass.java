@@ -25,6 +25,7 @@ public class CreeClass
 	private String mere = null;
 	private List<String> interfaces = null;
 	private Lien lien;
+	private Multiplicite multi;
 
 	private int posX;
 	private int posY;
@@ -65,6 +66,7 @@ public class CreeClass
 
 		this.lstAttribut      = new ArrayList<Attribut>();
 		this.lstMethode       = new ArrayList<Methode>();
+		this.lstClassAttribut = new ArrayList<Attribut>();
 		this.lstClassAttribut = new ArrayList<Attribut>();
 		try
 		{
@@ -168,6 +170,8 @@ public class CreeClass
 				}
 			}
 			this.lien = new Lien(this);
+			this.multi = new Multiplicite();
+			
 			sc.close();
 
 		}
@@ -447,7 +451,7 @@ public class CreeClass
 
 	public void creerMultiplicite(List<CreeClass> lstClass)
 	{
-		this.lien.creerMutiplisite(lstClass);
+		this.multi.creerMutiplisite(this, lstClass);
 	}
 
 	private static boolean verifdata(String data)
@@ -489,8 +493,7 @@ public class CreeClass
 
 	public void deplacerAttribut(Attribut att)
 	{
-		this.lstClassAttribut.add(att);
-		this.lstAttribut.remove(att);
+			this.lstClassAttribut.add(att);
 	}
 
 	public String getMere()
@@ -506,6 +509,11 @@ public class CreeClass
 	public Lien getLien()
 	{
 		return this.lien;
+	}
+
+	public Multiplicite getMultiplicite()
+	{
+		return this.multi;
 	}
 
 	public int getPosX()

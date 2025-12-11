@@ -4,6 +4,7 @@ metier/CreeClass.java
 metier/LectureRepertoire.java
 metier/Lien.java
 metier/ClassUMLPanel.java
+metier/Multiplicite.java
 
 ihm/IhmCui.java
 ihm/FrameAppli.java

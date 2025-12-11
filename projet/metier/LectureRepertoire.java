@@ -37,16 +37,17 @@ public class LectureRepertoire
 	
 	public void creeLien()
 	{
-		for(int cpt2 = 0; cpt2 < this.lstClass.size(); cpt2++ )
+		for(int cpt = 0; cpt < this.lstClass.size(); cpt++ )
 		{
-			this.lstClass.get(cpt2).creelien(this.lstClass);
+			this.lstClass.get(cpt).creelien(this.lstClass);
 		}
 	}
 	public void creerMultiplicite()
 	{
-		for(int cpt2 = 0; cpt2 < this.lstClass.size(); cpt2++ )
+		for(int cpt = 0; cpt < this.lstClass.size(); cpt++ )
 		{
-			this.lstClass.get(cpt2).creerMultiplicite(this.lstClass);
+			System.out.println( this.lstClass.get(cpt).getNom() ); //dabug
+			this.lstClass.get(cpt).creerMultiplicite(this.lstClass);
 		}
 	}
 	

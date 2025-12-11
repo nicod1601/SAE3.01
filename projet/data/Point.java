@@ -5,9 +5,11 @@ public class Point
 /*╔════════════════════════╗*/
 /*║       Attribut         ║*/
 /*╚════════════════════════╝*/
+
 	private String nom;//Nom du Point
 	private int x;
 	private int y;
+	private Disque[] lstDisqueAssocies;
 
 /*╔════════════════════════╗*/
 /*║      Constructeur      ║*/

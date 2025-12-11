@@ -1,5 +1,7 @@
 package projet.ihm;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import projet.Controleur;
@@ -115,23 +117,34 @@ public class IhmCui
 
 		String res = "";
 		String nomClass = ctrl.getNoms().get(id); 
+		String typeClass = ctrl.getLstClass().get(id).getType();
+		//System.out.println(classCourante);
 
-		res += "------------------------------------------------\n";
+		res += "-------------------------------------------------------\n";
 		int centre = (48 + nomClass.length()) / 2;
-		res += String.format("%" + centre + "s\n", nomClass);
-		res += "------------------------------------------------\n";
+		res += String.format("%" + centre + "s", nomClass);
+		if( typeClass.equals("abstract"))
+			res += "  <<abstract>>";
+		else if ( typeClass.equals("interface") )
+			res += "  <<interface>>";
+		else if ( typeClass.equals("record"))
+			res += "  <<record>>";
+		res += "\n";
+		res += "-------------------------------------------------------\n";
 
-		// Affichage des attributs
-		for (Attribut attribut : attributs)
+		if(!attributs.isEmpty())
 		{
-			String symbole = this.replaceVisibilite(attribut.getVisibilite());
+			// Affichage des attributs
+			for (Attribut attribut : attributs)
+			{
+				String symbole = this.replaceVisibilite(attribut.getVisibilite());
 
-			res += String.format("%s %s : %s\n", symbole, attribut.getNom(), attribut.getType());
+				res += String.format("%s %s : %s\n", symbole, attribut.getNom(), attribut.getType());
+			}
+
+			// Séparateur entre attributs et méthodes
+			res += "-------------------------------------------------------\n";
 		}
-
-		// Séparateur entre attributs et méthodes
-		res += "------------------------------------------------\n";
-
 		// Affichage des méthodes
 		for (Methode methode : methodes)
 		{
@@ -165,10 +178,14 @@ public class IhmCui
 				signature += String.format("%"+ longeur +"s : %-5s", "", methode.getType());
 			}
 
+			//Ajout ou non de <<abstract>>
+			if(methode.estAbstract())
+				signature += "  <<abstract>>";
+
 			res += signature + "\n";
 		}
 
-		res += "------------------------------------------------\n";
+		res += "-------------------------------------------------------\n";
 
 		return res;
 	}
@@ -186,12 +203,15 @@ public class IhmCui
 	public void affichageNiv3()
 	{
 		// reprendre la liste des classes qui se trouvent dans le répertoire
-		List<CreeClass> lstClass = this.ctrl.getLstClass();
+		List<CreeClass> lstClass              = this.ctrl.getLstClass            ();
 
-		String strLiens         = "";
+		List<List<List<String>>> associations = new ArrayList<List<List<String>>>();
 
-		int    id               = 0;
-		int    cpt              = 1;
+
+		String strLiens                       = "";
+
+		int    id                             = 0;
+		int    cpt                            = 1;
 
 		/* création des classes */
 		for(CreeClass c : lstClass)
@@ -199,41 +219,80 @@ public class IhmCui
 			List<Methode>  methodes  = c.getLstMethode ();
 			List<Attribut> attributs = c.getLstAttribut();
 
-			Lien   lien       = c.getLien();
+			Multiplicite   multiC       = c.getMultiplicite();
 
-			Map<CreeClass, List<String>> mapMultiplC = lien.getMapMultiplicites();
+			// Class : [0..* , 1..1, ...]
+			Map<CreeClass, List<List<String>>> mapMultiplC = multiC.getMapMultiplicites();
 
 			
 			System.out.println(structAffichageNiv2Niv3(attributs, methodes, id++));
-
-			//Exemple : Association 1 : unidirectionnelle de Disque(0..*) vers Point(1..1) 
 			if (mapMultiplC != null)
 			{
-				for (CreeClass clef : mapMultiplC.keySet())
+				for (CreeClass c2 : mapMultiplC.keySet())
 				{
-					for (String multC : mapMultiplC.get(clef))
+					for (List<String> multi : mapMultiplC.get(c2))
 					{
-						Map<CreeClass, List<String>> mapMultiplClef = clef.getLien().getMapMultiplicites();
-						
-						if (mapMultiplClef != null && mapMultiplClef.get(c) != null)
+						if (!multi.isEmpty())
 						{
-							for (String multClef : mapMultiplClef.get(c))
-								strLiens += String.format(	"Association %d : %s de %s(%s) vers %s(%s)\n", 
-															cpt++,
-															"\"Unidirectionnelle\"", 
-															c.getNom().trim(), multC,
-															clef.getNom().trim(), multClef);
+							List<String> lstClassMultiC = new ArrayList<>();
+							lstClassMultiC.add(c.getNom());
+							lstClassMultiC.add(multi.get(0));
+
+							List<String> lstClassMultiClef = new ArrayList<>();
+							lstClassMultiClef.add(c2.getNom());
+							lstClassMultiClef.add(multi.get(1));
+
+							if (!multi.get(0).equals("0..*") && verfiDoublon(lstClassMultiC, lstClassMultiClef, associations))
+							{
+								strLiens += String.format("Association %d : %s de %s(%s) vers %s(%s)\n", 
+																				cpt++,
+																				multi.get(0).equals("1..*") && multi.get(1).equals("1..*") ? "Bidirectionnel" : "Unidirectionnelle", 
+																				c.getNom().trim(), multi.get(0),
+																				c2.getNom().trim(), multi.get(1));
+
+								List<List<String>> classMuLti         = new ArrayList<List<String>>      ();
+										
+								classMuLti.add(lstClassMultiC);
+								classMuLti.add(lstClassMultiClef);
+
+								associations.add(classMuLti);
+							}
 						}
 					}
-
-					
 				}
 			}
 		}
 		System.out.println(strLiens);
 	}
 
+	private boolean verfiDoublon(List<String> lstClassMultiC, List<String> lstCassMultiClef, List<List<List<String>>> association)
+    {
+        if (association != null && association.isEmpty()) { return true; }
 
+
+         // l = [Disque; 1..], [[Point; 1..1]]
+        //     [[     0     ], [      1     ]]
+        //     [[ 0   ;  1  ], [  0   ;   1 ]]
+        //
+        // lstCassMultiC          = [Point ]; [1..1]
+        // lstCassMultiClef       = [Disque]; [1..]
+
+
+        for (List<List<String>> l : association)
+        {
+                //B -> A
+            if (    (l.get(0).get(0).equals(lstCassMultiClef.get(0)) /*Disque*/&& 
+                     l.get(0).get(1).equals(lstCassMultiClef.get(1)) /* 1..* */  ) && 
+                    (l.get(1).get(0).equals(lstClassMultiC  .get(0)) /*Point */&& 
+                     l.get(1).get(1).equals(lstClassMultiC  .get(1)) /*1..1  */  )   )
+
+            {
+                return false;
+            }
+        }
+        return true; 
+    }
+	
 	public void affichageNiv4()
 	{
 		String          heritage = "";
