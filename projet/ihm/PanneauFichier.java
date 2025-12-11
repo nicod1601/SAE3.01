@@ -54,6 +54,7 @@ public class PanneauFichier extends JPanel
         scrollFichiers.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         scrollFichiers.getViewport().setBackground(COULEUR_LISTE);
         scrollFichiers.setBackground(COULEUR_FOND);
+        this.listeFichiers.setEnabled(false);
         
         // Ajout des composants
         this.add(lblFichiers, BorderLayout.NORTH);
@@ -147,6 +148,14 @@ public class PanneauFichier extends JPanel
 
     public void selectionnerList(int index)
     {
-        this.listeFichiers.setSelectedIndex(index);
+        if(index == -1)
+        {
+            this.listeFichiers.clearSelection();
+        }
+        else
+        {
+            this.listeFichiers.setSelectedIndex(index);
+        }
+
     }
 }

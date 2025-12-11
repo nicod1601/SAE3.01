@@ -1,9 +1,12 @@
 package projet.ihm;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -45,6 +48,9 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
     private double zoom = 1.0;
     private double offsetX = 0;
     private double offsetY = 0;
+
+    private ArrayList<Integer[]> lstCordFleche;
+    private int indexFlecheSelec;
     
 
     public PanneauPrincipal(Controleur ctrl, FrameAppli frame) 
@@ -54,13 +60,18 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
         this.frame = frame;
         this.lstClass = new ArrayList<>();
         this.indexSelectionner = -1;
+        this.indexFlecheSelec  = -1;
         this.sourisX = 0;
         this.sourisY = 0;
         this.inClass = false;
 
+        this.lstCordFleche = new ArrayList<>();
+        this.indexFlecheSelec = -1;
+
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
         this.addMouseWheelListener(this);
+
     }
 
     public void majListeClasses(boolean dossier, String nomFichier)
@@ -106,12 +117,14 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
         this.offsetX = 0;
         this.offsetY = 0;
         this.zoom = 1.0;
+        this.lstCordFleche.clear();
         this.repaint();
     }
 
     protected void paintComponent(Graphics g) 
     {
         super.paintComponent(g);
+        this.lstCordFleche.clear();
         
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -347,13 +360,176 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
             }
             
         }
+
+        for(CreeClass cl1 : this.lstClass)
+        {
+            int xDepFleche = cl1.getPosX();
+            int yDepFleche = cl1.getPosY() + cl1.getHauteur() / 2;
+
+            for(CreeClass cl2 : cl1.getLien().getLstLienAttribut())
+            {
+                int xFinFleche = cl2.getPosX();
+                int yFinFleche = cl2.getPosY() + cl2.getHauteur() / 2;
+
+                int dx = xFinFleche - xDepFleche;
+                int dy = yFinFleche - yDepFleche;
+
+                if(Math.abs(dx) > Math.abs(dy))
+                {
+                    if (dx > 0) 
+                    {
+                        // cl2 est à droite de cl1
+                        xDepFleche = cl1.getPosX() + cl1.getLargeur();
+                        xFinFleche = cl2.getPosX();
+                    } 
+                    else 
+                    {
+                        // cl2 est à gauche de cl1
+                        xDepFleche = cl1.getPosX();
+                        xFinFleche = cl2.getPosX() + cl2.getLargeur();
+                    }
+                }
+                /*else
+                {
+                    if(dy > 0)
+                    {
+                        yDepFleche = cl1.getPosX() + cl1.getHauteur();
+                        yFinFleche = cl2.getPosX();
+                    } 
+                    else 
+                    {
+                        yDepFleche = cl1.getPosX();
+                        yFinFleche = cl2.getPosX() + cl2.getHauteur();
+                    }
+                }*/
+
+                g2.setColor(GRIS);
+                g2.drawLine(xDepFleche, yDepFleche, xFinFleche, yFinFleche);
+
+                Integer[] tabInfo = {xFinFleche, yFinFleche};
+                this.lstCordFleche.add(tabInfo);
+                
+
+                int taille = 10;
+
+                double angle = Math.atan2(yFinFleche -yDepFleche, xFinFleche - xDepFleche);
+
+                int xP1 = (int) (xFinFleche - taille * Math.cos(angle - Math.PI / 6));
+                int yP1 = (int) (yFinFleche - taille * Math.sin(angle - Math.PI / 6));
+
+                int xP2 = (int) (xFinFleche - taille * Math.cos(angle + Math.PI / 6));
+                int yP2 = (int) (yFinFleche - taille * Math.sin(angle + Math.PI / 6));
+
+                g2.drawLine(xFinFleche, yFinFleche, xP1, yP1);
+                g2.drawLine(xFinFleche, yFinFleche, xP2, yP2);
+                g2.setColor(NOIR);
+            }
+
+            
+
+            for(CreeClass cl3 : cl1.getLien().getLstLienInterface())
+            {
+                int xFin = cl3.getPosX();
+                int yFin = cl3.getPosY();
+
+                Integer[] tabInfo = {xFin, yFin};
+                this.lstCordFleche.add(tabInfo);
+
+                float[] pattern = {6f, 6f};
+                g2.setStroke(new BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1f, pattern, 0f));
+                g2.setColor(NOIR);
+
+                g2.setColor(ROUGE);
+                g2.drawLine(xDepFleche, yDepFleche, xFin, yFin);
+                
+
+                int t = 10;
+
+                g2.drawLine(xFin, yFin, xFin - t, yFin - t);
+                g2.drawLine(xFin, yFin, xFin - t, yFin + t);
+                g2.setColor(NOIR);
+            }
+
+            for(CreeClass cl4 : cl1.getLien().getLstLienHeritage())
+            {
+                int xFin = cl4.getPosX();
+                int yFin = cl4.getPosY() + cl4.getHauteur() / 2;
+
+                Integer[] tabInfo = {xFin, yFin};
+                this.lstCordFleche.add(tabInfo);
+
+                int dx = xFin - xDepFleche;
+                int dy = yFin - yDepFleche;
+
+                if(Math.abs(dx) > Math.abs(dy))
+                {
+                    if (dx > 0) 
+                    {
+                        // cl2 est à droite de cl1
+                        xDepFleche = cl1.getPosX() + cl1.getLargeur();
+                        xFin = cl4.getPosX();
+                    } 
+                    else 
+                    {
+                        // cl2 est à gauche de cl1
+                        xDepFleche = cl1.getPosX();
+                        xFin = cl4.getPosX() + cl4.getLargeur();
+                    }
+                }
+
+                g2.setColor(CYAN);
+                g2.drawLine(xDepFleche, yDepFleche, xFin, yFin);
+                
+
+                int taille = 10;
+
+                double angle = Math.atan2(yFin -yDepFleche, xFin - xDepFleche);
+
+                int xP1 = (int) (xFin - taille * Math.cos(angle - Math.PI / 6));
+                int yP1 = (int) (yFin - taille * Math.sin(angle - Math.PI / 6));
+
+                int xP2 = (int) (xFin - taille * Math.cos(angle + Math.PI / 6));
+                int yP2 = (int) (yFin - taille * Math.sin(angle + Math.PI / 6));
+
+                int[] xPoints = {xFin, xP1, xP2};
+                int[] yPoints = {yFin, yP1, yP2};
+                
+                g2.fillPolygon(xPoints, yPoints, 3);
+                g2.setColor(NOIR);
+            }
+        }
         // Restauration transform
         g2.setTransform(old);
     }
 
+
     public void mouseClicked(MouseEvent e)
     {
         this.inClass = false;
+        double realX = (e.getX() - offsetX) / zoom ;
+        double realY = (e.getY() - offsetY) / zoom ;
+
+        int tolerance = 5;
+        
+        for(int cpt = 0; cpt < this.lstCordFleche.size(); cpt++) 
+        {
+            Integer[] tabInfo = this.lstCordFleche.get(cpt);
+            
+            int x = tabInfo[0];
+            int y = tabInfo[1];
+            
+            // Calcul de la distance entre le clic et la pointe de la flèche
+            double distance = Math.sqrt(Math.pow(realX - x, 2) + Math.pow(realY - y, 2));
+            
+            // CORRECTION : au lieu de if (realX >= x && realX <= x ...)
+            if (distance <= tolerance)
+            {
+                System.out.println("Flèche cliquée à la position (" + x + ", " + y + ")");
+                System.out.println("Index de la flèche : " + cpt);
+                this.indexFlecheSelec = cpt;
+                return;
+            }
+        }
 
         for(int cpt = 0; cpt < this.lstClass.size(); cpt++)
         {
@@ -364,14 +540,17 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
             int w = c.getLargeur();
             int h = c.getHauteur();
 
-            double realX = (e.getX() - offsetX) / zoom ;
-            double realY = (e.getY() - offsetY) / zoom ;
+
 
             if (realX >= x && realX <= x + w && realY >= y && realY <= y + h)
             {
                 this.indexSelectionner = cpt;
                 this.frame.selectionnerList(this.indexSelectionner);
                 break;
+            }
+            else
+            {
+                this.indexSelectionner = -1;
             }
         }
         this.repaint();
@@ -422,6 +601,22 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
             this.lstClass.get(this.indexSelectionner).setPosX(newX);
             this.lstClass.get(this.indexSelectionner).setPosY(newY);
             repaint();
+        }
+
+        if(this.indexFlecheSelec >= 0)
+        {
+            double realX = (e.getX() - offsetX) / zoom ;
+            double realY = (e.getY() - offsetY) / zoom ;
+
+            Integer tabInfo[] = this.lstCordFleche.get(this.indexFlecheSelec);
+            int x = tabInfo[0];
+            int y = tabInfo[1];
+
+
+            int newX = (int)(realX - x);
+            int newY = (int)(realY - y);
+
+            
         }
     }
 
