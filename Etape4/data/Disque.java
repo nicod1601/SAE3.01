@@ -1,12 +1,17 @@
-package projet.data;
+package data;
 
-import java.util.List;
-
-public class Disque  extends Rond
+public class Disque  extends Rond implements ISurface
 {
-	private Point[]	    points;
-	private Point       reponsable;
-	private Point       centre;
+	private static int       autoIncre;
+	private static final int MAXLENGTH = 10;
+
+	private final String     NOM       = "NOM";
+
+
+
+	private Point[]          tabPoints;
+	private Point            reponsable;
+	private Point            centre;
 	
 	
 	public Disque(Point centre, double rayon)
@@ -40,6 +45,7 @@ public class Disque  extends Rond
 		return centre;
 	}
 
+	@Override
 	public double calculerSurface()
 	{
 		return Math.PI * Math.pow(super.getRayon(), 2);

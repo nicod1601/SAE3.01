@@ -1,23 +1,50 @@
-package projet.metier;
+package src.metier;
 
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Classe Lien
+ * 
+ * Cette classe est responsable de l'établissement et de la gestion des liens entre les classes
+ * dans le contexte de la rétro-conception UML. Elle identifie les relations d'attributs,
+ * d'héritage et d'implémentation d'interfaces entre les classes Java analysées.
+ * 
+ * @author Équipe 3 SAE 3.01
+ * @version 1.0
+ */
 public class Lien
 {
 	/*╔════════════════════════╗*/
 	/*║       Attribut         ║*/
 	/*╚════════════════════════╝*/
+	
+	/** Liste des classes liées par attributs (classes référencées via les attributs de la classe courante) */
 	private List<CreeClass>        lstLienAttribut;
+	
+	/** Liste des classes liées par héritage (classes mères) */
 	private List<CreeClass>        lstLienHeritage;
+	
+	/** Liste des classes liées par interfaces (interfaces implémentées) */
 	private List<CreeClass>        lstLienInterface;
+	
+	/** Référence à l'objet CreeClass représentant la classe courante */
 	private CreeClass              creeClass;
 
 	/*╔════════════════════════╗*/
 	/*║     Constructeur       ║*/
 	/*╚════════════════════════╝*/
+	
+	/**
+	 * Constructeur de la classe Lien.
+	 * 
+	 * Initialise la classe avec l'objet CreeClass fourni et crée les listes vides
+	 * pour stocker les différents types de liens.
+	 * 
+	 * @param creeClass L'objet CreeClass représentant la classe pour laquelle établir les liens
+	 */
 	public Lien(CreeClass creeClass)
 	{
 		this.creeClass   = creeClass;
@@ -31,6 +58,14 @@ public class Lien
 	/*║       Methode          ║*/
 	/*╚════════════════════════╝*/
 
+	/**
+	 * Méthode d'initialisation des liens.
+	 * 
+	 * Cette méthode publique appelle les trois méthodes privées pour établir
+	 * tous les types de liens (attributs, héritage, interfaces) pour la classe courante.
+	 * 
+	 * @param lstClass La liste de toutes les classes analysées pour établir les liens
+	 */
 	public void initialiser(List<CreeClass> lstClass)
 	{
 		this.lienClasseParAttribut(lstClass);
@@ -38,7 +73,14 @@ public class Lien
 		this.lienClasseParInterface(lstClass);
 	}
 
-
+	/**
+	 * Méthode lienClasseParAttribut des liens.
+	 * 
+	 * Cette méthode privé permet de gérer les liens au niveau des attributs de la
+	 * class.
+	 * 
+	 * @param lstClass La liste de toutes les classes analysées pour établir les liens
+	 */
 	private void lienClasseParAttribut(List<CreeClass> lstClass)
 	{
 		// Ajouter les classes que creeClass référence (liens sortants)
@@ -55,7 +97,13 @@ public class Lien
 		}
 	}
 
-
+	/**
+	 * Méthode lienClasseParMere des liens.
+	 * 
+	 * Cette méthode privé permet de gérer les liens à propo de l'héritage
+	 * 
+	 * @param lstClass La liste de toutes les classes analysées pour établir les liens
+	 */
 	private void lienClasseParMere(List<CreeClass> lstClass)
 	{
 		// Parcourir toutes les classes pour trouver des liens d'héritage
@@ -78,6 +126,13 @@ public class Lien
 		}
 	}
 	
+	/**
+	 * Méthode lienClasseParInterface des liens.
+	 * 
+	 * Cette méthode privé permet de gérer les liens à propo d'un interface
+	 * 
+	 * @param lstClass La liste de toutes les classes analysées pour établir les liens
+	 */
 	private void lienClasseParInterface(List<CreeClass> lstClass)
 	{
 		// Parcourir toutes les classes pour trouver des liens d'interface
@@ -106,16 +161,32 @@ public class Lien
 	/*╔════════════════════════╗*/
 	/*║      Accesseur         ║*/
 	/*╚════════════════════════╝*/
+	
+	/**
+	 * Retourne la liste des classes liées par attributs.
+	 * 
+	 * @return La liste des classes référencées via les attributs de la classe courante
+	 */
 	public List<CreeClass> getLstLienAttribut()
 	{
 		return this.lstLienAttribut;
 	}
 
+	/**
+	 * Retourne la liste des classes liées par héritage.
+	 * 
+	 * @return La liste des classes mères de la classe courante
+	 */
 	public List<CreeClass> getLstLienHeritage()
 	{
 		return this.lstLienHeritage;
 	}
 
+	/**
+	 * Retourne la liste des classes liées par interfaces.
+	 * 
+	 * @return La liste des interfaces implémentées par la classe courante
+	 */
 	public List<CreeClass> getLstLienInterface()
 	{
 		return this.lstLienInterface;

@@ -1,19 +1,31 @@
-/**
- * Cette classe représente une Methode.
- * Elle contient les informations de base et quelques utilitaires.
- */
-package projet.metier;
+package src.metier;
 
 import java.util.List;
 
+/**
+ * Cette classe représente une Methode.
+ * Elle contient les informations de base et quelques utilitaires.
+ * @author Équipe 3 SAE 3.01
+ * @version 1.0
+ */
 public class Methode
 {
+	/** La visibilité de la méthode (public, private, protected, etc.) */
 	private String visibilite;
+	
+	/** Le type de retour de la méthode */
 	private String type;
+	
+	/** Le nom de la méthode */
 	private String nom;
 
+	/** Indique si la méthode est statique */
 	private boolean estStatic;
+	
+	/** Indique si la méthode est abstraite */
 	private boolean estAbstract;
+	
+	/** Liste des paramètres de la méthode, chaque paramètre étant représenté par un tableau de chaînes [type, nom] */
 	private List<String[]> lstParametres;
 
 	/**

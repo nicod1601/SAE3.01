@@ -1,36 +1,40 @@
-/**
- * Classe métier qui nous permet de creer une classe via la lecture de fichier(s) / un dossier.
- * Cette classe nous permet alors d'ajouter des méthodes, des attributs, ainsi que les liens qu'elle a :<br>
- * - Liens en fonction de ses attributs (par exemple si dans ses attributs elle a une autre classe (lienAttribut)).
- * - Liens en fonction de son héritage (par exemple si la dite classe hérite d'une autre classe (lienHeritage)).
- * - Liens en fonction de son interface (par exemple si la classe courante implemente une autre class (lienInterface)).
- * <br>
- * @author : MARTIN Erwan, DELPECH Nicolas, GRICOURT Paul, PREVOST Donovan, MILLEREUX-BIENVAULT William  
- * 
- */
-package projet.metier;
+package src.metier;
 
 import java.io.FileInputStream;
 import java.util.*;
 
+/**
+ * Classe métier qui nous permet de creer une classe via la lecture de fichier(s) / un dossier.
+ * Cette classe nous permet alors d'ajouter des méthodes, des attributs, ainsi que les liens qu'elle a :<br>
+ * - Liens en fonction de ses attributs (par exemple si dans ses attributs elle a une (ou plus) autre classe (lienAttribut)).
+ * - Liens en fonction de son héritage (par exemple si la dite classe hérite d'une autre classe (lienHeritage)).
+ * - Liens en fonction de son interface (par exemple si la classe courante implemente d'autres classes (lienInterface)).
+ * <br>
+ * @author Équipe 3 SAE 3.01
+ * @version 1.0
+ */
 public class CreeClass
 {
+	/** Nom de la classe */
 	private String nom;
+	/** type : class, interface, record*/
 	private String type="";
+	/** Liste des attributs de la classe (int, String, double, etc...) */
 	private List<Attribut> lstAttribut;
+	/** Liste des attributs de classe ex : Point x; pour carré */
 	private List<Attribut> lstClassAttribut;
+	/** Liste des méthodes de la classe (comporte également le constructeur)*/
 	private List<Methode> lstMethode;
 
-
+	/** Nom de la classe mère, null si existe pas */
 	private String mere = null;
+	/** Liste des interfaces implémenté par la classe */
 	private List<String> interfaces = null;
+	/** Lien entre les classes selon la liste des attributs */
 	private Lien lien;
+	/** Multiplicité de la classe avec une autre classe avec la/les multiplicitée(s) */
 	private Multiplicite multi;
 
-	private int posX;
-	private int posY;
-	private int hauteur;
-	private int largeur;
 	/**
 	 * Factory qui crée des objets {@link CreeClass}.
 	 * <p>
@@ -47,16 +51,12 @@ public class CreeClass
 	}
 
 	/**
-     * Crée d'une nouvelle CreeClass.
-     *
-     * @param data     le nom du fichier qu'on vas traitee
-     */
+	 * Création d'un nouvel objet CreeClass.
+	 *
+	 * @param data le nom du fichier qu'on va traiter
+	 */
 	private CreeClass(String data)
 	{
-		this.posX = 0;
-		this.posY = 0;
-		this.hauteur = 0;
-		this.largeur = 0;
 
 		String nomComplet = new java.io.File(data).getName();
 		if (nomComplet.endsWith(".java"))
@@ -82,18 +82,18 @@ public class CreeClass
 				/* Gestion des commentaires */
 				/*--------------------------*/
 				
-				// Si /* Sur plusieurs lignes */
+				// Si '/*'' Sur plusieurs lignes '*/''
 				if (line.contains("/*"))
 					while (!line.contains("*/"))
 						line = sc.nextLine();
 
-				// Si this.x = x; //public String getX()
+				// Si "this.x = x; //public String getX()""
 				if (line.contains("//"))
 				{
 					line = line.substring(0, line.indexOf("//"));
 				}
 
-				// Si this.x = x;/* public String getX()*/
+				// Si "this.x = x;/* public String getX()*/""
 				if (line.contains("/*") && line.contains("*/"))
 				{
 					line = line.substring(0, line.indexOf("/*")) + line.substring(line.indexOf("*/") + 2);
@@ -102,8 +102,6 @@ public class CreeClass
 				// Si class / interface / class abstract
 				if (line.contains("class") || line.contains("interface") || (line.contains("abstract") && line.contains("class")))
 				{
-
-					
 					/*------------------------------*/
 					/* Ananlyse ligne : mot par mot */
 					/*------------------------------*/
@@ -113,17 +111,21 @@ public class CreeClass
 					while (lineSc.hasNext())
 					{
 						String mot = lineSc.next();
-						//Si mot lu est class et que dans la ligne il n'y a pas abstract alors type = mot = class
-						//Si mot lu n'est pas class alors c'est interface ou record
-						if ((mot.equals("class") && !line.contains("abstract") ) || mot.equals("interface"))
-							this.type = mot;
-						if((mot.equals("class") && line.contains("abstract")))
+						if(mot.equals(" "))
+							continue;
+						if(mot.equals("\t"))
+							continue;
+						//Si mot lu est class et qu'il y a abstract alors c'est un classe abstraite donc type = abstract
+						//Sinon type = mot (donc mot = class ou interface ou record)
+						if ((mot.equals("class") && line.contains("abstract") ))
 							this.type = "abstract";
+						else
+							this.type = mot;
 
 						//extends / implements / record
 						switch (mot)
 						{
-							case "extends" ->    { this.mere = lineSc.next(); }
+							case "extends" -> { this.mere = lineSc.next(); }
 							
 							case "implements" ->
 								{
@@ -146,17 +148,18 @@ public class CreeClass
 
 				// Méthode / Constructeur / Attribut / Abstract
 				if ((line.contains("private") || line.contains("protected") || line.contains("public")
-				      || line.contains("abstract") ) && !line.contains("class"))
-					  // pas class car class peut être abstract
+					|| line.contains("abstract") ) && !line.contains("class"))
+					// sans class car class peut être abstract
 				{
-					//Si dans la ligne il y a le nom ainsi qu'une visibilité alors c'est un constructeur
-					if (line.contains(this.nom))
+					//Si dans la ligne il y a le nom de la classe ainsi qu'une visibilité alors c'est un constructeur
+					if (line.contains(this.nom) && line.contains("("))
 					{
 						this.ajouterConstructeur(line);
 					}
-					else //sinon pas un constructeur
+					else //sinon c'est pas un constructeur
 					{
-						//Si il y a une visibilité ainsi qu'une parenthèse alors c'est une méthode
+						//S'il y a une visibilité ainsi qu'une parenthèse
+						//Mais pas le nom de la classe alors c'est une méthode
 						if (line.contains("(") )
 						{
 							this.ajouterMethode(line);
@@ -182,22 +185,22 @@ public class CreeClass
 	}
 
 	/**
-	 * ajoute le constructeur dans lstMethodes
+	 * Ajoute le constructeur dans lstMethodes
 	 *
 	 * @param constructeur la ligne du constructeur
 	 * @return void
-	 * @throws NomException Problème de parenthèse
+	 * @throws NomException Problème de parenthèse (non trouvées)
 	 */
 	private void ajouterConstructeur(String constructeur)
 	{
 		constructeur = constructeur.trim();
 
-		int posOuv = constructeur.indexOf("(");
+		int posOuv  = constructeur.indexOf("(");
 		int posFerm = constructeur.indexOf(")");
 
 		if (posOuv == -1 || posFerm == -1)
 		{
-			System.out.println("Problème de parenthèse");
+			System.out.println("Parenthèses non trouvées");
 			System.out.println(constructeur);
 			return;
 		}
@@ -206,8 +209,8 @@ public class CreeClass
 		String avantParenthese = constructeur.substring(0, posOuv).trim();
 		Scanner avantSc = new Scanner(avantParenthese);
 
-		
-		String visibilite = avantSc.next(); // premier mot = visibilité
+		// premier mot = visibilité
+		String visibilite = avantSc.next();
 		String nom = "";
 
 		// Mot après visibilité est forcément le nom
@@ -216,16 +219,19 @@ public class CreeClass
 
 		// Parser les paramètres
 		String paramBrut = constructeur.substring(posOuv + 1, posFerm).trim();
-		List<String[]> lstLstParamInfo = new ArrayList<>();
+		//Tableau des informations des paramètres du constructeur
 		String[] tabInfo = null;
+
+		List<String[]> lstLstParamInfo = new ArrayList<>();
+		
 		if (!paramBrut.isEmpty())
 		{
 			Scanner sc = new Scanner(paramBrut);
 			sc.useDelimiter(",");
 			while (sc.hasNext())
 			{
-				String sh= sc.next().trim();
-				tabInfo = sh.split(" ");
+				String sh = sc.next().trim();
+				tabInfo   = sh.split(" ");
 			}
 			lstLstParamInfo.add(tabInfo);
 			sc.close();
@@ -236,30 +242,18 @@ public class CreeClass
 	}
 
 	/**
-	 * ajoute l'Attribut dans lstAttribut.
+	 * Ajoute l'Attribut dans lstAttribut.
 	 *
-	 * @param attribut ligne de l'attribut
+	 * @param attribut ligne de l'attribut à traiter
 	 * @return void
 	 */
 	private void ajouterAttribut(String attribut)
 	{
 		Scanner sc = new Scanner(attribut);
 
-		if (!sc.hasNext())
-		{
-			sc.close();
-			return;
-		}
-
 		String visibilite = sc.next();
 		boolean estStatic = false;
 		boolean estFinal  = false;
-
-		if (!sc.hasNext())
-		{
-			sc.close();
-			return;
-		}
 
 		String motSuivant = sc.next();
 
@@ -272,7 +266,7 @@ public class CreeClass
 				motSuivant = sc.next();
 			}
 		}
-		else if (motSuivant.equals("final"))
+		if (motSuivant.equals("final"))
 		{
 			estFinal = true;
 			if (sc.hasNext())
@@ -310,8 +304,8 @@ public class CreeClass
 			sc.close();
 			return;
 		}
-		String visibilite = sc.next();
-		boolean estStatic = false;
+		String visibilite   = sc.next();
+		boolean estStatic   = false;
 		boolean estAbstract = false;
 
 		//Si visibilité non renseigné dans le code
@@ -399,7 +393,7 @@ public class CreeClass
 	private void creeRecord(String record)
 	{
 		record = record.trim();
-		int posOuv = record.indexOf("(");
+		int posOuv  = record.indexOf("(");
 		int posFerm = record.indexOf(")");
 		if (posOuv == -1 || posFerm == -1)
 		{
@@ -444,16 +438,34 @@ public class CreeClass
 		}
 	}
 
+	/**
+	 * Cree tout les lien 
+	 *
+	 * @param lstClass toute les classCree
+	 * @return void
+	 */
 	public void creelien(List<CreeClass> lstClass)
 	{
 		this.lien.initialiser(lstClass);
 	}
 
+	/**
+	 * Cree toute les Multiplicite
+	 *
+	 * @param lstClass toute les classCree
+	 * @return void
+	 */
 	public void creerMultiplicite(List<CreeClass> lstClass)
 	{
 		this.multi.creerMutiplisite(this, lstClass);
 	}
 
+	/**
+	 * on vérifie si c'est bien un fichier java
+	 *
+	 * @param data le nom du fichier
+	 * @return boolean
+	 */
 	private static boolean verifdata(String data)
 	{
 		try
@@ -471,89 +483,95 @@ public class CreeClass
 		return false;
 	}
 
-	public String getNom()
-	{
-		return this.nom;
-	}
-
-	public String getType()
-	{
-		return this.type;
-	}
-
-	public List<Attribut> getLstAttribut()
-	{
-		return lstAttribut;
-	}
-
-	public List<Methode> getLstMethode()
-	{
-		return lstMethode;
-	}
-
+	/**
+	 * on depalce un attriut dans une autre list
+	 *
+	 * @param att l'attribut qu'on veux déplacer
+	 * @return void
+	 */
 	public void deplacerAttribut(Attribut att)
 	{
 		this.lstClassAttribut.add(att);
 		this.lstAttribut.remove(att);
 	}
 
+	/**
+	 * Retourne le nom.
+	 *
+	 * @return le nom;
+	 */
+	public String getNom()
+	{
+		return this.nom;
+	}
+
+	/**
+	 * Retourne le type (class,abstract,...).
+	 *
+	 * @return le type;
+	 */
+	public String getType()
+	{
+		return this.type;
+	}
+
+	/**
+	 * Retourne la list de c'est attribut.
+	 *
+	 * @return la list de c'est attribut;
+	 */
+	public List<Attribut> getLstAttribut()
+	{
+		return lstAttribut;
+	}
+
+	/**
+	 * Retourne la list de c'est Methodes.
+	 *
+	 * @return la list de c'est Methodes;
+	 */
+	public List<Methode> getLstMethode()
+	{
+		return lstMethode;
+	}
+
+	/**
+	 * Retourne la mere.
+	 *
+	 * @return la mere;
+	 */
 	public String getMere()
 	{
 		return this.mere;
 	}
 
+	/**
+	 * Retourne la list interface.
+	 *
+	 * @return une list interface;
+	 */
 	public List<String> getInterfaces()
 	{
 		return this.interfaces;
 	}
 
+	/**
+	 * Retourne leurs lien.
+	 *
+	 * @return leurs lien;
+	 */
 	public Lien getLien()
 	{
 		return this.lien;
 	}
 
+	/**
+	 * Retourne la Multiplicite.
+	 *
+	 * @return la Multiplicite;
+	 */
 	public Multiplicite getMultiplicite()
 	{
 		return this.multi;
-	}
-
-	public int getPosX()
-	{
-		return this.posX;
-	}
-
-	public int getPosY()
-	{
-		return this.posY;
-	}
-
-	public int getLargeur()
-	{
-		return this.largeur;
-	}
-
-	public int getHauteur()
-	{
-		return this.hauteur;
-	}
-
-	public void setPosX(int x)
-	{
-		this.posX = x;
-	}
-
-	public void setPosY(int y)
-	{
-		this.posY = y;
-	}
-
-	public void setHauteur(int h)
-	{
-		this.hauteur = h;
-	}
-
-	public void setLargeur(int l)
-	{
-		this.largeur = l;
 	}
 }

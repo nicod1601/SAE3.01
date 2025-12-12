@@ -1,4 +1,4 @@
-package projet.data;
+package data;
 
 public class Rond 
 {

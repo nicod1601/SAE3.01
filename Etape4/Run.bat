@@ -10,6 +10,6 @@ echo Compilation reussie!
 echo.
 echo Execution du programme...
 cd class
-java projet.Controleur
+java src.Controleur
 cd ..
 pause
