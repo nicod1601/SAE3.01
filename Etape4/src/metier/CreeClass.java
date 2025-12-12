@@ -41,6 +41,8 @@ public class CreeClass
 	 * Ce pattern permet d'instancier différentes implémentations
 	 * sans exposer leur logique de création.
 	 * </p>
+	 * @param Lien du fichier
+	 * @return CreeClass
 	 */
 	public static CreeClass factoryCreeClass(String data)
 	{
