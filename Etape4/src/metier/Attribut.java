@@ -1,3 +1,5 @@
+package src.metier;
+
 /**
  * Cette classe représente un Attribut d'une classe Java.
  * Elle contient les informations de base sur un attribut (visibilité, type, nom, etc.)
@@ -9,8 +11,6 @@
  * @author Équipe SAE 3.01
  * @version 1.0
  */
-package src.metier;
-
 public class Attribut
 {
 	/** La visibilité de l'attribut (public, private, protected, etc.) */
