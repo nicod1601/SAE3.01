@@ -127,11 +127,10 @@ public class CreeClass
 							continue;
 						if(mot.equals("\t"))
 							continue;
-						//Si mot lu est class et qu'il y a abstract alors c'est un classe abstraite donc type = abstract
-						//Sinon type = mot (donc mot = class ou interface ou record)
-						if ((mot.equals("class") && line.contains("abstract") ))
-							this.type = "abstract";
-						else
+
+						if ((mot.equals("class") && !line.contains("abstract"))|| mot.equals("interface") || mot.equals("record"))
+							this.type = mot;
+						if (mot.equals("abstract"))
 							this.type = mot;
 
 						//extends / implements / record
