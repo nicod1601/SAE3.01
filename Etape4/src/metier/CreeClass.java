@@ -244,8 +244,8 @@ public class CreeClass
 			{
 				String sh = sc.next().trim();
 				tabInfo   = sh.split(" ");
+				lstLstParamInfo.add(tabInfo);
 			}
-			lstLstParamInfo.add(tabInfo);
 			sc.close();
 		}
 
@@ -386,8 +386,9 @@ public class CreeClass
 			{
 				String sh= sc.next().trim();
 				tabInfo = sh.split(" ");
+				lstLstParamInfo.add(tabInfo);
 			}
-			lstLstParamInfo.add(tabInfo);
+	
 			sc.close();
 		}
 
@@ -427,8 +428,9 @@ public class CreeClass
 			{
 				String sh= sc.next().trim();
 				tabInfo = sh.split(" ");
+				lstLstParamInfo.add(tabInfo);
 			}
-			lstLstParamInfo.add(tabInfo);
+
 			sc.close();
 		}
 		//cree constructeur
