@@ -55,6 +55,7 @@ Run.bat
 ### Linux
 ```bash
 cd etape4
+sed -i 's/\r$//' Run.sh
 chmod +x Run.sh
 ./Run.sh
 ```
