@@ -226,18 +226,23 @@ public class IhmCui
 			// Affichage des attributs
 			for (Attribut attribut : attributs)
 			{
-				String symbole = this.replaceVisibilite(attribut.getVisibilite());
+				String symbole   = this.replaceVisibilite(attribut.getVisibilite());
 
-				res += String.format("%s %s : %s", symbole, attribut.getNom(), attribut.getType());
+				String  reset    = "\u001B[0m";
+				String  souligne = "\u001B[4m";
+
 				if(attribut.isEstStatic())
 				{
-					res += "<<static>>";
+					res += souligne;
 				}
+
+				res += String.format("%s %s : %s", symbole, attribut.getNom(), attribut.getType());
+
 				if(attribut.isEstFinal())
 				{
-					res += "<<freeze>>";
+					res += " <<freeze>>";
 				}
-				res += "\n";
+				res += reset + "\n";
 			}
 
 			// Séparateur entre attributs et méthodes
