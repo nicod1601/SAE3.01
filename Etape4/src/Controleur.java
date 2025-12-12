@@ -139,7 +139,7 @@ public class Controleur
 	 * @param id L'indice de la classe dans la liste
 	 * @return La liste des méthodes de la classe
 	 */
-	public List<Methode>   getMethode (int id)    { return this.lstMetiers.get(id).getLstMethode (); }
+	public List<Methode>   getMethode (int id)    { return new ArrayList<Methode>(this.lstMetiers.get(id).getLstMethode ()); }
 	
 	/**
 	 * Retourne la liste des attributs d'une classe spécifique.
@@ -147,14 +147,14 @@ public class Controleur
 	 * @param id L'indice de la classe dans la liste
 	 * @return La liste des attributs de la classe
 	 */
-	public List<Attribut>  getAttribut(int id)    { return this.lstMetiers.get(id).getLstAttribut(); }
+	public List<Attribut>  getAttribut(int id)    { return new ArrayList<Attribut>(this.lstMetiers.get(id).getLstAttribut()); }
 	
 	/**
 	 * Retourne la liste complète des classes analysées.
 	 * 
 	 * @return La liste des classes métier
 	 */
-	public List<CreeClass> getLstClass(      )    { return this.lstMetiers;                          }
+	public List<CreeClass> getLstClass(      )    { return new ArrayList<CreeClass>(this.lstMetiers);                          }
 	
 	/**
 	 * Retourne la liste des noms des classes analysées.
