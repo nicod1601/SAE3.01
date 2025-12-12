@@ -7,6 +7,8 @@ import src.metier.CreeClass;
 import src.metier.LectureRepertoire;
 import src.metier.Methode;
 
+import src.ihm.FrameAppli;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,8 @@ public class Controleur
 	/** Référence vers l'interface utilisateur en mode console */
 	private IhmCui          ihmCui;
 
+	private FrameAppli frame;
+
 	/*╔════════════════════════╗*/
 	/*║     Constructeur       ║*/
 	/*╚════════════════════════╝*/
@@ -72,6 +76,11 @@ public class Controleur
 				while (this.lstMetiers.isEmpty() || this.lstMetiers.get(0) == null);
 
 				this.ihmCui = new IhmCui(this, this.niv);
+			}
+
+			if(niv == 5 )
+			{
+				this.frame = new FrameAppli(this);
 			}
 
 		} while (this.niv != 0);

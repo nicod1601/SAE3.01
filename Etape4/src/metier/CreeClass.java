@@ -35,6 +35,11 @@ public class CreeClass
 	/** Multiplicité de la classe avec une autre classe avec la/les multiplicitée(s) */
 	private Multiplicite multi;
 
+	private int posX;
+	private int posY;
+	private int hauteur;
+	private int largeur;
+
 	/**
 	 * Factory qui crée des objets {@link CreeClass}.
 	 * <p>
@@ -57,6 +62,11 @@ public class CreeClass
 	 */
 	private CreeClass(String data)
 	{
+		this.posX = 0;
+		this.posY = 0;
+		this.hauteur = 0;
+		this.largeur = 0;
+
 
 		String nomComplet = new java.io.File(data).getName();
 		if (nomComplet.endsWith(".java"))
@@ -573,5 +583,45 @@ public class CreeClass
 	public Multiplicite getMultiplicite()
 	{
 		return this.multi;
+	}
+
+	public int getPosX()
+	{
+		return this.posX;
+	}
+
+	public int getPosY()
+	{
+		return this.posY;
+	}
+
+	public int getLargeur()
+	{
+		return this.largeur;
+	}
+
+	public int getHauteur()
+	{
+		return this.hauteur;
+	}
+
+	public void setPosX(int x)
+	{
+		this.posX = x;
+	}
+
+	public void setPosY(int y)
+	{
+		this.posY = y;
+	}
+
+	public void setHauteur(int h)
+	{
+		this.hauteur = h;
+	}
+
+	public void setLargeur(int l)
+	{
+		this.largeur = l;
 	}
 }

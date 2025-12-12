@@ -103,7 +103,7 @@ public class IhmCui
 		                   blue + "║" + vert    + "  3 = IHM CUI Formalisme UML (Plusieurs Classes) " + blue + "║\n" +
 		                   blue + "║" + vert    + "  4 = IHM CUI Héritage                           " + blue + "║\n" +
 		                          "╠-------------------------------------------------╣\n" +
-		                   blue + "║" + indispo + "  5 = IHM GUI                                    " + blue + "║\n" +
+		                   blue + "║" + vert + "  5 = IHM GUI                                    " + blue + "║\n" +
 		                          "╠-------------------------------------------------╣\n" +
 
 		                   blue + "║" + reset   + "  0 = Quitter le programme                       " + blue + "║\n" +
@@ -123,7 +123,7 @@ public class IhmCui
 				sc.next();
 			}
 		} 
-		while (!(saisieValide && niv >= 0 && niv < 5));
+		while (!(saisieValide && niv >= 0 && niv < 6));
 
 		return niv;
 	}
