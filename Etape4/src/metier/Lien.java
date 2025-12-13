@@ -109,9 +109,7 @@ public class Lien
 		// Parcourir toutes les classes pour trouver des liens d'héritage
 		for (int cpt2 = 0; cpt2 < lstClass.size(); cpt2++)
 		{
-			List<Attribut> lstAtt = lstClass.get(cpt2).getLstAttribut();
-
-			if (lstAtt == null || this.creeClass.getMere() == null)
+			if (this.creeClass.getMere() == null)
 				continue;
 
 			// Vérifier si la classe actuelle hérite de la classe parcourue

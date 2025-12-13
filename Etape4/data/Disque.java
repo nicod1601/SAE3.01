@@ -30,6 +30,11 @@ public class Disque  extends Rond implements ISurface
 		return 2 * Math.PI * super.getRayon();
 	}
 
+	public Disque testGenerique()
+	{
+		return this;
+	}
+
 	public void setX(int x) 
 	{
 		centre.setX(x);
