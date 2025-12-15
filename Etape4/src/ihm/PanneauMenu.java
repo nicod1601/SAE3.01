@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 
 import java.io.File;
 
@@ -11,7 +12,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import src.Controleur;
-import src.metier.Couleur;
 
 public class PanneauMenu extends JPanel implements ActionListener
 {
@@ -57,10 +57,12 @@ public class PanneauMenu extends JPanel implements ActionListener
 		this.quitter  = new JButton("✖ Quitter");
 
 		/* Composants File */
-		this.fileMenu.add(new JMenuItem("📄 Open File"));
-		this.fileMenu.add(new JMenuItem("📂 Open Folder"));
+		this.fileMenu.add(new JMenuItem("📄 Ouvrir Fichier"));
+		this.fileMenu.add(new JMenuItem("📂 Ouvrir Dossier"));
 		this.fileMenu.addSeparator();
-		this.fileMenu.add(new JMenuItem("🗑️ Clear List"));
+		this.fileMenu.add(new JMenuItem("📤 Exporter"));
+		this.fileMenu.addSeparator();
+		this.fileMenu.add(new JMenuItem("🗑️ Suprimmer"));
 
 		/*Composants Edit */
 		
@@ -202,13 +204,16 @@ public class PanneauMenu extends JPanel implements ActionListener
 		
 		switch (command) 
 		{
-			case "Open File":
+			case "Ouvrir Fichier":
 				this.ouvrirFichier();
 				break;
-			case "Open Folder":
+			case "Ouvrir Dossier":
 				this.ouvrirDossier();
 				break;
-			case "Clear List":
+			case "Exporter":
+				this.exporterEnImage();
+				break;
+			case "Suprimmer":
 				this.viderListe();
 				break;
 			default:
@@ -219,7 +224,34 @@ public class PanneauMenu extends JPanel implements ActionListener
 		{
 			System.exit(0);
 		}
+		if (e.getSource() == this.editMenu)
+		{
+			//new FrameEdit();
+		}
 	}
+
+
+	public void exporterEnImage()
+	{
+		JFileChooser dialogueEnregistrement = new JFileChooser();
+
+		dialogueEnregistrement.setDialogTitle("Enregistrer les positions sous...");
+		dialogueEnregistrement.setCurrentDirectory(new File("./enreg"));
+	
+		dialogueEnregistrement.setSelectedFile(new File("Export.png"));
+	
+		int choixUtilisateur = dialogueEnregistrement.showSaveDialog(this.getParent());
+	
+		if (choixUtilisateur == JFileChooser.APPROVE_OPTION) 
+		{
+			File   fichierAEnregistrer = dialogueEnregistrement.getSelectedFile();
+			String cheminAbsolu = fichierAEnregistrer.getAbsolutePath();
+			
+			this.();
+
+		} 
+	}
+
 
 	public void ouvrirFichier() 
 	{
@@ -265,7 +297,7 @@ public class PanneauMenu extends JPanel implements ActionListener
 	}
 
 	private void chargerFichiersDossier()
-	{        
+	{
 		if (this.dossierOuvert != null && this.dossierOuvert.isDirectory())
 		{
 			File[] fichiers = this.dossierOuvert.listFiles();

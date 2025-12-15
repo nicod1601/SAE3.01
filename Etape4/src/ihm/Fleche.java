@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import src.metier.Couleur;
 import src.metier.CreeClass;
 import src.metier.Multiplicite;
 

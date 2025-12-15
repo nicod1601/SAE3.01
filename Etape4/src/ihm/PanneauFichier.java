@@ -7,7 +7,6 @@ import java.awt.Font;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import src.Controleur;
-import src.metier.Couleur;
 
 public class PanneauFichier extends JPanel
 {

@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 
 import src.Controleur;
 import src.metier.Attribut;
-import src.metier.Couleur;
 import src.metier.CreeClass;
 import src.metier.Methode;
 import src.metier.Multiplicite;
@@ -37,7 +36,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	private int sourisY;
 	private boolean inClass;
 
-	private double zoom = 1.0;
+	private double zoom    = 1.0;
 	private double offsetX = 0;
 	private double offsetY = 0;
 

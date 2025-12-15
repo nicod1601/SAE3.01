@@ -1,4 +1,4 @@
-package src.metier;
+package src.ihm;
 
 import java.awt.Color;
 
