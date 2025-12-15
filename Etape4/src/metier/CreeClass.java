@@ -79,7 +79,6 @@ public class CreeClass
 		this.lstAttribut      = new ArrayList<Attribut>();
 		this.lstMethode       = new ArrayList<Methode>();
 		this.lstClassAttribut = new ArrayList<Attribut>();
-		this.lstClassAttribut = new ArrayList<Attribut>();
 		try(Scanner sc = new Scanner(new FileInputStream(data), "UTF8");)
 		{
 		
