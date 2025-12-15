@@ -12,12 +12,20 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
 import java.awt.geom.AffineTransform;
-
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 
 import src.Controleur;
 import src.metier.Attribut;
@@ -25,7 +33,7 @@ import src.metier.CreeClass;
 import src.metier.Methode;
 import src.metier.Multiplicite;
 
-public class PanneauPrincipal extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener
+public class PanneauPrincipal extends JPanel implements MouseListener, MouseMotionListener
 {
 	private FrameAppli frame;
 	private Controleur ctrl;
@@ -64,7 +72,6 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
-		this.addMouseWheelListener(this);
 	}
 
 	public void majListeClasses(boolean dossier, String nomFichier)
@@ -514,25 +521,6 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		}
 	}
 
-	public void mouseWheelMoved(MouseWheelEvent e)
-	{
-		double oldZoom = this.zoom;
-		
-		// Modifier le zoom
-		if (e.getWheelRotation() < 0)
-			this.zoom *= 1.1;
-		else
-			this.zoom /= 1.1;
-		
-		double mouseX = e.getX();
-		double mouseY = e.getY();
-		
-		this.offsetX = mouseX - (mouseX - offsetX) * this.zoom / oldZoom;
-		this.offsetY = mouseY - (mouseY - offsetY) * this.zoom / oldZoom;
-		
-		repaint();
-	}
-
 	public void mouseReleased(MouseEvent e){}
 	public void mouseEntered(MouseEvent e){}
 	public void mouseExited(MouseEvent e){}
@@ -559,5 +547,32 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	{
 		this.multiplicite = multiplicite;
 		this.repaint();
+	}
+
+	public void exporterEnImage(String chemin, File fichier)
+	{
+		BufferedImage image = new BufferedImage(
+			this.getWidth(), 
+			this.getHeight(), 
+			BufferedImage.TYPE_INT_ARGB // Supporte la transparence
+		);
+
+		// 2. Récupérer l'outil de dessin (Graphics2D) de l'image
+		Graphics2D g2d = image.createGraphics();
+
+		// 3. Demander au composant de se dessiner sur l'image
+		// "paint" inclut les bordures et les enfants, contrairement à "paintComponent"
+		this.paint(g2d); 
+		
+		// Libérer les ressources graphiques
+		g2d.dispose();
+
+		// 4. Sauvegarder l'image sur le disque
+		try {
+			ImageIO.write(image, "png", fichier);
+			System.out.println("Image sauvegardée : " + chemin);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

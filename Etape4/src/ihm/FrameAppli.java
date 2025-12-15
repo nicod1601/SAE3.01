@@ -1,6 +1,11 @@
 package src.ihm;
 
+
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import java.awt.BorderLayout;
+import java.io.File;
 import java.util.ArrayList;
 import javax.swing.*;
 import src.Controleur;
@@ -17,9 +22,11 @@ public class FrameAppli extends JFrame
 	{
 		this.setTitle("Création UML Java");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(800, 600);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setSize(screenSize.width, screenSize.height);
 		this.setLocationRelativeTo(null);
 		this.setLayout(new BorderLayout());
+
 
 		/*-------------------------*/
 		/* Création des Composants */
@@ -73,5 +80,10 @@ public class FrameAppli extends JFrame
 	public void lstSelectionner(ArrayList<Integer> lst)
 	{
 		this.panneauPrincipal.lstSelectionner(lst);
+	}
+
+	public void exporterEnImage(String chemin, File nomFichier)
+	{
+		this.panneauPrincipal.exporterEnImage(chemin, nomFichier);
 	}
 }
