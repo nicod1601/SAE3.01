@@ -89,7 +89,7 @@ public class Lien
 		{
 			for(CreeClass c : lstClass)
 			{
-				if(c.getNom().equals(att.getType()))
+				if(att.getType().contains(c.getNom()) )
 				{
 					this.lstLienAttribut.add(c);
 					creeClass.deplacerAttribut(att);

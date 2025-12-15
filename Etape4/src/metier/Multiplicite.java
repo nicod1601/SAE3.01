@@ -62,7 +62,6 @@ public class Multiplicite
 				{
 					lstMultiplC.add(determinerMultiplicite(att));
 					cptLiaison++;
-					creeClass.deplacerAttribut(att);
 				}
 			}
 

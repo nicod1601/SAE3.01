@@ -33,10 +33,7 @@ public class Disque  extends Rond implements ISurface
 		return 2 * Math.PI * super.getRayon();
 	}
 
-	public Disque testGenerique(int a,
-	                            int b,
-								int c,
-								int d)
+	public Disque testGenerique(int a,int b,int c,int d)
 	{
 		return this;
 	}
