@@ -15,6 +15,8 @@ import java.awt.geom.AffineTransform;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import javax.swing.JPanel;
 
 import src.Controleur;
@@ -47,7 +49,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 
 	public PanneauPrincipal(Controleur ctrl, FrameAppli frame) 
 	{
-		this.setBackground(Couleur.COULEUR_FOND.getColor());
+		this.setBackground(Couleur.BLANC.getColor());
 		this.ctrl = ctrl;
 		this.frame = frame;
 		this.lstClass = new ArrayList<>();
@@ -167,6 +169,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 				str += meth.getNom() + " (";
 
 				List<String[]> params = meth.getLstParametres();
+				if (params != null && !params.isEmpty())
 				for (int i = 0; i < params.size(); i++)
 				{
 					String[] p = params.get(i); 
@@ -314,13 +317,16 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 
 				List<String[]> params = meth.getLstParametres();
 				String listP = "";
-				for (int i = 0; i < params.size(); i++)
+				if (params != null)
 				{
-					String[] p = params.get(i); 
-					listP += p[1] + " : " + p[0];
-					if (i < params.size() - 1) 
+					for (int i = 0; i < params.size(); i++)
 					{
-						listP += ",   ";
+						String[] p = params.get(i); 
+						listP += p[1] + " : " + p[0];
+						if (i < params.size() - 1) 
+						{
+							listP += ",   ";
+						}
 					}
 				}
 
@@ -353,20 +359,60 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 
 				index++;
 			}
-
-			
 		}
 
-		for(CreeClass c1 : this.lstClass)
-		{
-			this.multiplicite = c1.getMultiplicite();
-
-			for(CreeClass c2 : this.lstClass)
+					List<List<List<String>>> associations = new ArrayList<List<List<String>>>();
+			for(CreeClass c : lstClass)
 			{
-				//this.lstFleches.add(new Fleche(c1, c2, typeLien, multScr, nomClasse, bidir));
-				//public Fleche(CreeClass source, CreeClass cible, String typeLien, String multSrc, String multCible, boolean bidir)
+				List<Methode>  methodes  = c.getLstMethode ();
+				List<Attribut> attributs = c.getLstAttribut();
+				Multiplicite   multiC    = c.getMultiplicite();
+
+				// Class : [0..* , 1..1, ...]
+				Map<CreeClass, List<List<String>>> mapMultiplC = multiC.getMapMultiplicites();
+				
+				
+				if (mapMultiplC != null)
+				{
+					for (CreeClass c2 : mapMultiplC.keySet())
+					{
+						for (List<String> multi : mapMultiplC.get(c2))
+						{
+							if (!multi.isEmpty())
+							{
+								List<String> lstClassMultiC = new ArrayList<>();
+								lstClassMultiC.add(c.getNom());
+								lstClassMultiC.add(multi.get(0));
+
+								List<String> lstClassMultiClef = new ArrayList<>();
+								lstClassMultiClef.add(c2.getNom());
+								lstClassMultiClef.add(multi.get(1));
+
+								if (!multi.get(0).equals("0..*") && IhmCui.verfiDoublon(lstClassMultiC, lstClassMultiClef, associations))
+								{
+									boolean estBidirectionnel = multi.get(0).equals("1..*") && multi.get(1).equals("1..*") ? true : false;
+
+									this.lstFleches.add(new Fleche (c,c2,"association",multi.get(0),multi.get(1), estBidirectionnel));
+
+									List<List<String>> classMuLti = new ArrayList<List<String>>();
+
+									classMuLti.add(lstClassMultiC);
+									classMuLti.add(lstClassMultiClef);
+
+									associations.add(classMuLti);
+								}
+							}
+						}
+					}
+				}
 			}
-		}    
+
+			int espace = 0;
+			for (Fleche fl : this.lstFleches)
+			{
+				fl.dessiner(g2,espace);
+				espace += 20;
+			}
 			
 		// Restauration transform
 		g2.setTransform(old);

@@ -410,7 +410,7 @@ public class IhmCui
 	 * @param association       La liste de toutes les associations déjà enregistrées.
 	 * @return true si l'association n'existe pas encore, false sinon.
 	 */
-	private boolean verfiDoublon(List<String> lstClassMultiC, List<String> lstCassMultiClef, List<List<List<String>>> association)
+	public static boolean verfiDoublon(List<String> lstClassMultiC, List<String> lstCassMultiClef, List<List<List<String>>> association)
 	{
 		if (association != null && association.isEmpty()) 
 		{ 
