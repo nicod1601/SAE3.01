@@ -21,7 +21,6 @@ import src.Controleur;
 import src.metier.Attribut;
 import src.metier.Couleur;
 import src.metier.CreeClass;
-import src.metier.Fleche;
 import src.metier.Methode;
 import src.metier.Multiplicite;
 
@@ -364,7 +363,8 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 
 			for(CreeClass c2 : this.lstClass)
 			{
-				//this.lstFleches.add(this.ctrl.Fleche(c1, c2, , , nomClasse, inClass));
+				//this.lstFleches.add(new Fleche(c1, c2, typeLien, multScr, nomClasse, bidir));
+				//public Fleche(CreeClass source, CreeClass cible, String typeLien, String multSrc, String multCible, boolean bidir)
 			}
 		}    
 			
