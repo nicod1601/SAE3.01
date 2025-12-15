@@ -16,6 +16,7 @@ public class FrameAppli extends JFrame
 	private PanneauPrincipal panneauPrincipal;
 	private PanneauFichier   panneauFichier;
 	private PanneauMenu      panneauMenu;
+
 	private Controleur ctrl;
 
 	public FrameAppli(Controleur ctrl) 
@@ -86,4 +87,10 @@ public class FrameAppli extends JFrame
 	{
 		this.panneauPrincipal.exporterEnImage(chemin, nomFichier);
 	}
+
+	public DefaultListModel<String> getModeleFichiers()
+	{
+		return this.panneauFichier.getModeleFichiers();
+	}
+	
 }

@@ -19,6 +19,7 @@
 		private JMenu fileMenu;
 		private JMenu editMenu;
 		private JButton quitter;
+		private JScrollPane scroll;
 
 		private Controleur ctrl;
 		private File dossierOuvert;
@@ -254,7 +255,11 @@
 
 
 		public void ouvrirFichier() 
-		{
+		{	
+			if (!this.frameAppli.getModeleFichiers().isEmpty())
+			{
+				this.viderListe();
+			}
 			JFileChooser chooser = this.creerFileChooser(JFileChooser.FILES_ONLY, "Sélectionner un fichier .java");
 			
 			int resultat = chooser.showOpenDialog(this);
@@ -278,7 +283,10 @@
 
 		private void ouvrirDossier() 
 		{
-			this.frameAppli.viderListe();
+			if (!this.frameAppli.getModeleFichiers().isEmpty())
+			{
+				this.viderListe();
+			}
 
 			JFileChooser chooser = this.creerFileChooser(JFileChooser.DIRECTORIES_ONLY, "Sélectionner un dossier contenant des fichiers .java");
 			
