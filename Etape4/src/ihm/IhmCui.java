@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
 import src.Controleur;
 import src.metier.*;
 
@@ -328,6 +327,15 @@ public class IhmCui
 		// reprendre la liste des classes qui se trouvent dans le répertoire
 		List<CreeClass>          lstClass     = this.ctrl.getLstClass();
 		List<List<List<String>>> associations = new ArrayList<List<List<String>>>();
+
+		for (CreeClass c : lstClass)
+		{
+			System.out.println(c.getNom());
+			for (Attribut a : c.getlstClassAttribut())
+			{
+				System.out.println("type : " +a.getType());
+			}
+		}
 
 		boolean aLiens   = false;
 		String  strLiens = "-------------------------------------------------------" + "\n" + 
