@@ -206,17 +206,24 @@ public class IhmCui
 		String res       = "";
 		String nomClass  = ctrl.getNoms().get(id); 
 		String typeClass = ctrl.getLstClass().get(id).getType();
+		boolean estAbstract = ctrl.getLstClass().get(id).estAbstract();
 		int    centre    = (48 + nomClass.length()) / 2;
 
 		res += "-------------------------------------------------------\n";
 		res += String.format("%" + centre + "s", nomClass);
 
-		switch (typeClass)
+		if(!estAbstract)
 		{
-			case "abstract"  -> res += "  <<abstract>>";
-			case "interface" -> res += "  <<interface>>";
-			case "record"    -> res += "  <<record>>";
+			switch (typeClass)
+			{
+				case "interface" -> res += "  <<interface>>";
+				case "record"    -> res += "  <<record>>";
+				default -> res += "";
+			}
 		}
+		else
+			res += "  <<abstract>>";
+		
 
 		res += "\n";
 		res += "-------------------------------------------------------\n";
@@ -240,7 +247,7 @@ public class IhmCui
 
 				if(attribut.isEstFinal())
 				{
-					res += " <<freeze>>";
+					res += " <<freeze>>"+" = "+attribut.getValeur();
 				}
 				res += reset + "\n";
 			}
@@ -260,19 +267,22 @@ public class IhmCui
 
 			// Ajout des paramètres
 			List<String[]> params = methode.getLstParametres();
-			for (int i = 0; i < params.size(); i++)
+			if(params != null)
 			{
-				String nomParam  = params.get(i)[1];
-				String typeParam = params.get(i)[0];
-				
-				signature += nomParam + " : " + typeParam;
-				
-				if (i < params.size() - 1)
+				for (int i = 0; i < params.size(); i++)
 				{
-					signature += ", ";
+					String nomParam  = params.get(i)[1];
+					String typeParam = params.get(i)[0];
+					
+					signature += nomParam + " : " + typeParam;
+					
+					if (i < params.size() - 1)
+					{
+						signature += ", ";
+					}
 				}
 			}
-
+			
 			signature += ")";
 
 			// Ajout du type de retour
