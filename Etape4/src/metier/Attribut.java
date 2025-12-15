@@ -28,6 +28,9 @@ public class Attribut
 	/** Indique si l'attribut est final (constante) */
 	private boolean estFinal;
 
+	/** Valeur du final*/
+	private String valeurFinal = null;
+
 	/**
      * Crée un nouvel attribut.
      *
@@ -37,15 +40,33 @@ public class Attribut
 	 * @param estStatic Indique si l'attribut est statique
 	 * @param estFinal Indique si l'attribut est final (constante)
      */
-	public Attribut(String visibilite, String type, String nom, boolean estStatic, boolean estFinal)
+	public Attribut(String visibilite, String type, String nom, boolean estStatic)
 	{
 		this.visibilite = visibilite;
 		this.type = type;
 		this.nom = nom;
 		this.estStatic = estStatic;
-		this.estFinal = estFinal;
+		this.estFinal = false;
 	}
 
+	public Attribut(String visibilite, String type, String nom, boolean estStatic, String valeur)
+	{
+		this(visibilite, type, nom, estStatic);
+		this.estFinal = true;
+		this.valeurFinal = this.checkValeur(valeur);
+	}
+
+	private String checkValeur(String valeur)
+	{
+		type = this.type.toLowerCase();
+		
+		if ( type.contains("list") || type.contains("set") || type.contains("collection") || type.contains("[]"))
+		{
+			return "...";
+		}
+
+		return valeur;
+	}
 	/**
 	 * Retourne la visibilité de l'attribut.
 	 *
@@ -94,6 +115,16 @@ public class Attribut
 	public boolean isEstFinal()
 	{
 		return estFinal;
+	}
+
+	/**
+	 * Retourne la valeur du final.
+	 *
+	 * @return la valeur du final
+	 */
+	public String getValeur()
+	{
+		return this.valeurFinal;
 	}
 
 }

@@ -5,9 +5,7 @@ public class Disque  extends Rond implements ISurface
 	private static int       autoIncre;
 	private static final int MAXLENGTH = 10;
 
-	private final String     NOM       = "NOM";
-
-
+	private final String     NOM       = "NOM allo";
 
 	private Point[]          tabPoints;
 	private Point            reponsable;
@@ -20,6 +18,11 @@ public class Disque  extends Rond implements ISurface
 		this.centre = centre;
 	}
 
+	public Disque(Point cente)
+	{
+		this(cente, 10);
+	}
+
 	public double calculerAire()
 	{
 		return Math.PI * super.getRayon() * super.getRayon();
@@ -30,7 +33,10 @@ public class Disque  extends Rond implements ISurface
 		return 2 * Math.PI * super.getRayon();
 	}
 
-	public Disque testGenerique()
+	public Disque testGenerique(int a,
+	                            int b,
+								int c,
+								int d)
 	{
 		return this;
 	}

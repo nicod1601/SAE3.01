@@ -19,6 +19,8 @@ public class CreeClass
 	private String nom;
 	/** type : class, interface, record*/
 	private String type="";
+	/** Si class est abstract*/
+	private boolean estAbstract=false;
 	/** Liste des attributs de la classe (int, String, double, etc...) */
 	private List<Attribut> lstAttribut;
 	/** Liste des attributs de classe ex : Point x; pour carré */
@@ -51,10 +53,8 @@ public class CreeClass
 	 */
 	public static CreeClass factoryCreeClass(String data)
 	{
-		if (CreeClass.verifdata(data))
-			return new CreeClass(data);
-		else
-			return null;
+		CreeClass.verifdata(data);
+		return new CreeClass(data);
 	}
 
 	/**
@@ -80,9 +80,9 @@ public class CreeClass
 		this.lstMethode       = new ArrayList<Methode>();
 		this.lstClassAttribut = new ArrayList<Attribut>();
 		this.lstClassAttribut = new ArrayList<Attribut>();
-		try
+		try(Scanner sc = new Scanner(new FileInputStream(data), "UTF8");)
 		{
-			Scanner sc = new Scanner(new FileInputStream(data), "UTF8");
+		
 			while (sc.hasNext())
 			{
 				String line = sc.nextLine();
@@ -111,8 +111,8 @@ public class CreeClass
 					line = line.substring(0, line.indexOf("/*")) + line.substring(line.indexOf("*/") + 2);
 				}
 
-				// Si class / interface / class abstract
-				if (line.contains("class") || line.contains("interface") || (line.contains("abstract") && line.contains("class")))
+				// Si class / interface / class abstract / record
+				if (line.contains("class") || line.contains("interface") || (line.contains("abstract") && line.contains("class")) || line.contains("record"))
 				{
 					/*------------------------------*/
 					/* Ananlyse ligne : mot par mot */
@@ -128,10 +128,10 @@ public class CreeClass
 						if(mot.equals("\t"))
 							continue;
 
-						if ((mot.equals("class") && !line.contains("abstract"))|| mot.equals("interface") || mot.equals("record"))
+						if (mot.equals("class") || mot.equals("interface") || mot.equals("record"))
 							this.type = mot;
 						if (mot.equals("abstract"))
-							this.type = mot;
+							this.estAbstract = true;
 
 						//extends / implements / record
 						switch (mot)
@@ -183,10 +183,12 @@ public class CreeClass
 					}
 				}
 			}
+			sc.close();
+			
 			this.lien = new Lien(this);
 			this.multi = new Multiplicite();
 			
-			sc.close();
+			
 
 		}
 		catch (Exception e)
@@ -226,6 +228,16 @@ public class CreeClass
 
 		// Mot après visibilité est forcément le nom
 		nom = avantSc.next();
+		// Si on a un suivant : public Disque methode()
+		// Ca veut dire que c'est une méthode et pas un constructeur
+		if ( avantSc.hasNext() )
+		{
+			this.ajouterMethode(constructeur);
+			avantSc.close();
+			return;
+		}
+		
+		
 		avantSc.close();
 
 		// Parser les paramètres
@@ -265,6 +277,7 @@ public class CreeClass
 		String visibilite = sc.next();
 		boolean estStatic = false;
 		boolean estFinal  = false;
+		String valeur="";
 
 		String motSuivant = sc.next();
 
@@ -291,10 +304,28 @@ public class CreeClass
 		// Dernier mot forcément le nom
 		String nom = sc.next();
 
-		if (!nom.isEmpty())
+		//Si attribut est final on récupère sa valeur
+		//Ensuite dans attribut on verifie le type
+		//et remplace la valeur par "..." si tableau ou list etc...
+		if (estFinal)
+		{
+			// = valeur
+			sc.next();
+			while(sc.hasNext())
+			{
+				valeur += sc.next() + " ";
+			}
+
+			valeur = valeur.replace(";", "");
+
+			Attribut attr = new Attribut(visibilite, type, nom, estStatic,valeur);
+			this.lstAttribut.add(attr);
+		}
+
+		if (!nom.isEmpty() && !estFinal)
 		{
 			nom = nom.replace(";", "");
-			Attribut attr = new Attribut(visibilite, type, nom, estStatic, estFinal);
+			Attribut attr = new Attribut(visibilite, type, nom, estStatic);
 			this.lstAttribut.add(attr);
 		}
 		sc.close();
@@ -437,7 +468,7 @@ public class CreeClass
 		// cree les attribut
 		for (String[] sh : lstLstParamInfo)
 		{
-			this.lstAttribut.add(new Attribut("private",sh[0],sh[1],false,false) );
+			this.lstAttribut.add(new Attribut("private",sh[0],sh[1],false) );
 		}
 		// crée les getter
 		for (Attribut att : lstAttribut)
@@ -479,21 +510,12 @@ public class CreeClass
 	 * @param data le nom du fichier
 	 * @return boolean
 	 */
-	private static boolean verifdata(String data)
+	private static void verifdata(String data) throws IllegalArgumentException
 	{
-		try
+		if (!data.substring(data.length() - 5).equals(".java"))
 		{
-			if (data.substring(data.length() - 5).equals(".java"))
-			{
-				return true;
-			}
+			throw new IllegalArgumentException("Erreur " + data + " n'est pas un fichier .java");
 		}
-		catch (Exception e)
-		{
-			System.out.println("\u001B[31m Erreur : le fichier spécifié ( " + data
-					+ " ) n'existe pas ou n'est pas un fichier .Java.\u001B[0m");
-		}
-		return false;
 	}
 
 	/**
@@ -529,6 +551,14 @@ public class CreeClass
 	}
 
 	/**
+	 * 
+	 */
+	public boolean estAbstract()
+	{
+		return this.estAbstract;
+	}
+
+	/**
 	 * Retourne la list de c'est attribut.
 	 *
 	 * @return la list de c'est attribut;
@@ -536,6 +566,11 @@ public class CreeClass
 	public List<Attribut> getLstAttribut()
 	{
 		return lstAttribut;
+	}
+
+	public List<Attribut> getlstClassAttribut()
+	{
+		return this.lstClassAttribut;
 	}
 
 	/**

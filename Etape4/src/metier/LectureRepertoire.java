@@ -43,9 +43,10 @@ public class LectureRepertoire
 					}
 				}
 			}
+			this.creeLien();
+			this.creerMultiplicite();
 		}
-		this.creeLien();
-		this.creerMultiplicite();
+		
 	}
 
 	/**
