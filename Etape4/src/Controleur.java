@@ -43,7 +43,7 @@ public class Controleur
 	/** Référence vers l'interface utilisateur en mode console */
 	private IhmCui          ihmCui;
 
-	private FrameAppli frame;
+	private FrameAppli      frame;
 
 	/*╔════════════════════════╗*/
 	/*║     Constructeur       ║*/
