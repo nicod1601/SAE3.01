@@ -568,7 +568,7 @@ public class CreeClass
 		return lstAttribut;
 	}
 
-	public List<Attribut> getlstClassAttribut()
+	public List<Attribut> getLstClassAttribut()
 	{
 		return this.lstClassAttribut;
 	}

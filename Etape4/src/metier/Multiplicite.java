@@ -45,8 +45,8 @@ public class Multiplicite
 		for (CreeClass autreClass : lstClass) 
 		{
 
-			List<Attribut> lstAtt             = creeClass.getLstAttribut();
-			List<Attribut> lstAttAutre        = autreClass.getLstAttribut();
+			List<Attribut> lstAtt             = creeClass.getLstClassAttribut();
+			List<Attribut> lstAttAutre        = autreClass.getLstClassAttribut();
 			List<List<String>> lstToutMultipl = new ArrayList<List<String>>();
 			List<String> lstMultiplC          = new ArrayList<String>();
 			List<String> lstMultiplAutre      = new ArrayList<String>();

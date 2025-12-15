@@ -331,7 +331,7 @@ public class IhmCui
 		for (CreeClass c : lstClass)
 		{
 			System.out.println(c.getNom());
-			for (Attribut a : c.getlstClassAttribut())
+			for (Attribut a : c.getLstClassAttribut())
 			{
 				System.out.println("type : " +a.getType());
 			}
