@@ -13,4 +13,8 @@ src/ihm/PanneauFichier.java
 src/ihm/PanneauMenu.java
 src/ihm/PanneauPrincipal.java
 
+src/ihm/FrameEdit.java
+src/ihm/PanneauChoix.java
+src/ihm/PanneauInfo.java
+
 src/Controleur.java
