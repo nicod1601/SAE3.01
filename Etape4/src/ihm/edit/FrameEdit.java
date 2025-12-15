@@ -1,4 +1,4 @@
-package src.ihm;
+package src.ihm.edit;
 
 import java.awt.BorderLayout;
 import javax.swing.*;

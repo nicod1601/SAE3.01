@@ -246,8 +246,6 @@ public class PanneauMenu extends JPanel implements ActionListener
 		{
 			File   fichierAEnregistrer = dialogueEnregistrement.getSelectedFile();
 			String cheminAbsolu = fichierAEnregistrer.getAbsolutePath();
-			
-			this.();
 
 		} 
 	}

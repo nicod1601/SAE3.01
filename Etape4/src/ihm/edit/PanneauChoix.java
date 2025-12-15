@@ -1,4 +1,4 @@
-package src.ihm;
+package src.ihm.edit;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
