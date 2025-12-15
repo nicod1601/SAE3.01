@@ -4,6 +4,7 @@ src/metier/CreeClass.java
 src/metier/LectureRepertoire.java
 src/metier/Lien.java
 src/metier/Multiplicite.java
+src/metier/LectureFichier.java
 
 src/ihm/Fleche.java
 src/ihm/IhmCui.java

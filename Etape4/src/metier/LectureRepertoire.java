@@ -36,10 +36,10 @@ public class LectureRepertoire
 			{
 				if (f.getName().endsWith(".java"))
 				{
-					CreeClass c = CreeClass.factoryCreeClass(f.getPath());
-					if (c != null)
+					LectureFichier lecture = LectureFichier.factoryLectureFichier(f.getPath());
+					if (lecture != null)
 					{
-						this.lstClass.add(c);
+						this.lstClass.add(lecture.getClasse());
 					}
 				}
 			}

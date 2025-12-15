@@ -4,6 +4,7 @@ import src.ihm.IhmCui;
 
 import src.metier.Attribut;
 import src.metier.CreeClass;
+import src.metier.LectureFichier;
 import src.metier.LectureRepertoire;
 import src.metier.Methode;
 
@@ -112,7 +113,8 @@ public class Controleur
 		{
 			System.out.print("Nous sommes dans le dossier class. Veuillez entrer le chemin du fichier (ex: ../data/Point.java) : ");
 			data = sc.next();
-			lstMetiers.add(CreeClass.factoryCreeClass(data));
+			LectureFichier lf = LectureFichier.factoryLectureFichier(data);
+			lstMetiers.add(lf.getClasse());
 		}
 		else if (niv > 2 && niv < 5)
 		{
@@ -123,7 +125,7 @@ public class Controleur
 
 			for ( CreeClass c :lectureRepertoire.getLstClass() )
 			{
-					lstMetiers.add(c);
+				lstMetiers.add(c);
 			}
 		}
 		return lstMetiers;
@@ -192,7 +194,8 @@ public class Controleur
 	 */
 	public CreeClass CreerClass(String chemin)
 	{
-		return CreeClass.factoryCreeClass(chemin);
+		LectureFichier lf = LectureFichier.factoryLectureFichier(chemin);
+		return lf.getClasse();
 	}
 
 	/*╔════════════════════════╗*/

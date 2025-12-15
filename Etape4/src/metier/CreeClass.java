@@ -18,9 +18,9 @@ public class CreeClass
 	/** Nom de la classe */
 	private String nom;
 	/** type : class, interface, record*/
-	private String type="";
+	private String type;
 	/** Si class est abstract*/
-	private boolean estAbstract=false;
+	private boolean estAbstract;
 	/** Liste des attributs de la classe (int, String, double, etc...) */
 	private List<Attribut> lstAttribut;
 	/** Liste des attributs de classe ex : Point x; pour carré */
@@ -29,9 +29,9 @@ public class CreeClass
 	private List<Methode> lstMethode;
 
 	/** Nom de la classe mère, null si existe pas */
-	private String mere = null;
+	private String mere;
 	/** Liste des interfaces implémenté par la classe */
-	private List<String> interfaces = null;
+	private List<String> interfaces;
 	/** Lien entre les classes selon la liste des attributs */
 	private Lien lien;
 	/** Multiplicité de la classe avec une autre classe avec la/les multiplicitée(s) */
@@ -43,157 +43,42 @@ public class CreeClass
 	private int largeur;
 
 	/**
-	 * Factory qui crée des objets {@link CreeClass}.
-	 * <p>
-	 * Ce pattern permet d'instancier différentes implémentations
-	 * sans exposer leur logique de création.
-	 * </p>
-	 * @param Lien du fichier
-	 * @return CreeClass
+	 * Création d'un nouvel objet CreeClass.
 	 */
-	public static CreeClass factoryCreeClass(String data)
+	public CreeClass()
 	{
-		CreeClass.verifdata(data);
-		return new CreeClass(data);
+		this.nom = "";
+		this.type = "";
+		this.estAbstract = false;
+		this.lstAttribut = new ArrayList<>();
+		this.lstClassAttribut = new ArrayList<>();
+		this.lstMethode = new ArrayList<>();
+		this.mere = null;
+		this.lien = null;
+		this.multi = null;
 	}
 
 	/**
-	 * Création d'un nouvel objet CreeClass.
-	 *
-	 * @param data le nom du fichier qu'on va traiter
+	 * 
 	 */
-	private CreeClass(String data)
+	public void initLstInterface()
 	{
-		this.posX = 0;
-		this.posY = 0;
-		this.hauteur = 0;
-		this.largeur = 0;
+		this.interfaces = new ArrayList<>();
+	}
+	
+	/** */
+	public void addInterface(String inter)
+	{
+		this.interfaces.add(inter);
+	}
 
-
-		String nomComplet = new java.io.File(data).getName();
-		if (nomComplet.endsWith(".java"))
-		{
-			this.nom = nomComplet.substring(0, nomComplet.length() - 5);
-		}
-
-		this.lstAttribut      = new ArrayList<Attribut>();
-		this.lstMethode       = new ArrayList<Methode>();
-		this.lstClassAttribut = new ArrayList<Attribut>();
-		try(Scanner sc = new Scanner(new FileInputStream(data), "UTF8");)
-		{
-		
-			while (sc.hasNext())
-			{
-				String line = sc.nextLine();
-
-				if(line.equals(""))
-					continue;
-				
-				/*--------------------------*/
-				/* Gestion des commentaires */
-				/*--------------------------*/
-				
-				// Si '/*'' Sur plusieurs lignes '*/''
-				if (line.contains("/*"))
-					while (!line.contains("*/"))
-						line = sc.nextLine();
-
-				// Si "this.x = x; //public String getX()""
-				if (line.contains("//"))
-				{
-					line = line.substring(0, line.indexOf("//"));
-				}
-
-				// Si "this.x = x;/* public String getX()*/""
-				if (line.contains("/*") && line.contains("*/"))
-				{
-					line = line.substring(0, line.indexOf("/*")) + line.substring(line.indexOf("*/") + 2);
-				}
-
-				// Si class / interface / class abstract / record
-				if (line.contains("class") || line.contains("interface") || (line.contains("abstract") && line.contains("class")) || line.contains("record"))
-				{
-					/*------------------------------*/
-					/* Ananlyse ligne : mot par mot */
-					/*------------------------------*/
-					
-					// Utiliser Scanner pour parser la ligne
-					Scanner lineSc = new Scanner(line);
-					while (lineSc.hasNext())
-					{
-						String mot = lineSc.next();
-						if(mot.equals(" "))
-							continue;
-						if(mot.equals("\t"))
-							continue;
-
-						if (mot.equals("class") || mot.equals("interface") || mot.equals("record"))
-							this.type = mot;
-						if (mot.equals("abstract"))
-							this.estAbstract = true;
-
-						//extends / implements / record
-						switch (mot)
-						{
-							case "extends" -> { this.mere = lineSc.next(); }
-							
-							case "implements" ->
-								{
-									this.interfaces = new ArrayList<String>();
-									while (lineSc.hasNext())
-									{
-										String inter = lineSc.next().replace(",", "").trim();
-										if (!inter.isEmpty())
-										{
-											this.interfaces.add(inter);
-										}
-									}
-								}
-							case "record" -> { this.creeRecord(line); }
-						}
-					}
-					lineSc.close();
-					continue;
-				}
-
-				// Méthode / Constructeur / Attribut / Abstract
-				if ((line.contains("private") || line.contains("protected") || line.contains("public")
-					|| line.contains("abstract") ) && !line.contains("class"))
-					// sans class car class peut être abstract
-				{
-					//Si dans la ligne il y a le nom de la classe ainsi qu'une visibilité alors c'est un constructeur
-					if (line.contains(this.nom) && line.contains("("))
-					{
-						this.ajouterConstructeur(line);
-					}
-					else //sinon c'est pas un constructeur
-					{
-						//S'il y a une visibilité ainsi qu'une parenthèse
-						//Mais pas le nom de la classe alors c'est une méthode
-						if (line.contains("(") )
-						{
-							this.ajouterMethode(line);
-						}
-						//Sinon s'il y a pas de parenthèse et qu'il y a visibilité et un ';' alors c'est attribut
-						else if (line.contains(";"))
-						{
-							this.ajouterAttribut(line);
-						}
-					}
-				}
-			}
-			sc.close();
-			
-			this.lien = new Lien(this);
-			this.multi = new Multiplicite();
-			
-			
-
-		}
-		catch (Exception e)
-		{
-			System.out.println("\u001B[31m Erreur : le fichier spécifié ( " + data + " ) n'existe pas.\u001B[0m");
-		}
+	/**
+	 * 
+	 */
+	public void initLienMulti()
+	{
+		this.lien = new Lien(this);
+		this.multi = new Multiplicite();
 	}
 
 	/**
@@ -203,7 +88,7 @@ public class CreeClass
 	 * @return void
 	 * @throws NomException Problème de parenthèse (non trouvées)
 	 */
-	private void ajouterConstructeur(String constructeur)
+	public void ajouterConstructeur(String constructeur)
 	{
 		constructeur = constructeur.trim();
 
@@ -269,7 +154,7 @@ public class CreeClass
 	 * @param attribut ligne de l'attribut à traiter
 	 * @return void
 	 */
-	private void ajouterAttribut(String attribut)
+	public void ajouterAttribut(String attribut)
 	{
 		Scanner sc = new Scanner(attribut);
 
@@ -336,7 +221,7 @@ public class CreeClass
 	 * @param methode ligne de la Methode
 	 * @return void
 	 */
-	private void ajouterMethode(String methode)
+	public void ajouterMethode(String methode)
 	{
 		Scanner sc = new Scanner(methode);
 
@@ -432,7 +317,7 @@ public class CreeClass
 	 * @param record ligne de la record
 	 * @return void
 	 */
-	private void creeRecord(String record)
+	public void creeRecord(String record)
 	{
 		record = record.trim();
 		int posOuv  = record.indexOf("(");
@@ -501,20 +386,6 @@ public class CreeClass
 	public void creerMultiplicite(List<CreeClass> lstClass)
 	{
 		this.multi.creerMutiplisite(this, lstClass);
-	}
-
-	/**
-	 * on vérifie si c'est bien un fichier java
-	 *
-	 * @param data le nom du fichier
-	 * @return boolean
-	 */
-	private static void verifdata(String data) throws IllegalArgumentException
-	{
-		if (!data.substring(data.length() - 5).equals(".java"))
-		{
-			throw new IllegalArgumentException("Erreur " + data + " n'est pas un fichier .java");
-		}
 	}
 
 	/**
@@ -642,6 +513,51 @@ public class CreeClass
 		return this.hauteur;
 	}
 
+
+	/*-----------------------*/
+	/*         SETTERS       */
+	/*-----------------------*/
+
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public void setEstAbstract(boolean estAbstract) {
+		this.estAbstract = estAbstract;
+	}
+
+	public void setLstAttribut(List<Attribut> lstAttribut) {
+		this.lstAttribut = lstAttribut;
+	}
+
+	public void setLstClassAttribut(List<Attribut> lstClassAttribut) {
+		this.lstClassAttribut = lstClassAttribut;
+	}
+
+	public void setLstMethode(List<Methode> lstMethode) {
+		this.lstMethode = lstMethode;
+	}
+
+	public void setMere(String mere) {
+		this.mere = mere;
+	}
+
+	public void setInterfaces(List<String> interfaces) {
+		this.interfaces = interfaces;
+	}
+
+	public void setLien(Lien lien) {
+		this.lien = lien;
+	}
+
+	public void setMulti(Multiplicite multi) {
+		this.multi = multi;
+	}
+
 	public void setPosX(int x)
 	{
 		this.posX = x;
@@ -661,4 +577,5 @@ public class CreeClass
 	{
 		this.largeur = l;
 	}
+
 }
