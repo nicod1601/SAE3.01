@@ -225,13 +225,14 @@ public class PanneauMenu extends JPanel implements ActionListener
 			this.viderListe();
 		}
 
-		JFileChooser chooser = this.creerFileChooser(JFileChooser.DIRECTORIES_ONLY, "Sélectionner un dossier contenant des fichiers .java");
+		JFileChooser chooser = this.creerFileChooser(JFileChooser.FILES_AND_DIRECTORIES, "Sélectionner un dossier contenant des fichiers .java");
 		
 		int resultat = chooser.showOpenDialog(this);
-		if (resultat == JFileChooser.APPROVE_OPTION)
+    
+		if (resultat == JFileChooser.APPROVE_OPTION) 
 		{
 			this.dossierOuvert = chooser.getSelectedFile();
-			chargerFichiersDossier();
+			this.chargerFichiersDossier();
 			this.ctrl.LectureRepertoire(this.dossierOuvert);
 			this.frameAppli.majListeClasses(true, null);
 		}
