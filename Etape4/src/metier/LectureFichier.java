@@ -46,7 +46,7 @@ public class LectureFichier
 			{
 				String line = sc.nextLine();
 
-				if(line.equals(""))
+				if(line.equals("") || line.contains("{") || line.contains("]"))
 					continue;
 				
 				/*--------------------------*/
