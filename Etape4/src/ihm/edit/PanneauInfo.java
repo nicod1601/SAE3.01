@@ -3,6 +3,10 @@ package src.ihm.edit;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import javax.swing.*;
 import src.Controleur;
 import src.metier.Attribut;
@@ -93,8 +97,8 @@ public class PanneauInfo extends JPanel implements ActionListener
 		this.contentPanel.add(new JLabel("Attributs :"), gbc);
 		this.attributsArea = new JTextArea(4, 30);
 		this.attributsArea.setEditable(false);
-		this.attributsArea.setLineWrap(true);
-		this.attributsArea.setWrapStyleWord(true);
+		//this.attributsArea.setLineWrap(true);
+		//this.attributsArea.setWrapStyleWord(true);
 		gbc.gridx = 1; gbc.gridy = row++; gbc.weightx = 1; gbc.fill = GridBagConstraints.BOTH;
 		this.contentPanel.add(new JScrollPane(this.attributsArea), gbc);
 
@@ -103,14 +107,14 @@ public class PanneauInfo extends JPanel implements ActionListener
 		this.contentPanel.add(new JLabel("Méthodes :"), gbc);
 		this.methodesArea = new JTextArea(5, 30);
 		this.methodesArea.setEditable(false);
-		this.methodesArea.setLineWrap(true);
-		this.methodesArea.setWrapStyleWord(true);
+		//this.methodesArea.setLineWrap(true);
+		//this.methodesArea.setWrapStyleWord(true);
 		gbc.gridx = 1; gbc.gridy = row++; gbc.weightx = 1; gbc.fill = GridBagConstraints.BOTH;
 		this.contentPanel.add(new JScrollPane(this.methodesArea), gbc);
 
 		// Remplir l'espace vertical restant
 		gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 2; gbc.weighty = 1; gbc.fill = GridBagConstraints.BOTH;
-		this.contentPanel.add(Box.createVerticalGlue(), gbc);
+		//this.contentPanel.add(Box.createVerticalGlue(), gbc);
 
 		this.add(new JScrollPane(this.contentPanel), BorderLayout.CENTER);
 
@@ -118,10 +122,10 @@ public class PanneauInfo extends JPanel implements ActionListener
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 		this.btnModif = new JButton("Modifier Classe");
 		this.btnValid = new JButton("Valider Modifications");
-        
+
 		buttonPanel.add(this.btnModif);
 		buttonPanel.add(this.btnValid);
-        
+
 		this.add(buttonPanel, BorderLayout.SOUTH);
 
 		this.effacer();
@@ -149,24 +153,26 @@ public class PanneauInfo extends JPanel implements ActionListener
 		// Les panels de checkboxes pour héritage/interfaces sont gérés par majInfoClasse(...)
 
 		// Attributs
-		StringBuilder attributsText = new StringBuilder();
+
+		String attributsText = "";
+
 		if (!classe.getLstAttribut().isEmpty())
 		{
 			for (Attribut attr : classe.getLstAttribut())
 			{
-				attributsText.append(attr.getType()).append(" ").append(attr.getNom()).append("\n");
+				attributsText += attr.getType()+" "+ attr.getNom()+"\n";
 			}
 		}
 		if (!classe.getLstClassAttribut().isEmpty())
 		{
 			for (Attribut att : classe.getLstClassAttribut())
 			{
-				attributsText.append(att.getType()).append(" ").append(att.getNom()).append("\n");
+				attributsText += att.getType() + "\t" + att.getNom() + "\n";
 			}
 		}
 		if (classe.getLstClassAttribut().isEmpty() && classe.getLstAttribut().isEmpty() )
 		{
-			attributsText.append("Aucun attribut");
+			attributsText += "Aucun attribut";
 		}
 		this.attributsArea.setText(attributsText.toString());
 
@@ -178,7 +184,7 @@ public class PanneauInfo extends JPanel implements ActionListener
 			{
 				methodesText.append(method.getVisibilite()).append(" ")
 					.append(method.getType()).append(" ")
-					.append(method.getNom()).append("(...)");
+					.append(method.getNom()).append("(...)"+"\n");
 			}
 		}
 		else
@@ -262,15 +268,15 @@ public class PanneauInfo extends JPanel implements ActionListener
 
 		if (classeTrouvee != null && classeTrouvee.getMultiplicite() != null && classeTrouvee.getMultiplicite().getMapMultiplicites() != null)
 		{
-			java.util.Map<src.metier.CreeClass, java.util.List<java.util.List<String>>> map = classeTrouvee.getMultiplicite().getMapMultiplicites();
-			for (java.util.Map.Entry<src.metier.CreeClass, java.util.List<java.util.List<String>>> entry : map.entrySet())
+			Map<CreeClass, List<List<String>>> map = classeTrouvee.getMultiplicite().getMapMultiplicites();
+			for (Entry<CreeClass, List<List<String>>> entry : map.entrySet())
 			{
-				src.metier.CreeClass other = entry.getKey();
-				java.util.List<java.util.List<String>> pairs = entry.getValue();
+				CreeClass other = entry.getKey();
+				List<List<String>> pairs = entry.getValue();
 
 				// récupérer les noms d'attributs impliqués dans les liaisons, dans le même ordre
-				java.util.List<String> attrsThis = new java.util.ArrayList<>();
-				java.util.List<String> attrsOther = new java.util.ArrayList<>();
+				java.util.List<String> attrsThis = new ArrayList<>();
+				java.util.List<String> attrsOther = new ArrayList<>();
 				for (Attribut att : classeTrouvee.getLstClassAttribut())
 				{
 					if (att.getType().contains(other.getNom())) attrsThis.add(att.getNom());
@@ -282,7 +288,7 @@ public class PanneauInfo extends JPanel implements ActionListener
 
 				for (int p = 0; p < pairs.size(); p++)
 				{
-					java.util.List<String> pair = pairs.get(p);
+					List<String> pair = pairs.get(p);
 					String left = pair.size() >= 1 ? pair.get(0) : "1..1";
 					String right = pair.size() >= 2 ? pair.get(1) : "1..1";
 					String attrThis = p < attrsThis.size() ? attrsThis.get(p) : "";
@@ -294,12 +300,14 @@ public class PanneauInfo extends JPanel implements ActionListener
 					lbl.setPreferredSize(new Dimension(120, 20));
 					row.add(lbl);
 					String[] options = new String[]{"1..1", "1..*", "0..*"};
+
 					JComboBox<String> cbLeft = new JComboBox<>(options);
 					cbLeft.setSelectedItem(left);
 					cbLeft.setEnabled(false);
 					row.add(cbLeft);
 					row.add(new JLabel(attrThis.isEmpty() ? "" : " (" + attrThis + ")"));
 					row.add(new JLabel(" / "));
+
 					JComboBox<String> cbRight = new JComboBox<>(options);
 					cbRight.setSelectedItem(right);
 					cbRight.setEnabled(false);
@@ -311,8 +319,6 @@ public class PanneauInfo extends JPanel implements ActionListener
 		}
 		this.multiplicitePanel.revalidate();
 		this.multiplicitePanel.repaint();
-    
-    
 	}
 
 	public void actionPerformed (ActionEvent e)
