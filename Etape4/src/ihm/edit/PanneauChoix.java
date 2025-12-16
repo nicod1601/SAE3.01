@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import src.Controleur;
 import src.ihm.Couleur;
+import src.metier.CreeClass;
 
 public class PanneauChoix extends JPanel
 {
@@ -59,9 +60,9 @@ public class PanneauChoix extends JPanel
 	
 	private JLabel creerLabelEnTete()
 	{
-		JLabel label = new JLabel("<html><center>📁 Fichiers chargés<br><br>" +
+		JLabel label = new JLabel("<html><center>📁 Graph UML chargés<br><br>" +
 								  "<span style='font-size:10px; color:#bdc3c7;'>" +
-								  "Fichiers du dossier<br>sélectionné" +
+								  "Graph UML<br>sélectionné" +
 								  "</span></center></html>");
 		label.setFont(new Font("Segoe UI Emoji", Font.BOLD, 13));
 		label.setBorder(new EmptyBorder(15, 10, 15, 10));
@@ -100,11 +101,16 @@ public class PanneauChoix extends JPanel
 	/**
 	 * Ajoute un fichier à la liste
 	 */
-	public void ajouterFichier(String nomFichier)
+	public void ajouterFichier()
 	{
-		if (!this.modeleFichiers.contains(nomFichier))
+		if (this.ctrl.getLstClass() == null){ return;}
+		for (CreeClass classe : this.ctrl.getLstClass())
 		{
-			this.modeleFichiers.addElement(nomFichier);
+			String nomFichier = classe.getNom();
+			if (!this.modeleFichiers.contains(nomFichier))
+			{
+				this.modeleFichiers.addElement(nomFichier);
+			}
 		}
 	}
 	

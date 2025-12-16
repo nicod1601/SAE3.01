@@ -33,4 +33,9 @@ public class FrameEdit extends JFrame
 
 		this.setVisible(false);
 	}
+
+	public void majListeClasses()
+	{
+		this.panneauChoix.ajouterFichier();
+	}
 }

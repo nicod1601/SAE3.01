@@ -249,6 +249,7 @@
 			{
 				this.frameEdit.setVisible(false);
 			}
+			this.frameEdit.majListeClasses();
 		}
 
 		public void exporterEnImage()
