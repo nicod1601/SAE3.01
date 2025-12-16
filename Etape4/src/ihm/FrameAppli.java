@@ -22,8 +22,7 @@ public class FrameAppli extends JFrame
 	{
 		this.setTitle("Création UML Java");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setSize(screenSize.width, screenSize.height);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.setLocationRelativeTo(null);
 		this.setLayout(new BorderLayout());
 
@@ -37,11 +36,15 @@ public class FrameAppli extends JFrame
 		this.panneauPrincipal = new PanneauPrincipal(ctrl, this);
 
 
+		JScrollPane scrollFrame = new JScrollPane(this.panneauPrincipal,
+		                                          JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+		                                          JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
 		/*-------------------------*/
 		/* Position des Composants */
 		/*-------------------------*/
 		this.add(this.panneauFichier, BorderLayout.WEST);
-		this.add(this.panneauPrincipal, BorderLayout.CENTER);
+		this.add(scrollFrame, BorderLayout.CENTER);
 		this.add(this.panneauMenu, BorderLayout.NORTH);
 
 		this.setVisible(true);

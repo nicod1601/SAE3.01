@@ -15,6 +15,13 @@ import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+
 import src.Controleur;
 import src.metier.Attribut;
 import src.metier.Couleur;
@@ -33,8 +40,6 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	private int sourisX;
 	private int sourisY;
 	private boolean inClass;
-
-	private double zoom    = 1.0;
 	private double offsetX = 0;
 	private double offsetY = 0;
 
@@ -42,10 +47,18 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	private ArrayList<Fleche> lstFleches;
 	private ArrayList<Integer[]> lstCordFleche;
 	private Multiplicite multiplicite;
+/*	private JScrollBar   jScrollBarVert;
+	private JScrollBar   jScrollBarHoriz;
+	private int          hauteur;
+	private int          largeur;*/
 	
 
 	public PanneauPrincipal(Controleur ctrl, FrameAppli frame) 
 	{
+	/*	this.largeur = 900;
+		this.hauteur = 500;
+		this.setPreferredSize(new Dimension(largeur, hauteur));*/
+		this.setLayout(new BorderLayout());
 		this.setBackground(Couleur.BLANC.getColor());
 		this.ctrl = ctrl;
 		this.frame = frame;
@@ -56,10 +69,15 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		this.inClass = false;
 
 		this.indexFlecheSelec = -1;
-		this.lstFleches = new ArrayList<>();
-		this.lstCordFleche = new ArrayList<>(); // AJOUTÉ
-		this.multiplicite = null;
+		this.lstFleches    = new ArrayList<>();
+		this.lstCordFleche = new ArrayList<>();
+		this.multiplicite  = null;
+	/*	this.jScrollBarVert  = new JScrollBar(JScrollBar.VERTICAL  , 0, 10, 0,hauteur);
+		this.jScrollBarHoriz = new JScrollBar(JScrollBar.HORIZONTAL, 0, 10, 0,largeur);
+		this.add(jScrollBarVert,BorderLayout.EAST);
+		this.add(jScrollBarHoriz,BorderLayout.SOUTH);*/
 
+		//this.add(new JScrollPane(0,90));
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 	}
@@ -106,7 +124,6 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		this.inClass = false;
 		this.offsetX = 0;
 		this.offsetY = 0;
-		this.zoom = 1.0;
 		this.lstFleches.clear();
 		this.lstCordFleche.clear(); // AJOUTÉ
 		this.multiplicite = null;
@@ -125,11 +142,6 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		
 		// Sauvegarde du transform d'origine
 		AffineTransform old = g2.getTransform();
-
-		// Application du zoom
-		g2.translate(offsetX, offsetY);
-		g2.scale(zoom, zoom);
-
 		int xOffset = 50;
 		int yOffset = 50;
 		int maxHeightLigne = 0;
@@ -144,8 +156,8 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			List<Methode> lstMethodes = classe.getLstMethode();
 
 			int heightTitre = 40;
-			int heightAttributs = lstAttributs.size() * 20 + 20;
-			int heightMethodes = lstMethodes.size() * 20 + 20;
+			int heightAttributs = (lstAttributs.size() > 3 ? 4 : lstAttributs.size()) * 20 + 20;
+			int heightMethodes  = (lstMethodes.size()  > 3 ? 4 : lstMethodes.size() ) * 20 + 20;
 			int totalHeight = heightTitre + heightAttributs + heightMethodes;
 
 			// Calculer la largeur nécessaire
@@ -249,35 +261,48 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 				g2.drawLine(posX, posY + heightTitre + heightAttributs, posX + width, posY + heightTitre + heightAttributs);
 			}
 			
+	/*-----------------------------------------------------------------------------*/
+	/*                          DESSINER UNE CLASSE                                */
+	/*-----------------------------------------------------------------------------*/
 
 			// Texte : nom de la classe (centré)
 			String nomClasse = classe.getNom();
 			int largeurNom = g2.getFontMetrics().stringWidth(nomClasse);
 			g2.drawString(nomClasse, posX + (width - largeurNom) / 2, posY + 25);
 
+			int cptAttr = 1;
 			// Attributs
 			for(Attribut attr : lstAttributs) 
 			{
 				String symbole = "";
 				String finale = "";
-
-				switch (attr.getVisibilite())
+				String typeAttr = "";
+				String AlligneGauche;
+				
+				if (cptAttr >= 4)
 				{
-					case "public":    symbole = "+ "; break;
-					case "private":   symbole = "- "; break;
-					case "protected": symbole = "# "; break;
-					default:          symbole = "~ "; break;
+					AlligneGauche = "...";
 				}
-
-				if(attr.isEstFinal()) 
+				else 
 				{
-					finale = " <<freeze>>";
+					switch (attr.getVisibilite())
+					{
+						case "public":    symbole = "+ "; break;
+						case "private":   symbole = "- "; break;
+						case "protected": symbole = "# "; break;
+						default:          symbole = "~ "; break;
+					}
+
+					if(attr.isEstFinal()) 
+					{
+						finale = " <<freeze>>";
+					}
+
+					String nomAttr = attr.getNom();
+					typeAttr = ": " + attr.getType() + finale;
+					AlligneGauche = " " + symbole + " " + nomAttr;
 				}
-
-				String nomAttr = attr.getNom();
-				String typeAttr = ": " + attr.getType() + finale;
-				String AlligneGauche = " " + symbole + " " + nomAttr;
-
+				
 				int largeurType = g2.getFontMetrics().stringWidth(typeAttr);
 				int xGauche = posX + 10; 
 				int xType = posX + width - largeurType - 10; 
@@ -285,6 +310,10 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 				g2.drawString(AlligneGauche, xGauche, posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20));
 				g2.drawString(typeAttr, xType, posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20));
 
+				if (cptAttr >= 4)
+				{
+					break;
+				}
 				if(attr.isEstStatic()) 
 				{
 					int yUnderline = posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20) + 2;
@@ -292,68 +321,87 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 					g2.drawLine(xGauche, yUnderline, xGauche + g2.getFontMetrics().stringWidth(AlligneGauche), yUnderline);
 					g2.setColor(Couleur.NOIR.getColor());
 				}
+
+				cptAttr++;
 			}
 
+			int cptMeth = 1;
 			// Méthodes
 			int index = 0;
 			for (Methode meth : lstMethodes) 
 			{
 				String symbole = "";
+				String AlligneGauche;
 
-				switch (meth.getVisibilite())
+				if (cptMeth >= 4)
 				{
-					case "public":    symbole = "+ "; break;
-					case "private":   symbole = "- "; break;
-					case "protected": symbole = "# "; break;
-					default:          symbole = "~ "; break;
+					g2.drawString("...", posX + 10, posY + heightTitre + heightAttributs + 20 + (index * 20));
 				}
-
-				String nomMethode = meth.getNom();
-				String debP = " (";
-
-				List<String[]> params = meth.getLstParametres();
-				String listP = "";
-				if (params != null)
+				else 
 				{
-					for (int i = 0; i < params.size(); i++)
+					switch (meth.getVisibilite())
 					{
-						String[] p = params.get(i); 
-						listP += p[1] + " : " + p[0];
-						if (i < params.size() - 1) 
+						case "public":    symbole = "+ "; break;
+						case "private":   symbole = "- "; break;
+						case "protected": symbole = "# "; break;
+						default:          symbole = "~ "; break;
+					}
+
+					String nomMethode = meth.getNom();
+					String debP = " (";
+
+					List<String[]> params = meth.getLstParametres();
+					String listP = "";
+					if (params != null)
+					{
+						for (int i = 0; i < params.size() && i <= 2; i++)
 						{
-							listP += ",   ";
+							String[] p = params.get(i);
+							if (i == 2)
+							{
+								listP += "... ";
+								break;
+							}
+							else 
+							{
+								listP += p[1] + " : " + p[0];
+								if (i < params.size() - 1)
+									listP += ",   ";
+							}
+							
 						}
 					}
+
+					String finP = ")";
+					String type = "";
+					if (!classe.getNom().equals(meth.getNom()))
+					{
+						type = " : " + meth.getType();
+					}
+
+					if(type.equals(" : void")){type = "";}
+
+					AlligneGauche = symbole + " " + nomMethode + debP + listP + finP;
+					int largeurType = g2.getFontMetrics().stringWidth(type);
+					int xGauche = posX + 10; 
+					int xType = posX + width - largeurType - 10;
+
+					int yPos = posY + heightTitre + heightAttributs + 20 + (index * 20);
+
+					g2.drawString(AlligneGauche, xGauche, yPos);
+					g2.drawString(type, xType, yPos);
+
+					if(meth.isEstStatic()) 
+					{
+						int yUnderline = posY + heightTitre + heightAttributs + 20 + (lstMethodes.indexOf(meth) * 20) + 2;
+						g2.setColor(Couleur.GRIS.getColor());
+						g2.drawLine(xGauche, yUnderline, xGauche + g2.getFontMetrics().stringWidth(AlligneGauche), yUnderline);
+						g2.setColor(Couleur.NOIR.getColor());
+					}
+
+					index++;
 				}
-
-				String finP = ")";
-				String type = "";
-				if (!classe.getNom().equals(meth.getNom()))
-				{
-					type = " : " + meth.getType();
-				}
-
-				if(type.equals(" : void")){type = "";}
-
-				String AlligneGauche = symbole + " " + nomMethode + debP + listP + finP;
-				int largeurType = g2.getFontMetrics().stringWidth(type);
-				int xGauche = posX + 10; 
-				int xType = posX + width - largeurType - 10;
-
-				int yPos = posY + heightTitre + heightAttributs + 20 + (index * 20);
-
-				g2.drawString(AlligneGauche, xGauche, yPos);
-				g2.drawString(type, xType, yPos);
-
-				if(meth.isEstStatic()) 
-				{
-					int yUnderline = posY + heightTitre + heightAttributs + 20 + (lstMethodes.indexOf(meth) * 20) + 2;
-					g2.setColor(Couleur.GRIS.getColor());
-					g2.drawLine(xGauche, yUnderline, xGauche + g2.getFontMetrics().stringWidth(AlligneGauche), yUnderline);
-					g2.setColor(Couleur.NOIR.getColor());
-				}
-
-				index++;
+				cptMeth++;
 			}
 		}
 
@@ -440,11 +488,16 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	public void mouseClicked(MouseEvent e)
 	{
 		this.inClass = false;
-		double realX = (e.getX() - offsetX) / zoom ;
-		double realY = (e.getY() - offsetY) / zoom ;
+		double realX = (e.getX() - offsetX);
+		double realY = (e.getY() - offsetY);
 
 		int tolerance = 5;
-		
+
+		if (SwingUtilities.isRightMouseButton(e)) 
+		{
+			// Clic droit : réinitialiser la sélection de la flèche
+		}
+
 		for(int cpt = 0; cpt < this.lstCordFleche.size(); cpt++) 
 		{
 			Integer[] tabInfo = this.lstCordFleche.get(cpt);
@@ -500,8 +553,8 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			int w = c.getLargeur();
 			int h = c.getHauteur();
 
-			double realX = (e.getX() - offsetX) / zoom ;
-			double realY = (e.getY() - offsetY) / zoom ;
+			double realX = (e.getX() - offsetX);
+			double realY = (e.getY() - offsetY);
 
 			if (realX >= x && realX <= x + w && realY >= y && realY <= y + h)
 			{
@@ -522,8 +575,8 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	{
 		if (this.inClass == true && this.indexSelectionner >= 0)
 		{
-			double realX = (e.getX() - offsetX) / zoom ;
-			double realY = (e.getY() - offsetY) / zoom ;
+			double realX = (e.getX() - offsetX);
+			double realY = (e.getY() - offsetY);
 
 			int newX = (int)(realX - this.sourisX);
 			int newY = (int)(realY - this.sourisY);
