@@ -1,8 +1,5 @@
 package src.ihm;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -14,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -355,14 +351,45 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	{
 		if (this.inClass == true && this.indexSelectionner >= 0)
 		{
+			CreeClass classeSelectionnee = this.lstClass.get(this.indexSelectionner);
+			
 			double realX = (e.getX() - offsetX);
 			double realY = (e.getY() - offsetY);
 
 			int newX = (int)(realX - this.sourisX);
 			int newY = (int)(realY - this.sourisY);
 			
-			this.lstClass.get(this.indexSelectionner).setPosX(newX);
-			this.lstClass.get(this.indexSelectionner).setPosY(newY);
+			int panelWidth = this.getWidth();
+			int panelHeight = this.getHeight();
+
+			int classeWidth  = classeSelectionnee.getLargeur();
+			int classeHeight = classeSelectionnee.getHauteur();
+			
+			int marge = 5;
+			
+			// Limiter la position X
+			if (newX < marge) 
+			{
+				newX = marge;
+			} 
+			else if (newX + classeWidth > panelWidth - marge) 
+			{
+				newX = panelWidth - classeWidth - marge;
+			}
+			
+			// Limiter la position Y
+			if (newY < marge) 
+			{
+				newY = marge;
+			} 
+			else if (newY + classeHeight > panelHeight - marge) 
+			{
+				newY = panelHeight - classeHeight - marge;
+			}
+			
+			classeSelectionnee.setPosX(newX);
+			classeSelectionnee.setPosY(newY);
+			
 			repaint();
 		}
 	}

@@ -1,6 +1,7 @@
 package src.metier;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -137,34 +138,30 @@ public class Fleche
 				if (bidirectionnel) 
 				{
 					// Trait simple sans flèche pour bidirectionnel
-					g2.setColor(Couleur.GRIS.getColor());
 					g2.setStroke(new BasicStroke(2f));
 					g2.drawLine(pointXDepart, pointYDepart, pointXArrivee, pointYArrivee);
 				} 
 				else
 				{
 					// Flèche normale pour unidirectionnel
-					g2.setColor(Couleur.GRIS.getColor());
 					g2.setStroke(new BasicStroke(2f));
 					g2.drawLine(pointXDepart, pointYDepart, pointXArrivee, pointYArrivee);
-					dessinerPointe(g2, pointXDepart, pointYDepart, pointXArrivee, pointYArrivee, false);
+					this.dessinerPointe(g2, pointXDepart, pointYDepart, pointXArrivee, pointYArrivee, false);
 				}
 				break;
 				
 			case "heritage":
-				g2.setColor(Couleur.CYAN.getColor());
 				g2.setStroke(new BasicStroke(2f));
 				g2.drawLine(pointXDepart, pointYDepart, pointXArrivee, pointYArrivee);
-				dessinerPointe(g2, pointXArrivee, pointYArrivee,pointXDepart ,pointYDepart , true);
+				this.dessinerTriangleFerme(g2, pointXArrivee, pointYArrivee,pointXDepart ,pointYDepart );
 				break;
 				
 			case "interface":
 				float[] pattern = {6f, 6f};
 				g2.setStroke(new BasicStroke(2f, BasicStroke.CAP_ROUND, 
 				               BasicStroke.JOIN_ROUND, 1f, pattern, 0f));
-				g2.setColor(Couleur.ROUGE.getColor());
 				g2.drawLine(pointXDepart, pointYDepart, pointXArrivee, pointYArrivee);
-				dessinerPointe(g2, pointXArrivee, pointYArrivee,pointXDepart ,pointYDepart , true);
+				this.dessinerTriangleFerme(g2, pointXArrivee, pointYArrivee,pointXDepart ,pointYDepart );
 				break;
 		}
 		
@@ -219,6 +216,30 @@ public class Fleche
 			g2.drawLine(x2, y2, xP2, yP2);
 		}
 	}
+
+	private void dessinerTriangleFerme(Graphics2D g2, int xDepart, int yDepart, int xArrivee, int yArrivee)
+    {
+		g2.setStroke(new BasicStroke(2f));
+        int taillePointe = 12;
+        double angleDirection = Math.atan2(yArrivee - yDepart, xArrivee - xDepart);
+        
+        // Calcul des 3 points du triangle
+        int xPointeGauche = (int)(xArrivee - taillePointe * Math.cos(angleDirection - Math.PI / 6));
+        int yPointeGauche = (int)(yArrivee - taillePointe * Math.sin(angleDirection - Math.PI / 6));
+        
+        int xPointeDroite = (int)(xArrivee - taillePointe * Math.cos(angleDirection + Math.PI / 6));
+        int yPointeDroite = (int)(yArrivee - taillePointe * Math.sin(angleDirection + Math.PI / 6));
+        
+        // Dessiner et remplir le triangle
+        int[] coordonneesX = {xArrivee, xPointeGauche, xPointeDroite};
+        int[] coordonneesY = {yArrivee, yPointeGauche, yPointeDroite};
+        
+        g2.setColor(Color.WHITE);
+        g2.fillPolygon(coordonneesX, coordonneesY, 3);
+        
+        g2.setColor(Color.BLACK);
+        g2.drawPolygon(coordonneesX, coordonneesY, 3);
+    }
 
 	/**
 	 * Méthode statique pour créer et dessiner toutes les flèches
