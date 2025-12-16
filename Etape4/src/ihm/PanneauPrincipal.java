@@ -55,9 +55,6 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 
 	public PanneauPrincipal(Controleur ctrl, FrameAppli frame) 
 	{
-	/*	this.largeur = 900;
-		this.hauteur = 500;
-		this.setPreferredSize(new Dimension(largeur, hauteur));*/
 		this.setLayout(new BorderLayout());
 		this.setBackground(Couleur.BLANC.getColor());
 		this.ctrl = ctrl;
@@ -155,70 +152,14 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			List<Attribut> lstAttributs = classe.getLstAttribut();
 			List<Methode> lstMethodes = classe.getLstMethode();
 
-			int heightTitre = 40;
+			int heightTitre = 2 * 20;
 			int heightAttributs = (lstAttributs.size() > 3 ? 4 : lstAttributs.size()) * 20 + 20;
 			int heightMethodes  = (lstMethodes.size()  > 3 ? 4 : lstMethodes.size() ) * 20 + 20;
 			int totalHeight = heightTitre + heightAttributs + heightMethodes;
 
-			// Calculer la largeur nécessaire
-			int width = 200;
-			for (Methode meth : lstMethodes) 
-			{
-				String str = "";
-
-				switch (meth.getVisibilite())
-				{
-					case "public":    str += "+ "; break;
-					case "private":   str += "- "; break;
-					case "protected": str += "# "; break;
-					default:          str += "~ "; break;
-				}
-
-				str += meth.getNom() + " (";
-
-				List<String[]> params = meth.getLstParametres();
-				if (params != null && !params.isEmpty())
-				for (int i = 0; i < params.size(); i++)
-				{
-					String[] p = params.get(i); 
-					str += p[1] + " : " + p[0];
-					if (i < params.size() - 1) 
-					{
-						str += ",   ";
-					}
-				}
-
-				str += ")";
-
-				if (!classe.getNom().equals(meth.getNom()))
-				{
-					str += " : " + meth.getType();
-				}
-
-				if(width < str.length() * 6)
-				{
-					width = str.length() * 6;
-				}
-			}
-
-			// Vérifier aussi la largeur des attributs
-			for (Attribut attr : lstAttributs)
-			{
-				String str = attr.getNom() + " : " + attr.getType();
-				if (attr.isEstFinal())
-				{
-					str += " <<freeze>>";
-				}
-				if (width < str.length() * 8)
-				{
-					width = str.length() * 8;
-				}
-			}
-
-			// Mettre à jour la largeur et hauteur
-			this.lstClass.get(cpt).setLargeur(width);
-			this.lstClass.get(cpt).setHauteur(totalHeight);
-
+			//calculer la largeur nécessaire
+			int width = calculerLargeur(classe, lstAttributs,  lstMethodes);
+			
 			// IMPORTANT : N'initialiser la position QUE si elle est à (0,0)
 			if (classe.getPosX() == 0 && classe.getPosY() == 0)
 			{
@@ -237,172 +178,20 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 				maxHeightLigne = Math.max(maxHeightLigne, totalHeight);
 				xOffset += width + espacementX;
 			}
-
+			
 			// Utiliser les positions ACTUELLES de la classe pour dessiner
 			int posX = classe.getPosX();
 			int posY = classe.getPosY();
 
-			// Rectangle extérieur
-			if(this.indexSelectionner == cpt )
-			{
-				g2.setColor(Couleur.BLEU.getColor());
-				g2.drawRect(posX, posY, width, totalHeight);
-				g2.setColor(Couleur.NOIR.getColor());
+			//Dessiner le rectangle de la classe
+			this.dessinerRectangle(posX, posY, width, totalHeight, g2, heightTitre, heightAttributs, cpt);
 
-				g2.setColor(Couleur.BLEU.getColor());
-				g2.drawLine(posX, posY + heightTitre, posX + width, posY + heightTitre);
-				g2.drawLine(posX, posY + heightTitre + heightAttributs, posX + width, posY + heightTitre + heightAttributs);
-				g2.setColor(Couleur.NOIR.getColor());
-			}
-			else
-			{
-				g2.drawRect(posX, posY, width, totalHeight);
-				g2.drawLine(posX, posY + heightTitre, posX + width, posY + heightTitre);
-				g2.drawLine(posX, posY + heightTitre + heightAttributs, posX + width, posY + heightTitre + heightAttributs);
-			}
+			// Dessiner le contenu de la classe
+			this.dessinerContenu(classe, lstAttributs, lstMethodes, g2, posX, posY, width, heightTitre, heightAttributs);
 			
-	/*-----------------------------------------------------------------------------*/
-	/*                          DESSINER UNE CLASSE                                */
-	/*-----------------------------------------------------------------------------*/
-
-			// Texte : nom de la classe (centré)
-			String nomClasse = classe.getNom();
-			int largeurNom = g2.getFontMetrics().stringWidth(nomClasse);
-			g2.drawString(nomClasse, posX + (width - largeurNom) / 2, posY + 25);
-
-			int cptAttr = 1;
-			// Attributs
-			for(Attribut attr : lstAttributs) 
-			{
-				String symbole = "";
-				String finale = "";
-				String typeAttr = "";
-				String AlligneGauche;
-				
-				if (cptAttr >= 4)
-				{
-					AlligneGauche = "...";
-				}
-				else 
-				{
-					switch (attr.getVisibilite())
-					{
-						case "public":    symbole = "+ "; break;
-						case "private":   symbole = "- "; break;
-						case "protected": symbole = "# "; break;
-						default:          symbole = "~ "; break;
-					}
-
-					if(attr.isEstFinal()) 
-					{
-						finale = " <<freeze>>";
-					}
-
-					String nomAttr = attr.getNom();
-					typeAttr = ": " + attr.getType() + finale;
-					AlligneGauche = " " + symbole + " " + nomAttr;
-				}
-				
-				int largeurType = g2.getFontMetrics().stringWidth(typeAttr);
-				int xGauche = posX + 10; 
-				int xType = posX + width - largeurType - 10; 
-
-				g2.drawString(AlligneGauche, xGauche, posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20));
-				g2.drawString(typeAttr, xType, posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20));
-
-				if (cptAttr >= 4)
-				{
-					break;
-				}
-				if(attr.isEstStatic()) 
-				{
-					int yUnderline = posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20) + 2;
-					g2.setColor(Couleur.GRIS.getColor());
-					g2.drawLine(xGauche, yUnderline, xGauche + g2.getFontMetrics().stringWidth(AlligneGauche), yUnderline);
-					g2.setColor(Couleur.NOIR.getColor());
-				}
-
-				cptAttr++;
-			}
-
-			int cptMeth = 1;
-			// Méthodes
-			int index = 0;
-			for (Methode meth : lstMethodes) 
-			{
-				String symbole = "";
-				String AlligneGauche;
-
-				if (cptMeth >= 4)
-				{
-					g2.drawString("...", posX + 10, posY + heightTitre + heightAttributs + 20 + (index * 20));
-				}
-				else 
-				{
-					switch (meth.getVisibilite())
-					{
-						case "public":    symbole = "+ "; break;
-						case "private":   symbole = "- "; break;
-						case "protected": symbole = "# "; break;
-						default:          symbole = "~ "; break;
-					}
-
-					String nomMethode = meth.getNom();
-					String debP = " (";
-
-					List<String[]> params = meth.getLstParametres();
-					String listP = "";
-					if (params != null)
-					{
-						for (int i = 0; i < params.size() && i <= 2; i++)
-						{
-							String[] p = params.get(i);
-							if (i == 2)
-							{
-								listP += "... ";
-								break;
-							}
-							else 
-							{
-								listP += p[1] + " : " + p[0];
-								if (i < params.size() - 1)
-									listP += ",   ";
-							}
-							
-						}
-					}
-
-					String finP = ")";
-					String type = "";
-					if (!classe.getNom().equals(meth.getNom()))
-					{
-						type = " : " + meth.getType();
-					}
-
-					if(type.equals(" : void")){type = "";}
-
-					AlligneGauche = symbole + " " + nomMethode + debP + listP + finP;
-					int largeurType = g2.getFontMetrics().stringWidth(type);
-					int xGauche = posX + 10; 
-					int xType = posX + width - largeurType - 10;
-
-					int yPos = posY + heightTitre + heightAttributs + 20 + (index * 20);
-
-					g2.drawString(AlligneGauche, xGauche, yPos);
-					g2.drawString(type, xType, yPos);
-
-					if(meth.isEstStatic()) 
-					{
-						int yUnderline = posY + heightTitre + heightAttributs + 20 + (lstMethodes.indexOf(meth) * 20) + 2;
-						g2.setColor(Couleur.GRIS.getColor());
-						g2.drawLine(xGauche, yUnderline, xGauche + g2.getFontMetrics().stringWidth(AlligneGauche), yUnderline);
-						g2.setColor(Couleur.NOIR.getColor());
-					}
-
-					index++;
-				}
-				cptMeth++;
-			}
+			// Mettre à jour la largeur et hauteur
+			this.lstClass.get(cpt).setLargeur(width);
+			this.lstClass.get(cpt).setHauteur(totalHeight);
 		}
 
 		List<List<List<String>>> associations = new ArrayList<List<List<String>>>();
@@ -617,28 +406,249 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 
 	public void exporterEnImage(String chemin, File fichier)
 	{
+		System.out.println("preferedsize" + this.getPreferredSize());
+		System.out.println("size" + this.getSize());
+	
 		BufferedImage image = new BufferedImage(
 			this.getWidth(), 
 			this.getHeight(), 
-			BufferedImage.TYPE_INT_ARGB // Supporte la transparence
+			BufferedImage.TYPE_INT_ARGB
 		);
 
-		// 2. Récupérer l'outil de dessin (Graphics2D) de l'image
 		Graphics2D g2d = image.createGraphics();
 
-		// 3. Demander au composant de se dessiner sur l'image
-		// "paint" inclut les bordures et les enfants, contrairement à "paintComponent"
 		this.paint(g2d); 
-		
-		// Libérer les ressources graphiques
 		g2d.dispose();
 
-		// 4. Sauvegarder l'image sur le disque
 		try {
 			ImageIO.write(image, "png", fichier);
 			System.out.println("Image sauvegardée : " + chemin);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void dessinerRectangle(int posX, int posY, int width, int totalHeight, Graphics2D g2, int heightTitre, int heightAttributs, int cpt)
+	{
+		
+		if(this.indexSelectionner == cpt )
+		{
+			g2.setColor(Couleur.BLEU.getColor());
+			g2.drawRect(posX, posY, width, totalHeight);
+			g2.setColor(Couleur.NOIR.getColor());
+
+			g2.setColor(Couleur.BLEU.getColor());
+			g2.drawLine(posX, posY + heightTitre, posX + width, posY + heightTitre);
+			g2.drawLine(posX, posY + heightTitre + heightAttributs, posX + width, posY + heightTitre + heightAttributs);
+			g2.setColor(Couleur.NOIR.getColor());
+		}
+		else
+		{
+			g2.drawRect(posX, posY, width, totalHeight);
+			g2.drawLine(posX, posY + heightTitre, posX + width, posY + heightTitre);
+			g2.drawLine(posX, posY + heightTitre + heightAttributs, posX + width, posY + heightTitre + heightAttributs);
+		}
+	}
+
+	public void dessinerContenu(CreeClass classe, List<Attribut> lstAttributs, List<Methode> lstMethodes, Graphics2D g2, int posX, int posY, int width, int heightTitre, int heightAttributs)
+	{
+		// Texte : nom de la classe (centré)
+		String nomClasse = classe.getNom();
+		int largeurNom = g2.getFontMetrics().stringWidth(nomClasse);
+		g2.drawString(nomClasse, posX + (width - largeurNom) / 2, posY + 25);
+
+		int cptAttr = 1;
+		// Attributs
+		for(Attribut attr : lstAttributs) 
+		{
+			String symbole = "";
+			String finale = "";
+			String typeAttr = "";
+			String AlligneGauche;
+			
+			if (cptAttr >= 4)
+			{
+				AlligneGauche = "...";
+			}
+			else 
+			{
+				switch (attr.getVisibilite())
+				{
+					case "public":    symbole = "+ "; break;
+					case "private":   symbole = "- "; break;
+					case "protected": symbole = "# "; break;
+					default:          symbole = "~ "; break;
+				}
+
+				if(attr.isEstFinal()) 
+				{
+					finale = " <<freeze>>";
+				}
+
+				String nomAttr = attr.getNom();
+				typeAttr = ": " + attr.getType() + finale;
+				AlligneGauche = " " + symbole + " " + nomAttr;
+			}
+			
+			int largeurType = g2.getFontMetrics().stringWidth(typeAttr);
+			int xGauche = posX + 10; 
+			int xType = posX + width - largeurType - 10; 
+
+			g2.drawString(AlligneGauche, xGauche, posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20));
+			g2.drawString(typeAttr, xType, posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20));
+
+			if (cptAttr >= 4)
+			{
+				break;
+			}
+			if(attr.isEstStatic()) 
+			{
+				int yUnderline = posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20) + 2;
+				g2.setColor(Couleur.GRIS.getColor());
+				g2.drawLine(xGauche, yUnderline, xGauche + g2.getFontMetrics().stringWidth(AlligneGauche), yUnderline);
+				g2.setColor(Couleur.NOIR.getColor());
+			}
+
+			cptAttr++;
+		}
+
+		int cptMeth = 1;
+		// Méthodes
+		int index = 0;
+		for (Methode meth : lstMethodes) 
+		{
+			String symbole = "";
+			String AlligneGauche;
+
+			if (cptMeth >= 4)
+			{
+				g2.drawString("...", posX + 10, posY + heightTitre + heightAttributs + 20 + (index * 20));
+			}
+			else 
+			{
+				switch (meth.getVisibilite())
+				{
+					case "public":    symbole = "+ "; break;
+					case "private":   symbole = "- "; break;
+					case "protected": symbole = "# "; break;
+					default:          symbole = "~ "; break;
+				}
+
+				String nomMethode = meth.getNom();
+				String debP = " (";
+
+				List<String[]> params = meth.getLstParametres();
+				String listP = "";
+				if (params != null)
+				{
+					for (int i = 0; i < params.size() && i <= 2; i++)
+					{
+						String[] p = params.get(i);
+						if (i == 2)
+						{
+							listP += "... ";
+							break;
+						}
+						else 
+						{
+							listP += p[1] + " : " + p[0];
+							if (i < params.size() - 1)
+								listP += ",   ";
+						}
+						
+					}
+				}
+
+				String finP = ")";
+				String type = "";
+				if (!classe.getNom().equals(meth.getNom()))
+				{
+					type = " : " + meth.getType();
+				}
+
+				if(type.equals(" : void")){type = "";}
+
+				AlligneGauche = symbole + " " + nomMethode + debP + listP + finP;
+				int largeurType = g2.getFontMetrics().stringWidth(type);
+				int xGauche = posX + 10; 
+				int xType = posX + width - largeurType - 10;
+
+				int yPos = posY + heightTitre + heightAttributs + 20 + (index * 20);
+
+				g2.drawString(AlligneGauche, xGauche, yPos);
+				g2.drawString(type, xType, yPos);
+
+				if(meth.isEstStatic()) 
+				{
+					int yUnderline = posY + heightTitre + heightAttributs + 20 + (lstMethodes.indexOf(meth) * 20) + 2;
+					g2.setColor(Couleur.GRIS.getColor());
+					g2.drawLine(xGauche, yUnderline, xGauche + g2.getFontMetrics().stringWidth(AlligneGauche), yUnderline);
+					g2.setColor(Couleur.NOIR.getColor());
+				}
+
+				index++;
+			}
+			cptMeth++;
+		}
+	}
+
+	public int calculerLargeur(CreeClass classe, List<Attribut> lstAttributs, List<Methode> lstMethodes)
+	{
+		// Calculer la largeur nécessaire
+		int width = 200;
+		for (Methode meth : lstMethodes) 
+		{
+			String str = "";
+
+			switch (meth.getVisibilite())
+			{
+				case "public":    str += "+ "; break;
+				case "private":   str += "- "; break;
+				case "protected": str += "# "; break;
+				default:          str += "~ "; break;
+			}
+
+			str += meth.getNom() + " (";
+
+			List<String[]> params = meth.getLstParametres();
+			if (params != null && !params.isEmpty())
+			for (int i = 0; i < params.size() && i <= 2; i++)
+			{
+				String[] p = params.get(i); 
+				str += p[1] + " : " + p[0];
+				if (i < params.size() - 1  && i < 2)
+				{
+					str += ",   ";
+				}
+			}
+
+			str += ")";
+
+			if (!classe.getNom().equals(meth.getNom()))
+			{
+				str += " : " + meth.getType();
+			}
+
+			if(width < str.length() * 6)
+			{
+				width = str.length() * 6;
+			}
+		}
+
+		// Vérifier aussi la largeur des attributs
+		for (Attribut attr : lstAttributs)
+		{
+			String str = attr.getNom() + " : " + attr.getType();
+			if (attr.isEstFinal())
+			{
+				str += " <<freeze>>";
+			}
+			if (width < str.length() * 8)
+			{
+				width = str.length() * 8;
+			}
+		}
+
+		return width;
 	}
 }

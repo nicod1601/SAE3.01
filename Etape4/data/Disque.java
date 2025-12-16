@@ -2,14 +2,15 @@ package data;
 
 public class Disque  extends Rond implements ISurface
 {
-	private static int       autoIncre;
-	private static final int MAXLENGTH = 10;
+	private static       int     autoIncre;
+	private static final int     MAXLENGTH = 10;
 
-	private final String     NOM       = "NOM allo";
-
-	private Point[]          tabPoints;
-	private Point            reponsable;
-	private Point            centre;
+	private        final String  NOM       = "NOM allo";
+	private              String  pkTuTaffiche;
+ 
+	private              Point[] tabPoints;
+	private              Point   reponsable;
+	private              Point   centre;
 	
 	
 	public Disque(Point centre, double rayon)
@@ -33,7 +34,7 @@ public class Disque  extends Rond implements ISurface
 		return 2 * Math.PI * super.getRayon();
 	}
 
-	public Disque testGenerique(int a,int b,int c,int d)
+	public Disque testGenerique(int a, int b, int c, int d, int e, int f, int g, int h)
 	{
 		return this;
 	}
