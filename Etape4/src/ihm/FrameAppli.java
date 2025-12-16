@@ -84,11 +84,6 @@ public class FrameAppli extends JFrame
 		this.panneauFichier.selectionnerList(index);
 	}
 
-	public void lstSelectionner(ArrayList<Integer> lst)
-	{
-		this.panneauPrincipal.lstSelectionner(lst);
-	}
-
 	public void exporterEnImage(String chemin, File nomFichier)
 	{
 		this.panneauPrincipal.exporterEnImage(chemin, nomFichier);
@@ -98,5 +93,4 @@ public class FrameAppli extends JFrame
 	{
 		return this.panneauFichier.getModeleFichiers();
 	}
-	
 }

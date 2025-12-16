@@ -13,10 +13,6 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
 
 import src.Controleur;
 import src.metier.Attribut;
@@ -28,27 +24,25 @@ import src.metier.Multiplicite;
 
 public class PanneauPrincipal extends JPanel implements MouseListener, MouseMotionListener
 {
-	private FrameAppli frame;
 	private Controleur ctrl;
-	private List<CreeClass> lstClass;
+	private FrameAppli frame;
+	
 	private int indexSelectionner;
-
+	private int indexFlecheSelec;
 	private int sourisX;
 	private int sourisY;
-	private boolean inClass;
+	
 	private double offsetX = 0;
 	private double offsetY = 0;
 
-	private int indexFlecheSelec;
-	private ArrayList<Fleche> lstFleches;
-	private ArrayList<Integer[]> lstCordFleche;
-	private Multiplicite multiplicite;
-/*	private JScrollBar   jScrollBarVert;
-	private JScrollBar   jScrollBarHoriz;
-	private int          hauteur;
-	private int          largeur;*/
-	
+	private boolean rightMousePressed;
+	private boolean inClass;
 
+	private List<CreeClass> lstClass;
+	private List<Fleche> lstFleches;
+	private List<Integer[]> lstCordFleche;
+	
+	// Controleur
 	public PanneauPrincipal(Controleur ctrl, FrameAppli frame) 
 	{
 		this.setLayout(new BorderLayout());
@@ -60,79 +54,26 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		this.sourisX = 0;
 		this.sourisY = 0;
 		this.inClass = false;
+		this.rightMousePressed = false;
 
 		this.indexFlecheSelec = -1;
 		this.lstFleches    = new ArrayList<>();
 		this.lstCordFleche = new ArrayList<>();
-		this.multiplicite  = null;
-	/*	this.jScrollBarVert  = new JScrollBar(JScrollBar.VERTICAL  , 0, 10, 0,hauteur);
-		this.jScrollBarHoriz = new JScrollBar(JScrollBar.HORIZONTAL, 0, 10, 0,largeur);
-		this.add(jScrollBarVert,BorderLayout.EAST);
-		this.add(jScrollBarHoriz,BorderLayout.SOUTH);*/
 
-		//this.add(new JScrollPane(0,90));
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
-	}
-
-	public void majListeClasses(boolean dossier, String nomFichier)
-	{
-		if(dossier) 
-		{
-			this.lstClass = this.ctrl.getLstClass();
-			for (CreeClass classe : this.lstClass) 
-			{
-				System.out.println(classe.getNom());
-			}
-		} 
-		else
-		{
-			System.out.println("Nom Fichier reçu : " + nomFichier);
-			CreeClass nouvelleClasse = this.ctrl.CreerClass(nomFichier);
-			
-			for (CreeClass classe : this.lstClass)
-			{
-				if (classe.getNom().equals(nouvelleClasse.getNom()))
-				{
-					System.out.println("Classe déjà existante : " + nouvelleClasse.getNom());
-					return;
-				}
-			}
-
-			this.lstClass.add(nouvelleClasse);
-			for (CreeClass classe : this.lstClass)
-			{
-				System.out.println(classe.getNom());
-			}
-		}
-		this.repaint();
-	}
-
-	public void viderListeClasses()
-	{
-		this.lstClass.clear();
-		this.indexSelectionner = -1;
-		this.sourisX = 0;
-		this.sourisY = 0;
-		this.inClass = false;
-		this.offsetX = 0;
-		this.offsetY = 0;
-		this.lstFleches.clear();
-		this.lstCordFleche.clear();
-		this.multiplicite = null;
-		this.indexFlecheSelec = -1;
-		this.repaint();
 	}
 
 	protected void paintComponent(Graphics g) 
 	{
 		super.paintComponent(g);
 		this.lstFleches.clear();
-		this.lstCordFleche.clear();
+		this.lstCordFleche.clear(); // AJOUTÉ
 		
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
+		// Sauvegarde du transform d'origine
 		AffineTransform old = g2.getTransform();
 		int xOffset = 50;
 		int yOffset = 50;
@@ -141,6 +82,10 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		int espacementY = 50;
 		int largeurMax = this.getWidth() - 100;
 		
+		/*---------------------------------------------*/
+		/* Dessiner les associations avec associations */
+		/*---------------------------------------------*/
+
 		for(int cpt = 0; cpt < this.lstClass.size(); cpt++)
 		{
 			CreeClass classe = this.lstClass.get(cpt);
@@ -152,10 +97,13 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			int heightMethodes  = (lstMethodes.size()  > 3 ? 4 : lstMethodes.size() ) * 20 + 20;
 			int totalHeight = heightTitre + heightAttributs + heightMethodes;
 
-			int width = calculerLargeur(classe, lstAttributs,  lstMethodes);
+			//calculer la largeur nécessaire
+			int width = calculerLargeur(classe, lstAttributs,  lstMethodes, 1);
 			
+			// IMPORTANT : N'initialiser la position QUE si elle est à (0,0)
 			if (classe.getPosX() == 0 && classe.getPosY() == 0)
 			{
+				// Si on dépasse la largeur max, on passe à la ligne suivante
 				if (xOffset + width > largeurMax && cpt > 0)
 				{
 					xOffset = 50;
@@ -166,20 +114,29 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 				this.lstClass.get(cpt).setPosX(xOffset);
 				this.lstClass.get(cpt).setPosY(yOffset);
 				
+				// Mettre à jour les positions pour la prochaine classe
 				maxHeightLigne = Math.max(maxHeightLigne, totalHeight);
 				xOffset += width + espacementX;
 			}
 			
+			// Utiliser les positions ACTUELLES de la classe pour dessiner
 			int posX = classe.getPosX();
 			int posY = classe.getPosY();
 
-			this.dessinerRectangle(posX, posY, width, totalHeight, g2, heightTitre, heightAttributs, cpt);
+			//Dessiner le rectangle de la classe
+			this.dessinerRectangle(posX, posY, width, totalHeight, g2, heightTitre, heightAttributs, cpt, 1);
 
-			this.dessinerContenu(classe, lstAttributs, lstMethodes, g2, posX, posY, width, heightTitre, heightAttributs);
+			// Dessiner le contenu de la classe
+			this.dessinerContenu(classe, lstAttributs, lstMethodes, g2, posX, posY, width, heightTitre, heightAttributs, 1);
 			
+			// Mettre à jour la largeur et hauteur
 			this.lstClass.get(cpt).setLargeur(width);
 			this.lstClass.get(cpt).setHauteur(totalHeight);
 		}
+
+		/*---------------------------------------------*/
+		/* Dessiner les associations avec associations */
+		/*---------------------------------------------*/
 
 		List<List<List<String>>> associations = new ArrayList<List<List<String>>>();
 		for(CreeClass c : lstClass)
@@ -193,6 +150,10 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			}
 		}
 
+		/*---------------------------------------------*/
+		/* Dessiner les associations avec interface    */
+		/*---------------------------------------------*/
+
 		for(CreeClass c : lstClass)
 		{
 			if (c.getLien() != null && c.getLien().getLstLienInterface() != null)
@@ -204,11 +165,12 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			}
 		}
 
+		/*---------------------------------------------*/
+		/* Dessiner les associations avec multiplicité */
+		/*---------------------------------------------*/
 
 		for(CreeClass c : lstClass)
 		{
-			List<Methode>  methodes  = c.getLstMethode ();
-			List<Attribut> attributs = c.getLstAttribut();
 			Multiplicite   multiC    = c.getMultiplicite();
 
 			// Class : [0..* , 1..1, ...]
@@ -256,10 +218,40 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			fl.dessiner(g2,espace);
 			espace += 20;
 		}
+
+		/*---------------------------------------------*/
+		/* Zoom d'une Class                            */
+		/*---------------------------------------------*/
+
+		if(this.rightMousePressed)
+		{
+			CreeClass c = lstClass.get(this.indexSelectionner);
+
+			List<Attribut> lstAttributs = c.getLstAttribut();
+			List<Methode>  lstMethodes  = c.getLstMethode();
+
+			int heightTitre = 2 * 40;
+			int heightAttributs = (lstAttributs.size() > 3 ? 4 : lstAttributs.size()) * 40 + 40;
+			int heightMethodes  = (lstMethodes.size()  > 3 ? 4 : lstMethodes.size() ) * 40 + 40;
+			int totalHeight = heightTitre + heightAttributs + heightMethodes;
+
+			//calculer la largeur nécessaire
+			int width = calculerLargeur(c, lstAttributs,  lstMethodes, 2);
+
+			// Utiliser les positions ACTUELLES de la classe pour dessiner
+			dessinerRectangle(c.getPosX()-c.getLargeur()/2, c.getPosY()-c.getHauteur()/2, width, totalHeight, g2, heightTitre, heightAttributs, this.indexSelectionner, 2);
+			dessinerContenu  (c, lstAttributs, lstMethodes, g2, c.getPosX()-c.getLargeur()/2, c.getPosY()-c.getHauteur()/2, width, heightTitre, heightAttributs, 2);
+		}
 			
 		// Restauration transform
 		g2.setTransform(old);
 	}
+
+
+
+	/*--------------------------------------------------*/
+	/* Gestion des événements de la souris              */
+	/*--------------------------------------------------*/
 
 	public void mouseClicked(MouseEvent e)
 	{
@@ -268,11 +260,6 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		double realY = (e.getY() - offsetY);
 
 		int tolerance = 5;
-
-		if (SwingUtilities.isRightMouseButton(e)) 
-		{
-			// Clic droit : réinitialiser la sélection de la flèche
-		}
 
 		for(int cpt = 0; cpt < this.lstCordFleche.size(); cpt++) 
 		{
@@ -315,7 +302,6 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		}
 		this.repaint();
 	}
-
 	public void mousePressed(MouseEvent e)
 	{
 		this.inClass = false;
@@ -341,10 +327,23 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 				this.sourisX = (int)(realX - x);
 				this.sourisY = (int)(realY - y);
 
+				if (SwingUtilities.isRightMouseButton(e)) 
+				{
+					this.rightMousePressed = true;
+					this.repaint();
+				}
 				break;
 			}
 		}
 		this.repaint();
+	}
+	public void mouseReleased(MouseEvent e)
+	{
+		if (SwingUtilities.isRightMouseButton(e)) 
+		{
+			this.rightMousePressed = false;
+			this.repaint();
+		}
 	}
 
 	public void mouseDragged(MouseEvent e) 
@@ -394,60 +393,22 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		}
 	}
 
-	public void mouseReleased(MouseEvent e){}
 	public void mouseEntered(MouseEvent e){}
 	public void mouseExited(MouseEvent e){}
 	public void mouseMoved(MouseEvent e){}
+	
+	/*--------------------------------------------*/
+	/*                   DESSIN                   */
+	/*--------------------------------------------*/
 
-	public void selectionner(int index)
+
+	public void dessinerRectangle(int posX, int posY, int width, int totalHeight, Graphics2D g2, int heightTitre, int heightAttributs, int cpt, int zoom)
 	{
-		for(int cpt = 0; cpt < this.lstClass.size(); cpt++)
+		if (zoom == 2)
 		{
-			if(index == cpt)
-			{
-				this.indexSelectionner = cpt;
-			}
+			g2.setColor(Couleur.BLANC.getColor());
+			g2.fillRect(posX, posY, width, totalHeight);
 		}
-		this.repaint();
-	}
-
-	public void lstSelectionner(ArrayList<Integer> lst)
-	{
-		System.out.println("liste integer");
-	}
-	
-	public void setMultiplicite(Multiplicite multiplicite)
-	{
-		this.multiplicite = multiplicite;
-		this.repaint();
-	}
-
-	public void exporterEnImage(String chemin, File fichier)
-	{
-		System.out.println("preferedsize" + this.getPreferredSize());
-		System.out.println("size" + this.getSize());
-	
-		BufferedImage image = new BufferedImage(
-			this.getWidth(), 
-			this.getHeight(), 
-			BufferedImage.TYPE_INT_ARGB
-		);
-
-		Graphics2D g2d = image.createGraphics();
-
-		this.paint(g2d); 
-		g2d.dispose();
-
-		try {
-			ImageIO.write(image, "png", fichier);
-			System.out.println("Image sauvegardée : " + chemin);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void dessinerRectangle(int posX, int posY, int width, int totalHeight, Graphics2D g2, int heightTitre, int heightAttributs, int cpt)
-	{
 		
 		if(this.indexSelectionner == cpt )
 		{
@@ -468,15 +429,26 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		}
 	}
 
-	public void dessinerContenu(CreeClass classe, List<Attribut> lstAttributs, List<Methode> lstMethodes, Graphics2D g2, int posX, int posY, int width, int heightTitre, int heightAttributs)
+	public void dessinerContenu(CreeClass classe, List<Attribut> lstAttributs, List<Methode> lstMethodes, Graphics2D g2, int posX, int posY, int width, int heightTitre, int heightAttributs, int zoom)
 	{
+		// Texte : nom de la classe (centré)
 		String nomClasse = classe.getNom();
 		int largeurNom = g2.getFontMetrics().stringWidth(nomClasse);
+
+		//taille de la police en fonction du zoom
+		if (zoom == 2)
+		{
+			g2.setFont(new Font("Arial", Font.PLAIN, 16));
+		}
+		else
+		{
+			g2.setFont(new Font("Arial", Font.PLAIN, 12));
+		}
+
 		g2.drawString(nomClasse, posX + (width - largeurNom) / 2, posY + 25);
 
 		int cptAttr = 1;
-		
-		// Attributs
+		// Attributs ---------------------------------------------------------------------------------------------------
 		for(Attribut attr : lstAttributs) 
 		{
 			String symbole = "";
@@ -484,7 +456,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			String typeAttr = "";
 			String AlligneGauche;
 			
-			if (cptAttr >= 4)
+			if (cptAttr >= 4 && zoom == 1)
 			{
 				AlligneGauche = "...";
 			}
@@ -531,15 +503,14 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		}
 
 		int cptMeth = 1;
-		
-		// Méthodes
+		// Méthodes -----------------------------------------------------------------------------------------------------
 		int index = 0;
 		for (Methode meth : lstMethodes) 
 		{
 			String symbole = "";
 			String AlligneGauche;
 
-			if (cptMeth >= 4)
+			if (cptMeth >= 4 && zoom == 1)
 			{
 				g2.drawString("...", posX + 10, posY + heightTitre + heightAttributs + 20 + (index * 20));
 			}
@@ -563,7 +534,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 					for (int i = 0; i < params.size() && i <= 2; i++)
 					{
 						String[] p = params.get(i);
-						if (i == 2)
+						if (i == 2 && zoom == 1 && params.size() > 3)
 						{
 							listP += "... ";
 							break;
@@ -611,10 +582,24 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		}
 	}
 
-	public int calculerLargeur(CreeClass classe, List<Attribut> lstAttributs, List<Methode> lstMethodes)
+
+
+
+
+
+
+
+
+
+
+	/*--------------------------------------------*/
+	/*               OUTILS                       */
+	/*--------------------------------------------*/
+
+	public int calculerLargeur(CreeClass classe, List<Attribut> lstAttributs, List<Methode> lstMethodes, int zoom)
 	{
 		// Calculer la largeur nécessaire
-		int width = 200;
+		int width = 200 * zoom;
 		for (Methode meth : lstMethodes) 
 		{
 			String str = "";
@@ -648,9 +633,9 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 				str += " : " + meth.getType();
 			}
 
-			if(width < str.length() * 6)
+			if(width < str.length() * 6 * zoom)
 			{
-				width = str.length() * 6;
+				width = str.length() * 6 * zoom;
 			}
 		}
 
@@ -662,12 +647,99 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			{
 				str += " <<freeze>>";
 			}
-			if (width < str.length() * 8)
+			if (width < str.length() * 8 * zoom)
 			{
-				width = str.length() * 8;
+				width = str.length() * 8 * zoom;
 			}
 		}
 
 		return width;
+	}
+
+	//selectionner une class
+	public void selectionner(int index)
+	{
+		for(int cpt = 0; cpt < this.lstClass.size(); cpt++)
+		{
+			if(index == cpt)
+			{
+				this.indexSelectionner = cpt;
+			}
+		}
+		this.repaint();
+	}
+
+	//exporter le panneau en image
+	public void exporterEnImage(String chemin, File fichier)
+	{
+		System.out.println("preferedsize" + this.getPreferredSize());
+		System.out.println("size" + this.getSize());
+	
+		BufferedImage image = new BufferedImage(
+			this.getWidth(), 
+			this.getHeight(), 
+			BufferedImage.TYPE_INT_ARGB
+		);
+
+		Graphics2D g2d = image.createGraphics();
+
+		this.paint(g2d); 
+		g2d.dispose();
+
+		try {
+			ImageIO.write(image, "png", fichier);
+			System.out.println("Image sauvegardée : " + chemin);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	//mettre a jour la liste des classes -----------------------------------------------------------------------------
+	public void majListeClasses(boolean dossier, String nomFichier)
+	{
+		if(dossier) 
+		{
+			this.lstClass = this.ctrl.getLstClass();
+			for (CreeClass classe : this.lstClass) 
+			{
+				System.out.println(classe.getNom());
+			}
+		} 
+		else
+		{
+			System.out.println("Nom Fichier reçu : " + nomFichier);
+			CreeClass nouvelleClasse = this.ctrl.CreerClass(nomFichier);
+			
+			for (CreeClass classe : this.lstClass)
+			{
+				if (classe.getNom().equals(nouvelleClasse.getNom()))
+				{
+					System.out.println("Classe déjà existante : " + nouvelleClasse.getNom());
+					return;
+				}
+			}
+
+			this.lstClass.add(nouvelleClasse);
+			for (CreeClass classe : this.lstClass)
+			{
+				System.out.println(classe.getNom());
+			}
+		}
+		this.repaint();
+	}
+
+	public void viderListeClasses()
+	{
+		this.lstClass.clear();
+		this.indexSelectionner = -1;
+		this.sourisX = 0;
+		this.sourisY = 0;
+		this.inClass = false;
+		this.offsetX = 0;
+		this.offsetY = 0;
+		this.lstFleches.clear();
+		this.lstCordFleche.clear(); // AJOUTÉ
+		this.indexFlecheSelec = -1;
+		this.repaint();
 	}
 }
