@@ -155,7 +155,7 @@ public class Fleche
 				g2.setColor(Couleur.CYAN.getColor());
 				g2.setStroke(new BasicStroke(2f));
 				g2.drawLine(pointXDepart, pointYDepart, pointXArrivee, pointYArrivee);
-				dessinerPointe(g2, pointXDepart, pointYDepart, pointXArrivee, pointYArrivee, true);
+				dessinerPointe(g2, pointXArrivee, pointYArrivee,pointXDepart ,pointYDepart , true);
 				break;
 				
 			case "interface":
@@ -164,7 +164,7 @@ public class Fleche
 				               BasicStroke.JOIN_ROUND, 1f, pattern, 0f));
 				g2.setColor(Couleur.ROUGE.getColor());
 				g2.drawLine(pointXDepart, pointYDepart, pointXArrivee, pointYArrivee);
-				dessinerPointe(g2, pointXDepart, pointYDepart, pointXArrivee, pointYArrivee, true);
+				dessinerPointe(g2, pointXArrivee, pointYArrivee,pointXDepart ,pointYDepart , true);
 				break;
 		}
 		
