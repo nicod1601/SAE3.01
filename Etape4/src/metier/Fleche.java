@@ -55,7 +55,8 @@ public class Fleche
 	 */
 	private static String creerCleNormalisee(String nom1, String nom2, String typeLien)
 	{
-		if (nom1.compareTo(nom2) < 0) {
+		if (nom1.compareTo(nom2) < 0)
+		{
 			return nom1 + "<->" + nom2 + ":" + typeLien;
 		} else {
 			return nom2 + "<->" + nom1 + ":" + typeLien;
@@ -91,56 +92,46 @@ public class Fleche
 			double longueur = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 			if (longueur > 0) 
 			{
-				// Vecteur perpendiculaire normalisé
 				perpX = -deltaY / longueur * decalage;
 				perpY = deltaX / longueur * decalage;
 			}
 		}
 		
-		// Si l'angle est plus vertical qu'horizontal
 		if (Math.abs(deltaY) > Math.abs(deltaX))
 		{
-			// Connexion verticale (haut/bas)
 			if (deltaY < 0) 
 			{
-				// La classe d'arrivée est AU-DESSUS de la classe de départ
-				pointYDepart = source.getPosY(); // Haut de la classe de départ
-				pointYArrivee = cible.getPosY() + cible.getHauteur(); // Bas de la classe d'arrivée
+				pointYDepart = source.getPosY();
+				pointYArrivee = cible.getPosY() + cible.getHauteur();
 			}
 			else 
 			{
-				// La classe d'arrivée est EN-DESSOUS de la classe de départ
-				pointYDepart = source.getPosY() + source.getHauteur(); // Bas de la classe de départ
-				pointYArrivee = cible.getPosY(); // Haut de la classe d'arrivée
+				pointYDepart = source.getPosY() + source.getHauteur();
+				pointYArrivee = cible.getPosY();
 			}
 			
-			// Pour les connexions verticales, appliquer le décalage uniquement sur X
 			pointXDepart = centreXDepart + (int)perpX;
 			pointXArrivee = centreXArrivee + (int)perpX;
 		}
 		else
 		{
-			// Connexion horizontale (gauche/droite)
 			if (deltaX < 0) 
 			{
-				// La classe d'arrivée est À GAUCHE de la classe de départ
-				pointXDepart = source.getPosX(); // Gauche de la classe de départ
-				pointXArrivee = cible.getPosX() + cible.getLargeur(); // Droite de la classe d'arrivée
+				pointXDepart = source.getPosX();
+				pointXArrivee = cible.getPosX() + cible.getLargeur();
 			}
 			else 
 			{
-				// La classe d'arrivée est À DROITE de la classe de départ
-				pointXDepart = source.getPosX() + source.getLargeur(); // Droite de la classe de départ
-				pointXArrivee = cible.getPosX(); // Gauche de la classe d'arrivée
+				pointXDepart = source.getPosX() + source.getLargeur();
+				pointXArrivee = cible.getPosX();
 			}
-			
-			// Pour les connexions horizontales, appliquer le décalage uniquement sur Y
+
 			pointYDepart = centreYDepart + (int)perpY;
 			pointYArrivee = centreYArrivee + (int)perpY;
 		}
 		
 		// Dessiner selon le type de lien
-		switch (typeLien) 
+		switch (this.typeLien) 
 		{
 			case "association":
 				if (bidirectionnel) 
@@ -161,7 +152,6 @@ public class Fleche
 				break;
 				
 			case "heritage":
-				// Flèche fermée (triangle plein)
 				g2.setColor(Couleur.CYAN.getColor());
 				g2.setStroke(new BasicStroke(2f));
 				g2.drawLine(pointXDepart, pointYDepart, pointXArrivee, pointYArrivee);
@@ -169,7 +159,6 @@ public class Fleche
 				break;
 				
 			case "interface":
-				// Flèche en pointillés
 				float[] pattern = {6f, 6f};
 				g2.setStroke(new BasicStroke(2f, BasicStroke.CAP_ROUND, 
 				               BasicStroke.JOIN_ROUND, 1f, pattern, 0f));
@@ -183,7 +172,7 @@ public class Fleche
 		g2.setStroke(new BasicStroke(1f));
 		
 		// Afficher les multiplicités
-		if (multipliciteSource != null && !multipliciteSource.isEmpty()) 
+		if (this.multipliciteSource != null && !this.multipliciteSource.isEmpty()) 
 		{
 			g2.setColor(Couleur.NOIR.getColor());
 			int xTextSrc = pointXDepart + (pointXArrivee - pointXDepart) / 10;
@@ -191,7 +180,7 @@ public class Fleche
 			g2.drawString(multipliciteSource, xTextSrc, yTextSrc);
 		}
 		
-		if (multipliciteCible != null && !multipliciteCible.isEmpty()) 
+		if (this.multipliciteCible != null && !this.multipliciteCible.isEmpty()) 
 		{
 			g2.setColor(Couleur.NOIR.getColor());
 			int xTextCible = pointXDepart + (pointXArrivee - pointXDepart) * 9 / 10;
@@ -220,14 +209,12 @@ public class Fleche
 		
 		if (ferme) 
 		{
-			// Triangle fermé
 			int[] xPoints = {x2, xP1, xP2};
 			int[] yPoints = {y2, yP1, yP2};
 			g2.fillPolygon(xPoints, yPoints, 3);
 		} 
 		else
 		{
-			// Flèche ouverte
 			g2.drawLine(x2, y2, xP1, yP1);
 			g2.drawLine(x2, y2, xP2, yP2);
 		}
@@ -321,6 +308,7 @@ public class Fleche
 				lstFleches.add(fleche);
 			}
 			
+
 			for (CreeClass cl2 : cl1.getLien().getLstLienInterface()) 
 			{
 				String cleFleche = cl1.getNom() + "->" + cl2.getNom() + ":interface";
