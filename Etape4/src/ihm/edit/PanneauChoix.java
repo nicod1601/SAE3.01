@@ -3,23 +3,27 @@ package src.ihm.edit;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import src.Controleur;
 import src.metier.Couleur;
 import src.metier.CreeClass;
 
-public class PanneauChoix extends JPanel
+public class PanneauChoix extends JPanel implements MouseListener
 {
 	private Controleur ctrl;
 	private JList<String> listeFichiers;
 	private DefaultListModel<String> modeleFichiers;
 	private FrameEdit frame;
+	private PanneauInfo panneauInfo;
 
-	public PanneauChoix(Controleur ctrl, FrameEdit frame) 
+	public PanneauChoix(Controleur ctrl, FrameEdit frame, PanneauInfo panneauInfo) 
 	{
 		this.ctrl = ctrl;
 		this.frame = frame;
+		this.panneauInfo = panneauInfo;
 		
 		this.configurerPanneau();
 		this.creerComposants();
@@ -46,16 +50,14 @@ public class PanneauChoix extends JPanel
 		scrollFichiers.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		scrollFichiers.getViewport().setBackground(Couleur.COULEUR_LISTE.getColor());
 		scrollFichiers.setBackground(Couleur.COULEUR_FOND.getColor());
-		this.listeFichiers.setEnabled(false);
+		this.listeFichiers.setEnabled(true);
 		
 		// Ajout des composants
 		this.add(lblFichiers, BorderLayout.NORTH);
 		this.add(scrollFichiers, BorderLayout.CENTER);
 
-		//Activation des composants
-
-		//this.listeFichiers.addMouseListener(this);
-
+		// Activation des composants
+		this.listeFichiers.addMouseListener(this);
 	}
 	
 	private JLabel creerLabelEnTete()
@@ -153,6 +155,49 @@ public class PanneauChoix extends JPanel
 		{
 			this.listeFichiers.setSelectedIndex(index);
 		}
-
 	}
+
+	/**
+	 * Récupère la classe CreeClass correspondant au nom donné
+	 */
+	private CreeClass getClasseByNom(String nom)
+	{
+		if (this.ctrl.getLstClass() == null) return null;
+		
+		for (CreeClass classe : this.ctrl.getLstClass())
+		{
+			if (classe.getNom().equals(nom))
+			{
+				return classe;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e)
+	{
+		int index = this.listeFichiers.locationToIndex(e.getPoint());
+		if (index != -1)
+		{
+			String nomClasse = this.listeFichiers.getModel().getElementAt(index);
+			CreeClass classe = this.getClasseByNom(nomClasse);
+			if (classe != null && this.panneauInfo != null)
+			{
+				this.panneauInfo.majInfoClasse(nomClasse, this.ctrl);
+			}
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
 }
