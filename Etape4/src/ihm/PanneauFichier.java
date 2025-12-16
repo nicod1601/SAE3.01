@@ -59,10 +59,7 @@ public class PanneauFichier extends JPanel
 	
 	private JLabel creerLabelEnTete()
 	{
-		JLabel label = new JLabel("<html><center>📁 Fichiers chargés<br><br>" +
-								  "<span style='font-size:10px; color:#bdc3c7;'>" +
-								  "Fichiers du dossier<br>sélectionné" +
-								  "</span></center></html>");
+		JLabel label = new JLabel("<html><center>📁 Fichiers chargés</center></html>");
 		label.setFont(new Font("Segoe UI Emoji", Font.BOLD, 13));
 		label.setBorder(new EmptyBorder(15, 10, 15, 10));
 		label.setHorizontalAlignment(SwingConstants.CENTER);

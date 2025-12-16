@@ -62,10 +62,7 @@ public class PanneauChoix extends JPanel implements MouseListener
 	
 	private JLabel creerLabelEnTete()
 	{
-		JLabel label = new JLabel("<html><center>📁 Graph UML chargés<br><br>" +
-								  "<span style='font-size:10px; color:#bdc3c7;'>" +
-								  "Graph UML<br>sélectionné" +
-								  "</span></center></html>");
+		JLabel label = new JLabel("<html><center>📁 Graph UML chargés</center></html>");
 		label.setFont(new Font("Segoe UI Emoji", Font.BOLD, 13));
 		label.setBorder(new EmptyBorder(15, 10, 15, 10));
 		label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -173,8 +170,7 @@ public class PanneauChoix extends JPanel implements MouseListener
 		}
 		return null;
 	}
-
-	@Override
+	
 	public void mouseClicked(MouseEvent e)
 	{
 		int index = this.listeFichiers.locationToIndex(e.getPoint());
@@ -189,15 +185,11 @@ public class PanneauChoix extends JPanel implements MouseListener
 		}
 	}
 
-	@Override
 	public void mousePressed(MouseEvent e) {}
 
-	@Override
 	public void mouseReleased(MouseEvent e) {}
 
-	@Override
 	public void mouseEntered(MouseEvent e) {}
 
-	@Override
 	public void mouseExited(MouseEvent e) {}
 }

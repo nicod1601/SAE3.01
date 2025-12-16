@@ -245,21 +245,18 @@ public class Fleche
 		
 		for (CreeClass cl1 : lstClass) 
 		{
-			// ===== ASSOCIATIONS (attributs) =====
 			for (CreeClass cl2 : cl1.getLien().getLstLienAttribut()) 
 			{
 				boolean bidir = estBidirectionnel(cl1, cl2);
 				
-				// Créer une clé unique pour cette flèche
 				String cleFleche = cl1.getNom() + "->" + cl2.getNom() + ":association";
 				String cleFlecheInverse = cl2.getNom() + "->" + cl1.getNom() + ":association";
 				
 				// Si bidirectionnel, ne dessiner qu'une fois
-				if (bidir && flechesDessinées.contains(cleFlecheInverse)) {
+				if (bidir && flechesDessinées.contains(cleFlecheInverse))
+				{
 					continue;
 				}
-				
-				// Marquer cette flèche comme dessinée
 				flechesDessinées.add(cleFleche);
 				
 				// Calculer le décalage avec clé normalisée
@@ -301,7 +298,6 @@ public class Fleche
 				lstFleches.add(fleche);
 			}
 			
-			// ===== HÉRITAGE =====
 			for (CreeClass cl2 : cl1.getLien().getLstLienHeritage()) 
 			{
 				String cleFleche = cl1.getNom() + "->" + cl2.getNom() + ":heritage";
@@ -325,7 +321,6 @@ public class Fleche
 				lstFleches.add(fleche);
 			}
 			
-			// ===== INTERFACES =====
 			for (CreeClass cl2 : cl1.getLien().getLstLienInterface()) 
 			{
 				String cleFleche = cl1.getNom() + "->" + cl2.getNom() + ":interface";

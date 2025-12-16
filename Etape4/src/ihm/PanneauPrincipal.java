@@ -122,7 +122,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		this.offsetX = 0;
 		this.offsetY = 0;
 		this.lstFleches.clear();
-		this.lstCordFleche.clear(); // AJOUTÉ
+		this.lstCordFleche.clear();
 		this.multiplicite = null;
 		this.indexFlecheSelec = -1;
 		this.repaint();
@@ -132,12 +132,11 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	{
 		super.paintComponent(g);
 		this.lstFleches.clear();
-		this.lstCordFleche.clear(); // AJOUTÉ
+		this.lstCordFleche.clear();
 		
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		// Sauvegarde du transform d'origine
 		AffineTransform old = g2.getTransform();
 		int xOffset = 50;
 		int yOffset = 50;
@@ -157,13 +156,10 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			int heightMethodes  = (lstMethodes.size()  > 3 ? 4 : lstMethodes.size() ) * 20 + 20;
 			int totalHeight = heightTitre + heightAttributs + heightMethodes;
 
-			//calculer la largeur nécessaire
 			int width = calculerLargeur(classe, lstAttributs,  lstMethodes);
 			
-			// IMPORTANT : N'initialiser la position QUE si elle est à (0,0)
 			if (classe.getPosX() == 0 && classe.getPosY() == 0)
 			{
-				// Si on dépasse la largeur max, on passe à la ligne suivante
 				if (xOffset + width > largeurMax && cpt > 0)
 				{
 					xOffset = 50;
@@ -174,22 +170,17 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 				this.lstClass.get(cpt).setPosX(xOffset);
 				this.lstClass.get(cpt).setPosY(yOffset);
 				
-				// Mettre à jour les positions pour la prochaine classe
 				maxHeightLigne = Math.max(maxHeightLigne, totalHeight);
 				xOffset += width + espacementX;
 			}
 			
-			// Utiliser les positions ACTUELLES de la classe pour dessiner
 			int posX = classe.getPosX();
 			int posY = classe.getPosY();
 
-			//Dessiner le rectangle de la classe
 			this.dessinerRectangle(posX, posY, width, totalHeight, g2, heightTitre, heightAttributs, cpt);
 
-			// Dessiner le contenu de la classe
 			this.dessinerContenu(classe, lstAttributs, lstMethodes, g2, posX, posY, width, heightTitre, heightAttributs);
 			
-			// Mettre à jour la largeur et hauteur
 			this.lstClass.get(cpt).setLargeur(width);
 			this.lstClass.get(cpt).setHauteur(totalHeight);
 		}
@@ -452,12 +443,12 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 
 	public void dessinerContenu(CreeClass classe, List<Attribut> lstAttributs, List<Methode> lstMethodes, Graphics2D g2, int posX, int posY, int width, int heightTitre, int heightAttributs)
 	{
-		// Texte : nom de la classe (centré)
 		String nomClasse = classe.getNom();
 		int largeurNom = g2.getFontMetrics().stringWidth(nomClasse);
 		g2.drawString(nomClasse, posX + (width - largeurNom) / 2, posY + 25);
 
 		int cptAttr = 1;
+		
 		// Attributs
 		for(Attribut attr : lstAttributs) 
 		{
@@ -513,6 +504,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		}
 
 		int cptMeth = 1;
+		
 		// Méthodes
 		int index = 0;
 		for (Methode meth : lstMethodes) 
