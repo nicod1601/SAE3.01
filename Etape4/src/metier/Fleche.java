@@ -1,13 +1,11 @@
-package src.ihm;
+package src.metier;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-
-import src.metier.CreeClass;
-import src.metier.Multiplicite;
 
 public class Fleche
 {
@@ -53,25 +51,15 @@ public class Fleche
 	}
 
 	/**
-	 * Calcule un vecteur de décalage perpendiculaire à la ligne
+	 * Crée une clé normalisée pour deux classes (ordre alphabétique)
 	 */
-	private static int[] calculerDecalage(int x1, int y1, int x2, int y2, int offset)
+	private static String creerCleNormalisee(String nom1, String nom2, String typeLien)
 	{
-		double dx = x2 - x1;
-		double dy = y2 - y1;
-		double longueur = Math.sqrt(dx * dx + dy * dy);
-		
-		if (longueur == 0) return new int[]{0, 0};
-		
-		// Vecteur perpendiculaire normalisé
-		double perpX = -dy / longueur;
-		double perpY = dx / longueur;
-		
-		return new int[]
-		{
-			(int)(perpX * offset),
-			(int)(perpY * offset)
-		};
+		if (nom1.compareTo(nom2) < 0) {
+			return nom1 + "<->" + nom2 + ":" + typeLien;
+		} else {
+			return nom2 + "<->" + nom1 + ":" + typeLien;
+		}
 	}
 
 	/**
@@ -79,55 +67,76 @@ public class Fleche
 	 */
 	public void dessiner(Graphics2D g2, int decalage)
 	{
-		int xDepFleche = source.getPosX() + source.getLargeur() / 2;
-		int yDepFleche = source.getPosY() + source.getHauteur() / 2;
-		int xFinFleche = cible.getPosX()  + cible.getLargeur() / 2;
-		int yFinFleche = cible.getPosY()  + cible.getHauteur() / 2;
+		// Calcul des centres des classes
+		int centreXDepart = source.getPosX() + source.getLargeur() / 2;
+		int centreYDepart = source.getPosY() + source.getHauteur() / 2;
+		int centreXArrivee = cible.getPosX() + cible.getLargeur() / 2;
+		int centreYArrivee = cible.getPosY() + cible.getHauteur() / 2;
 		
-		// Calcul du décalage perpendiculaire pour éviter les chevauchements
-		int[] offset = calculerDecalage(xDepFleche, yDepFleche, xFinFleche, yFinFleche, decalage);
-		xDepFleche  += offset[0];
-		yDepFleche  += offset[1];
-		xFinFleche  += offset[0];
-		yFinFleche  += offset[1];
+		// Calculer la différence de position
+		double deltaX = centreXArrivee - centreXDepart;
+		double deltaY = centreYArrivee - centreYDepart;
 		
-		// Ajuster les points de départ et d'arrivée aux bords des rectangles
-		int dx = xFinFleche - xDepFleche;
-		int dy = yFinFleche - yDepFleche;
+		// Déterminer les points de connexion selon la position relative des classes
+		int pointXDepart = centreXDepart;
+		int pointYDepart = centreYDepart;
+		int pointXArrivee = centreXArrivee;
+		int pointYArrivee = centreYArrivee;
 		
-		if (Math.abs(dx) > Math.abs(dy)) 
+		// Calculer le vecteur perpendiculaire pour le décalage
+		double perpX = 0;
+		double perpY = 0;
+		if (decalage != 0) 
 		{
-			if (dx > 0) 
+			double longueur = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+			if (longueur > 0) 
 			{
-				xDepFleche = source.getPosX() + source.getLargeur()     + offset[0];
-				xFinFleche = cible.getPosX()                            + offset[0];
-				yDepFleche = source.getPosY() + source.getHauteur() / 2 + offset[1];
-				yFinFleche = cible.getPosY()  + cible.getHauteur()  / 2 + offset[1];
-			} 
+				// Vecteur perpendiculaire normalisé
+				perpX = -deltaY / longueur * decalage;
+				perpY = deltaX / longueur * decalage;
+			}
+		}
+		
+		// Si l'angle est plus vertical qu'horizontal
+		if (Math.abs(deltaY) > Math.abs(deltaX))
+		{
+			// Connexion verticale (haut/bas)
+			if (deltaY < 0) 
+			{
+				// La classe d'arrivée est AU-DESSUS de la classe de départ
+				pointYDepart = source.getPosY(); // Haut de la classe de départ
+				pointYArrivee = cible.getPosY() + cible.getHauteur(); // Bas de la classe d'arrivée
+			}
 			else 
 			{
-				xDepFleche = source.getPosX()                           + offset[0];
-				xFinFleche = cible.getPosX()  + cible.getLargeur()      + offset[0];
-				yDepFleche = source.getPosY() + source.getHauteur() / 2 + offset[1];
-				yFinFleche = cible.getPosY()  + cible.getHauteur()  / 2 + offset[1];
+				// La classe d'arrivée est EN-DESSOUS de la classe de départ
+				pointYDepart = source.getPosY() + source.getHauteur(); // Bas de la classe de départ
+				pointYArrivee = cible.getPosY(); // Haut de la classe d'arrivée
 			}
+			
+			// Pour les connexions verticales, appliquer le décalage uniquement sur X
+			pointXDepart = centreXDepart + (int)perpX;
+			pointXArrivee = centreXArrivee + (int)perpX;
 		}
 		else
 		{
-			if (dy > 0)
+			// Connexion horizontale (gauche/droite)
+			if (deltaX < 0) 
 			{
-				yDepFleche = source.getPosY() + source.getHauteur()     + offset[1];
-				yFinFleche = cible.getPosY()                            + offset[1];
-				xDepFleche = source.getPosX() + source.getLargeur() / 2 + offset[0];
-				xFinFleche = cible.getPosX()  + cible.getLargeur()  / 2 + offset[0];
-			} 
-			else
-			{
-				yDepFleche = source.getPosY() + offset[1];
-				yFinFleche = cible.getPosY()  + cible.getHauteur()       + offset[1];
-				xDepFleche = source.getPosX() + source.getLargeur() / 2  + offset[0];
-				xFinFleche = cible.getPosX()  + cible.getLargeur()  / 2  + offset[0];
+				// La classe d'arrivée est À GAUCHE de la classe de départ
+				pointXDepart = source.getPosX(); // Gauche de la classe de départ
+				pointXArrivee = cible.getPosX() + cible.getLargeur(); // Droite de la classe d'arrivée
 			}
+			else 
+			{
+				// La classe d'arrivée est À DROITE de la classe de départ
+				pointXDepart = source.getPosX() + source.getLargeur(); // Droite de la classe de départ
+				pointXArrivee = cible.getPosX(); // Gauche de la classe d'arrivée
+			}
+			
+			// Pour les connexions horizontales, appliquer le décalage uniquement sur Y
+			pointYDepart = centreYDepart + (int)perpY;
+			pointYArrivee = centreYArrivee + (int)perpY;
 		}
 		
 		// Dessiner selon le type de lien
@@ -137,36 +146,36 @@ public class Fleche
 				if (bidirectionnel) 
 				{
 					// Trait simple sans flèche pour bidirectionnel
-					g2.setColor (Couleur.GRIS.getColor());
+					g2.setColor(Couleur.GRIS.getColor());
 					g2.setStroke(new BasicStroke(2f));
-					g2.drawLine (xDepFleche, yDepFleche, xFinFleche, yFinFleche);
+					g2.drawLine(pointXDepart, pointYDepart, pointXArrivee, pointYArrivee);
 				} 
 				else
 				{
 					// Flèche normale pour unidirectionnel
-					g2.setColor   (Couleur.GRIS.getColor());
-					g2.setStroke  (new BasicStroke(2f));
-					g2.drawLine   (xDepFleche, yDepFleche, xFinFleche, yFinFleche);
-					dessinerPointe(g2, xDepFleche, yDepFleche, xFinFleche, yFinFleche, false);
+					g2.setColor(Couleur.GRIS.getColor());
+					g2.setStroke(new BasicStroke(2f));
+					g2.drawLine(pointXDepart, pointYDepart, pointXArrivee, pointYArrivee);
+					dessinerPointe(g2, pointXDepart, pointYDepart, pointXArrivee, pointYArrivee, false);
 				}
 				break;
 				
 			case "heritage":
 				// Flèche fermée (triangle plein)
-				g2.setColor   (Couleur.CYAN.getColor());
-				g2.setStroke  (new BasicStroke(2f));
-				g2.drawLine   (xDepFleche, yDepFleche, xFinFleche, yFinFleche);
-				dessinerPointe(g2, xDepFleche, yDepFleche, xFinFleche, yFinFleche, true);
+				g2.setColor(Couleur.CYAN.getColor());
+				g2.setStroke(new BasicStroke(2f));
+				g2.drawLine(pointXDepart, pointYDepart, pointXArrivee, pointYArrivee);
+				dessinerPointe(g2, pointXDepart, pointYDepart, pointXArrivee, pointYArrivee, true);
 				break;
 				
 			case "interface":
 				// Flèche en pointillés
 				float[] pattern = {6f, 6f};
-				g2.setStroke  (new BasicStroke(2f, BasicStroke.CAP_ROUND, 
+				g2.setStroke(new BasicStroke(2f, BasicStroke.CAP_ROUND, 
 				               BasicStroke.JOIN_ROUND, 1f, pattern, 0f));
-				g2.setColor   (Couleur.ROUGE.getColor());
-				g2.drawLine   (xDepFleche, yDepFleche, xFinFleche, yFinFleche);
-				dessinerPointe(g2, xDepFleche, yDepFleche, xFinFleche, yFinFleche, true);
+				g2.setColor(Couleur.ROUGE.getColor());
+				g2.drawLine(pointXDepart, pointYDepart, pointXArrivee, pointYArrivee);
+				dessinerPointe(g2, pointXDepart, pointYDepart, pointXArrivee, pointYArrivee, true);
 				break;
 		}
 		
@@ -177,22 +186,22 @@ public class Fleche
 		if (multipliciteSource != null && !multipliciteSource.isEmpty()) 
 		{
 			g2.setColor(Couleur.NOIR.getColor());
-			int xTextSrc = xDepFleche + (xFinFleche - xDepFleche) / 10;
-			int yTextSrc = yDepFleche + (yFinFleche - yDepFleche) / 10 - 5;
+			int xTextSrc = pointXDepart + (pointXArrivee - pointXDepart) / 10;
+			int yTextSrc = pointYDepart + (pointYArrivee - pointYDepart) / 10 - 5;
 			g2.drawString(multipliciteSource, xTextSrc, yTextSrc);
 		}
 		
 		if (multipliciteCible != null && !multipliciteCible.isEmpty()) 
 		{
 			g2.setColor(Couleur.NOIR.getColor());
-			int xTextCible = xDepFleche + (xFinFleche - xDepFleche) * 9 / 10;
-			int yTextCible = yDepFleche + (yFinFleche - yDepFleche) * 9 / 10 - 5;
+			int xTextCible = pointXDepart + (pointXArrivee - pointXDepart) * 9 / 10;
+			int yTextCible = pointYDepart + (pointYArrivee - pointYDepart) * 9 / 10 - 5;
 			g2.drawString(multipliciteCible, xTextCible, yTextCible);
 		}
 
 		// Sauvegarder la position finale pour la sélection
-		this.posXFin = xFinFleche;
-		this.posYFin = yFinFleche;
+		this.posXFin = pointXArrivee;
+		this.posYFin = pointYArrivee;
 	}
 
 	/**
@@ -232,28 +241,37 @@ public class Fleche
 	{
 		ArrayList<Fleche> lstFleches = new ArrayList<>();
 		HashMap<String, Integer> compteurLiaisons = new HashMap<>();
+		HashSet<String> flechesDessinées = new HashSet<>();
 		
 		for (CreeClass cl1 : lstClass) 
 		{
 			// ===== ASSOCIATIONS (attributs) =====
 			for (CreeClass cl2 : cl1.getLien().getLstLienAttribut()) 
 			{
-				String cle1   = cl1.getNom() + "->" + cl2.getNom();
-				String cle2   = cl2.getNom() + "->" + cl1.getNom();
-				
 				boolean bidir = estBidirectionnel(cl1, cl2);
 				
+				// Créer une clé unique pour cette flèche
+				String cleFleche = cl1.getNom() + "->" + cl2.getNom() + ":association";
+				String cleFlecheInverse = cl2.getNom() + "->" + cl1.getNom() + ":association";
+				
 				// Si bidirectionnel, ne dessiner qu'une fois
-				if (bidir && compteurLiaisons.containsKey(cle2)) {
+				if (bidir && flechesDessinées.contains(cleFlecheInverse)) {
 					continue;
 				}
 				
-				// Calculer le décalage si plusieurs liaisons entre les mêmes classes
-				String cleBase = cl1.getNom() + "<->" + cl2.getNom();
+				// Marquer cette flèche comme dessinée
+				flechesDessinées.add(cleFleche);
+				
+				// Calculer le décalage avec clé normalisée
+				String cleBase = creerCleNormalisee(cl1.getNom(), cl2.getNom(), "association");
 				int numLiaison = compteurLiaisons.getOrDefault(cleBase, 0);
-				int decalage   = numLiaison * 10;
+				
+				// Décalage alterné : 0, +15, -15, +30, -30, etc.
+				int decalage = (numLiaison == 0) ? 0 : 
+				               (numLiaison % 2 == 1) ? (numLiaison + 1) / 2 * 15 : 
+				               -(numLiaison / 2 * 15);
+				
 				compteurLiaisons.put(cleBase, numLiaison + 1);
-				compteurLiaisons.put(cle1, 1);
 				
 				// Récupérer les multiplicités depuis la classe Multiplicite
 				String multSrc   = "1";
@@ -286,9 +304,20 @@ public class Fleche
 			// ===== HÉRITAGE =====
 			for (CreeClass cl2 : cl1.getLien().getLstLienHeritage()) 
 			{
-				String cleBase = cl1.getNom() + "<->" + cl2.getNom();
+				String cleFleche = cl1.getNom() + "->" + cl2.getNom() + ":heritage";
+				
+				if (flechesDessinées.contains(cleFleche)) {
+					continue;
+				}
+				flechesDessinées.add(cleFleche);
+				
+				String cleBase = creerCleNormalisee(cl1.getNom(), cl2.getNom(), "heritage");
 				int numLiaison = compteurLiaisons.getOrDefault(cleBase, 0);
-				int decalage   = numLiaison * 10;
+				
+				int decalage = (numLiaison == 0) ? 0 : 
+				               (numLiaison % 2 == 1) ? (numLiaison + 1) / 2 * 15 : 
+				               -(numLiaison / 2 * 15);
+				
 				compteurLiaisons.put(cleBase, numLiaison + 1);
 				
 				Fleche fleche = new Fleche(cl1, cl2, "heritage", null, null, false);
@@ -299,9 +328,20 @@ public class Fleche
 			// ===== INTERFACES =====
 			for (CreeClass cl2 : cl1.getLien().getLstLienInterface()) 
 			{
-				String cleBase = cl1.getNom() + "<->" + cl2.getNom();
+				String cleFleche = cl1.getNom() + "->" + cl2.getNom() + ":interface";
+				
+				if (flechesDessinées.contains(cleFleche)) {
+					continue;
+				}
+				flechesDessinées.add(cleFleche);
+				
+				String cleBase = creerCleNormalisee(cl1.getNom(), cl2.getNom(), "interface");
 				int numLiaison = compteurLiaisons.getOrDefault(cleBase, 0);
-				int decalage   = numLiaison * 10;
+				
+				int decalage = (numLiaison == 0) ? 0 : 
+				               (numLiaison % 2 == 1) ? (numLiaison + 1) / 2 * 15 : 
+				               -(numLiaison / 2 * 15);
+				
 				compteurLiaisons.put(cleBase, numLiaison + 1);
 				
 				Fleche fleche = new Fleche(cl1, cl2, "interface", null, null, false);

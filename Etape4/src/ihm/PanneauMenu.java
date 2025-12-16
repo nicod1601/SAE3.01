@@ -9,6 +9,7 @@
 	import javax.swing.border.EmptyBorder;
 	import src.Controleur;
 	import src.ihm.edit.FrameEdit;
+	import src.metier.Couleur;
 
 	public class PanneauMenu extends JPanel implements ActionListener
 	{

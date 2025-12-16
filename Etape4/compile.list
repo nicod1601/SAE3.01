@@ -5,8 +5,9 @@ src/metier/LectureRepertoire.java
 src/metier/Lien.java
 src/metier/Multiplicite.java
 src/metier/LectureFichier.java
+src/metier/Fleche.java
+src/metier/Couleur.java
 
-src/ihm/Fleche.java
 src/ihm/IhmCui.java
 src/ihm/FrameAppli.java
 src/ihm/PanneauFichier.java

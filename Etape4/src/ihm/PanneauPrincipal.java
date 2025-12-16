@@ -1,35 +1,25 @@
 package src.ihm;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
-
 import src.Controleur;
 import src.metier.Attribut;
+import src.metier.Couleur;
 import src.metier.CreeClass;
+import src.metier.Fleche;
 import src.metier.Methode;
 import src.metier.Multiplicite;
 
@@ -367,58 +357,81 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			}
 		}
 
-					List<List<List<String>>> associations = new ArrayList<List<List<String>>>();
-			for(CreeClass c : lstClass)
+		List<List<List<String>>> associations = new ArrayList<List<List<String>>>();
+		for(CreeClass c : lstClass)
+		{
+			if (c.getLien() != null && c.getLien().getLstLienHeritage() != null)
 			{
-				List<Methode>  methodes  = c.getLstMethode ();
-				List<Attribut> attributs = c.getLstAttribut();
-				Multiplicite   multiC    = c.getMultiplicite();
-
-				// Class : [0..* , 1..1, ...]
-				Map<CreeClass, List<List<String>>> mapMultiplC = multiC.getMapMultiplicites();
-				
-				
-				if (mapMultiplC != null)
+				for (CreeClass classeMere : c.getLien().getLstLienHeritage())
 				{
-					for (CreeClass c2 : mapMultiplC.keySet())
+					this.lstFleches.add(new Fleche(classeMere, c, "heritage", "", "", false));
+				}
+			}
+		}
+
+		for(CreeClass c : lstClass)
+		{
+			if (c.getLien() != null && c.getLien().getLstLienInterface() != null)
+			{
+				for (CreeClass classeInterface : c.getLien().getLstLienInterface())
+				{
+					this.lstFleches.add(new Fleche(classeInterface, c, "interface", "", "", false));
+				}
+			}
+		}
+
+
+		for(CreeClass c : lstClass)
+		{
+			List<Methode>  methodes  = c.getLstMethode ();
+			List<Attribut> attributs = c.getLstAttribut();
+			Multiplicite   multiC    = c.getMultiplicite();
+
+			// Class : [0..* , 1..1, ...]
+			Map<CreeClass, List<List<String>>> mapMultiplC = multiC.getMapMultiplicites();
+			
+			
+			if (mapMultiplC != null)
+			{
+				for (CreeClass c2 : mapMultiplC.keySet())
+				{
+					for (List<String> multi : mapMultiplC.get(c2))
 					{
-						for (List<String> multi : mapMultiplC.get(c2))
+						if (!multi.isEmpty())
 						{
-							if (!multi.isEmpty())
+							List<String> lstClassMultiC = new ArrayList<>();
+							lstClassMultiC.add(c.getNom());
+							lstClassMultiC.add(multi.get(0));
+
+							List<String> lstClassMultiClef = new ArrayList<>();
+							lstClassMultiClef.add(c2.getNom());
+							lstClassMultiClef.add(multi.get(1));
+
+							if (!multi.get(0).equals("0..*") && IhmCui.verfiDoublon(lstClassMultiC, lstClassMultiClef, associations))
 							{
-								List<String> lstClassMultiC = new ArrayList<>();
-								lstClassMultiC.add(c.getNom());
-								lstClassMultiC.add(multi.get(0));
+								boolean estBidirectionnel = multi.get(0).equals("1..*") && multi.get(1).equals("1..*") ? true : false;
 
-								List<String> lstClassMultiClef = new ArrayList<>();
-								lstClassMultiClef.add(c2.getNom());
-								lstClassMultiClef.add(multi.get(1));
+								this.lstFleches.add(new Fleche (c,c2,"association",multi.get(0),multi.get(1), estBidirectionnel));
 
-								if (!multi.get(0).equals("0..*") && IhmCui.verfiDoublon(lstClassMultiC, lstClassMultiClef, associations))
-								{
-									boolean estBidirectionnel = multi.get(0).equals("1..*") && multi.get(1).equals("1..*") ? true : false;
+								List<List<String>> classMuLti = new ArrayList<List<String>>();
 
-									this.lstFleches.add(new Fleche (c,c2,"association",multi.get(0),multi.get(1), estBidirectionnel));
+								classMuLti.add(lstClassMultiC);
+								classMuLti.add(lstClassMultiClef);
 
-									List<List<String>> classMuLti = new ArrayList<List<String>>();
-
-									classMuLti.add(lstClassMultiC);
-									classMuLti.add(lstClassMultiClef);
-
-									associations.add(classMuLti);
-								}
+								associations.add(classMuLti);
 							}
 						}
 					}
 				}
 			}
+		}
 
-			int espace = 0;
-			for (Fleche fl : this.lstFleches)
-			{
-				fl.dessiner(g2,espace);
-				espace += 20;
-			}
+		int espace = 0;
+		for (Fleche fl : this.lstFleches)
+		{
+			fl.dessiner(g2,espace);
+			espace += 20;
+		}
 			
 		// Restauration transform
 		g2.setTransform(old);

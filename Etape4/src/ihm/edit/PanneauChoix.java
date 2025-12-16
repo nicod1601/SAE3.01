@@ -6,7 +6,7 @@ import java.awt.Font;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import src.Controleur;
-import src.ihm.Couleur;
+import src.metier.Couleur;
 import src.metier.CreeClass;
 
 public class PanneauChoix extends JPanel

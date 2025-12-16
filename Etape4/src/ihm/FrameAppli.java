@@ -1,10 +1,9 @@
 package src.ihm;
 
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-
-import java.awt.BorderLayout;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.*;

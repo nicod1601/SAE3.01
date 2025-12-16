@@ -1,12 +1,12 @@
 package src.ihm;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import src.Controleur;
+import src.metier.Couleur;
 
 public class PanneauFichier extends JPanel
 {
