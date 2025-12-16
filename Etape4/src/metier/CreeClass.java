@@ -1,6 +1,4 @@
 package src.metier;
-
-import java.io.FileInputStream;
 import java.util.*;
 
 /**

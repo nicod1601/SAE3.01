@@ -1,6 +1,7 @@
 package src.metier;
 
 import java.io.FileInputStream;
+import java.io.File;
 import java.util.Scanner;
 
 public class LectureFichier
@@ -32,7 +33,7 @@ public class LectureFichier
 	{
 		this.classe = new CreeClass();
 
-		String nomComplet = new java.io.File(data).getName();
+		String nomComplet = new File(data).getName();
 		if (nomComplet.endsWith(".java"))
 		{
 			this.classe.setNom( nomComplet.substring(0, nomComplet.length() - 5) );
@@ -70,7 +71,8 @@ public class LectureFichier
 				}
 
 				// Si class / interface / class abstract / record
-				if (line.contains("class") || line.contains("interface") || (line.contains("abstract") && line.contains("class")) || line.contains("record"))
+				if (line.contains("class") || line.contains("interface") || line.contains("record") ||
+				   (line.contains("abstract") && line.contains("class")) )
 				{
 					/*------------------------------*/
 					/* Ananlyse ligne : mot par mot */
@@ -120,7 +122,8 @@ public class LectureFichier
 					|| line.contains("abstract") ) && !line.contains("class"))
 					// sans class car class peut être abstract
 				{
-					//Si dans la ligne il y a le nom de la classe ainsi qu'une visibilité alors c'est un constructeur
+					//Si dans la ligne il y a le nom de la classe ainsi qu'une visibilité
+					// alors c'est un constructeur
 					if (line.contains(this.classe.getNom()) && line.contains("("))
 					{
 						this.classe.ajouterConstructeur(line);
