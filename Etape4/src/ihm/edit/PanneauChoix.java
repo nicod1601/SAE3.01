@@ -1,65 +1,152 @@
 package src.ihm.edit;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.border.EmptyBorder;
 import src.Controleur;
-import src.metier.CreeClass;
-import java.util.List;
+import src.ihm.Couleur;
 
 public class PanneauChoix extends JPanel
 {
 	private Controleur ctrl;
+	private JList<String> listeFichiers;
+	private DefaultListModel<String> modeleFichiers;
 	private FrameEdit frame;
 
-	private JCheckBox[] checkbox;
-	private PanneauInfo panneauInfo;
-
-	public PanneauChoix(Controleur ctrl, FrameEdit frame, PanneauInfo panneauInfo) 
+	public PanneauChoix(Controleur ctrl, FrameEdit frame) 
 	{
 		this.ctrl = ctrl;
 		this.frame = frame;
-		this.panneauInfo = panneauInfo;
+		
+		this.configurerPanneau();
+		this.creerComposants();
+	}
+	
+	private void configurerPanneau()
+	{
+		this.setLayout(new BorderLayout());
+		this.setPreferredSize(new Dimension(250, 0));
+		this.setBackground(Couleur.COULEUR_FOND.getColor());
+		this.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, Couleur.COULEUR_BORDURE.getColor()));
+	}
+	
+	private void creerComposants()
+	{
+		// Label d'en-tête
+		JLabel lblFichiers = this.creerLabelEnTete();
+		
+		// Liste des fichiers
+		this.modeleFichiers = new DefaultListModel<>();
+		this.listeFichiers = this.creerListeFichiers();
+		
+		JScrollPane scrollFichiers = new JScrollPane(listeFichiers);
+		scrollFichiers.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		scrollFichiers.getViewport().setBackground(Couleur.COULEUR_LISTE.getColor());
+		scrollFichiers.setBackground(Couleur.COULEUR_FOND.getColor());
+		this.listeFichiers.setEnabled(false);
+		
+		// Ajout des composants
+		this.add(lblFichiers, BorderLayout.NORTH);
+		this.add(scrollFichiers, BorderLayout.CENTER);
 
-		// Créer un panneau pour contenir les éléments en vertical
-		JPanel panelContenu = new JPanel();
-		panelContenu.setLayout(new BoxLayout(panelContenu, BoxLayout.Y_AXIS));
+		//Activation des composants
 
-		List<CreeClass> lstClasses = this.ctrl.getLstClass();
-		this.checkbox = new JCheckBox[lstClasses.size()];
-		int i = 0;
-		for (CreeClass c : lstClasses) 
-		{
-			this.checkbox[i] = new JCheckBox(c.getNom());
-			final int index = i;
-			final CreeClass classe = c;
-			
-			// Ajouter un listener pour afficher les infos quand sélectionné
-			this.checkbox[i].addChangeListener(new ChangeListener()
-			{
-				@Override
-				public void stateChanged(ChangeEvent e)
-				{
-					if (checkbox[index].isSelected())
-					{
-						panneauInfo.afficherInfoClasse(classe);
-					}
-					else
-					{
-						panneauInfo.effacer();
-					}
-				}
-			});
-			
-			panelContenu.add(new JLabel(c.getNom()));
-			panelContenu.add(this.checkbox[i]);
-			i++;
-		}
-
-		// Ajouter le panneau dans un JScrollPane
-		JScrollPane scrollPane = new JScrollPane(panelContenu);
-		this.add(scrollPane);
+		//this.listeFichiers.addMouseListener(this);
 
 	}
+	
+	private JLabel creerLabelEnTete()
+	{
+		JLabel label = new JLabel("<html><center>📁 Fichiers chargés<br><br>" +
+								  "<span style='font-size:10px; color:#bdc3c7;'>" +
+								  "Fichiers du dossier<br>sélectionné" +
+								  "</span></center></html>");
+		label.setFont(new Font("Segoe UI Emoji", Font.BOLD, 13));
+		label.setBorder(new EmptyBorder(15, 10, 15, 10));
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setForeground(Couleur.COULEUR_TEXTE.getColor());
+		label.setBackground(Couleur.COULEUR_FOND.getColor());
+		label.setOpaque(true);
+		
+		return label;
+	}
+	
+	private JList<String> creerListeFichiers()
+	{
+		JList<String> liste = new JList<>(modeleFichiers);
+		liste.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		liste.setFont(new Font("Consolas", Font.PLAIN, 12));
+		liste.setBorder(new EmptyBorder(5, 5, 5, 5));
+		liste.setBackground(Couleur.COULEUR_LISTE.getColor());
+		liste.setForeground(Couleur.COULEUR_TEXTE.getColor());
+		liste.setSelectionBackground(Couleur.COULEUR_SELECTION.getColor());
+		liste.setSelectionForeground(Couleur.BLANC.getColor());
+		liste.setFixedCellHeight(28);
+		
+		return liste;
+	}
 
+	
+	/**
+	 * Retourne le modèle de liste pour permettre au PanneauMenu d'ajouter des fichiers
+	 */
+	public DefaultListModel<String> getModeleFichiers()
+	{
+		return this.modeleFichiers;
+	}
+	
+	/**
+	 * Ajoute un fichier à la liste
+	 */
+	public void ajouterFichier(String nomFichier)
+	{
+		if (!this.modeleFichiers.contains(nomFichier))
+		{
+			this.modeleFichiers.addElement(nomFichier);
+		}
+	}
+	
+	/**
+	 * Vide la liste des fichiers
+	 */
+	public void viderListe()
+	{
+		this.modeleFichiers.clear();
+	}
+	
+	/**
+	 * Retourne les fichiers sélectionnés
+	 */
+	public java.util.List<String> getFichiersSelectionnes()
+	{
+		return this.listeFichiers.getSelectedValuesList();
+	}
+	
+	/**
+	 * Retourne tous les fichiers de la liste
+	 */
+	public java.util.List<String> getTousFichiers()
+	{
+		java.util.List<String> fichiers = new java.util.ArrayList<>();
+		for (int i = 0; i < this.modeleFichiers.size(); i++)
+		{
+			fichiers.add(this.modeleFichiers.getElementAt(i));
+		}
+		return fichiers;
+	}
+
+	public void selectionnerList(int index)
+	{
+		if(index == -1)
+		{
+			this.listeFichiers.clearSelection();
+		}
+		else
+		{
+			this.listeFichiers.setSelectedIndex(index);
+		}
+
+	}
 }

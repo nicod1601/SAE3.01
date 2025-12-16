@@ -4,14 +4,11 @@
 	import java.awt.FlowLayout;
 	import java.awt.Font;
 	import java.awt.event.*;
-	import java.awt.image.BufferedImage;
-
 	import java.io.File;
-
 	import javax.swing.*;
 	import javax.swing.border.EmptyBorder;
-
 	import src.Controleur;
+	import src.ihm.edit.FrameEdit;
 
 	public class PanneauMenu extends JPanel implements ActionListener
 	{
@@ -24,6 +21,7 @@
 		private Controleur ctrl;
 		private File dossierOuvert;
 		private FrameAppli frameAppli;
+		private FrameEdit frameEdit;
 
 		public PanneauMenu(Controleur ctrl, FrameAppli frameAppli) 
 		{
@@ -38,6 +36,8 @@
 			
 			this.creerMenus();
 			this.appliquerStyle();
+
+			this.frameEdit = new FrameEdit(this.ctrl);
 			
 			/*-------------------------*/
 			/* Position des Composants */
@@ -66,7 +66,7 @@
 			this.fileMenu.add(new JMenuItem("🗑️ Suprimmer"));
 
 			/*Composants Edit */
-			
+			this.editMenu.add(new JMenuItem("📄 Modif Fichier"));
 
 			this.menuBar.add(fileMenu);
 			this.menuBar.add(editMenu);
@@ -193,6 +193,15 @@
 				}
 			}
 
+			for (int i = 0; i < this.editMenu.getItemCount(); i++) 
+			{
+				JMenuItem item = this.editMenu.getItem(i);
+				if (item != null)
+				{
+					item.addActionListener(this);
+				}
+			}
+
 			this.quitter.addActionListener(this);
 		}
 
@@ -217,6 +226,9 @@
 				case "Suprimmer":
 					this.viderListe();
 					break;
+				case "Modif Fichier":
+					this.ouvrirFrameEdit();
+					break;
 				default:
 					break;
 			}
@@ -225,12 +237,19 @@
 			{
 				System.exit(0);
 			}
-			if (e.getSource() == this.editMenu)
-			{
-				//new FrameEdit();
-			}
 		}
 
+		private void ouvrirFrameEdit()
+		{
+			if(! this.frameEdit.isVisible())
+			{
+				this.frameEdit.setVisible(true);
+			}
+			else
+			{
+				this.frameEdit.setVisible(false);
+			}
+		}
 
 		public void exporterEnImage()
 		{

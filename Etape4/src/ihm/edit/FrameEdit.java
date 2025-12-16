@@ -4,13 +4,13 @@ import java.awt.BorderLayout;
 import javax.swing.*;
 import src.Controleur;
 
-public class FrameEdit extends JFrame 
+public class FrameEdit extends JFrame
 {
 	private final PanneauChoix panneauChoix;
 	private final PanneauInfo panneauInfo;
 	private final Controleur ctrl;
 
-	public FrameEdit(Controleur ctrl) 
+	public FrameEdit(Controleur ctrl)
 	{
 		this.setTitle("Edit du graph UML");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -23,7 +23,7 @@ public class FrameEdit extends JFrame
 		/*-------------------------*/
 		this.ctrl = ctrl;
 		this.panneauInfo = new PanneauInfo();
-		this.panneauChoix = new PanneauChoix(ctrl, this, this.panneauInfo);
+		this.panneauChoix = new PanneauChoix(ctrl, this);
 
 		/*-------------------------*/
 		/* Position des Composants */
@@ -31,12 +31,6 @@ public class FrameEdit extends JFrame
 		this.add(this.panneauChoix, BorderLayout.WEST);
 		this.add(this.panneauInfo, BorderLayout.CENTER);
 
-		this.setVisible(true);
-	}
-
-	public static void main(String[] args) 
-	{
-		// Test avec un contrôleur valide si nécessaire
-		// new FrameEdit(new Controleur());
+		this.setVisible(false);
 	}
 }
