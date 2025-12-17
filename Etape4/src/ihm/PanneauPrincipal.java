@@ -91,7 +91,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			List<Attribut> lstAttributs = classe.getLstAttribut();
 			List<Methode> lstMethodes = classe.getLstMethode();
 
-			int heightTitre = 2 * 20;
+			int heightTitre = 2 * 24;
 			int heightAttributs = (lstAttributs.size() > 3 ? 4 : lstAttributs.size()) * 20 + 20;
 			int heightMethodes  = (lstMethodes.size()  > 3 ? 4 : lstMethodes.size() ) * 20 + 20;
 			int totalHeight = heightTitre + heightAttributs + heightMethodes;
@@ -431,6 +431,8 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		// Texte : nom de la classe (centré)
 		String nomClasse = classe.getNom();
 		int largeurNom = g2.getFontMetrics().stringWidth(nomClasse);
+		String typeClass = classe.getNom();
+		int largeurTypeClass = g2.getFontMetrics().stringWidth(typeClass) + 25;
 
 		//taille de la police en fonction du zoom
 		if (zoom == 2)
@@ -443,6 +445,9 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		}
 
 		g2.drawString(nomClasse, posX + (width - largeurNom) / 2, posY + 25);
+
+		if(!typeClass.equals("class"))
+			g2.drawString("<<" + typeClass + ">>", posX + (width - largeurTypeClass) / 2, posY + 40);
 
 		int cptAttr = 1;
 		// Attributs ---------------------------------------------------------------------------------------------------
