@@ -212,7 +212,7 @@ public class Controleur
 	public void sauvegarderXML(List<CreeClass> lstMetiers)
 	{
 		GererData gererData = new GererData();
-		gererData.sauvegarderBinaire(this.lstMetiers);
+		gererData.sauvegarderProjet(this.lstMetiers);
 	}
 
 	/*╔════════════════════════╗*/

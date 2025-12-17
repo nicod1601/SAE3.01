@@ -27,7 +27,7 @@ public class LectureFichier
 		{
 			return new LectureFichier(new GererData(),data ,0);
 		}
-		else if (data.endsWith(".xml"))
+		else if (data.endsWith(".uml"))
 		{
 			return new LectureFichier(new GererData(),data ,1);
 		}
@@ -40,9 +40,9 @@ public class LectureFichier
 	private LectureFichier(GererData gererDatan,String data, int dummy)
 	{
 		if (dummy == 0)
-			this.lstMetiersXML = gererDatan.chargerBinaire(data);
+			this.lstMetiersXML = gererDatan.chargerBinaire();
 		else
-			this.lstMetiersXML = gererDatan.importerDepuisXML(data);
+			this.lstMetiersXML = gererDatan.importerDepuisUML();
 	}
 	/**
 	 * Création d'un nouvel objet CreeClass.

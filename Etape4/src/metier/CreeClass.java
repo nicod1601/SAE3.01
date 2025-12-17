@@ -186,7 +186,6 @@ public class CreeClass implements Serializable
 		}
 
 		String type = motSuivant;
-		System.out.println(type);
 		// Dernier mot forcément le nom
 		String nom = sc.next();
 
@@ -559,7 +558,7 @@ public class CreeClass implements Serializable
 		this.lien = lien;
 	}
 
-	public void setMulti(Multiplicite multi) {
+	public void setMultiplicite(Multiplicite multi) {
 		this.multi = multi;
 	}
 

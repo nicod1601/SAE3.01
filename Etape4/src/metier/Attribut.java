@@ -65,11 +65,13 @@ public class Attribut implements Serializable
 		this.valeurFinal = this.checkValeur(valeur);
 	}
 
+	
+
 	private String checkValeur(String valeur)
 	{
-		type = this.type.toLowerCase();
+		String typeCheck = this.type.toLowerCase();
 		
-		if ( type.contains("list") || type.contains("set") || type.contains("collection") || type.contains("[]"))
+		if ( typeCheck.contains("list") || typeCheck.contains("set") || typeCheck.contains("collection") || typeCheck.contains("[]"))
 		{
 			return "...";
 		}
