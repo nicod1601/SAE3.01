@@ -25,7 +25,7 @@ Classe:ISurface
 Classe:Musique
 [type=record;abstract=false;mere=;posX=686;posY=50;largeur=342;hauteur=228;interfaces=ISurface]
 	Attribut:private String nom
-	Attribut:private int durre
+	Attribut:private int duree
 	Attribut:private int plusLong
 	Methode:public void Musique(String nom, int durre, int plusLong)
 	Methode:public String nom()

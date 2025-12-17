@@ -88,12 +88,25 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		for(int cpt = 0; cpt < this.lstClass.size(); cpt++)
 		{
 			CreeClass classe = this.lstClass.get(cpt);
+			if(classe == null)
+				continue;
+
 			List<Attribut> lstAttributs = classe.getLstAttribut();
 			List<Methode> lstMethodes = classe.getLstMethode();
 
-			int heightTitre = 2 * 24;
-			int heightAttributs = (lstAttributs.size() > 3 ? 4 : lstAttributs.size()) * 20 + 20;
-			int heightMethodes  = (lstMethodes.size()  > 3 ? 4 : lstMethodes.size() ) * 20 + 20;
+			if(lstAttributs == null && lstMethodes == null)
+				continue;
+
+			int heightTitre     = 2 * 24;
+			int heightAttributs = 0;
+			int heightMethodes  = 0;
+
+			if(lstAttributs != null)
+				heightAttributs = (lstAttributs.size() > 3 ? 4 : lstAttributs.size()) * 20 + 20;
+
+			if(lstMethodes != null)
+				heightMethodes = (lstMethodes.size()  > 3 ? 4 : lstMethodes.size() ) * 20 + 20;
+
 			int totalHeight = heightTitre + heightAttributs + heightMethodes;
 
 			//calculer la largeur nécessaire
@@ -140,7 +153,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		List<List<List<String>>> associations = new ArrayList<List<List<String>>>();
 		for(CreeClass c : lstClass)
 		{
-			if (c.getLien() != null && c.getLien().getLstLienHeritage() != null)
+			if (c != null && c.getLien() != null && c.getLien().getLstLienHeritage() != null)
 			{
 				for (CreeClass classeMere : c.getLien().getLstLienHeritage())
 				{
@@ -155,7 +168,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 
 		for(CreeClass c : lstClass)
 		{
-			if (c.getLien() != null && c.getLien().getLstLienInterface() != null)
+			if (c != null && c.getLien() != null && c.getLien().getLstLienInterface() != null)
 			{
 				for (CreeClass classeInterface : c.getLien().getLstLienInterface())
 				{
@@ -170,10 +183,14 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 
 		for(CreeClass c : lstClass)
 		{
-			Multiplicite   multiC    = c.getMultiplicite();
+			Multiplicite multiC = null;
+			if(c != null)
+				multiC = c.getMultiplicite();
 
 			// Class : [0..* , 1..1, ...]
-			Map<CreeClass, List<List<String>>> mapMultiplC = multiC.getMapMultiplicites();
+			Map<CreeClass, List<List<String>>> mapMultiplC = null;
+			if( multiC != null)
+				mapMultiplC = multiC.getMapMultiplicites();
 			
 			
 			if (mapMultiplC != null)

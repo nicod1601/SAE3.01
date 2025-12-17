@@ -3,6 +3,8 @@
 
 # Fichiers .class individuels
 *.class
+*.uml
+*.ser
 
 # Fichiers IDE
 .vscode/
