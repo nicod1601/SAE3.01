@@ -43,6 +43,9 @@ public class FrameAppli extends JFrame
 		                                          JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 		                                          JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
+		scrollFrame.getVerticalScrollBar().setUnitIncrement(50);
+		scrollFrame.getHorizontalScrollBar().setUnitIncrement(50);
+
 		/*-------------------------*/
 		/* Position des Composants */
 		/*-------------------------*/
