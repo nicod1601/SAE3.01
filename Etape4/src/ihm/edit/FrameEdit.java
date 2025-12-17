@@ -23,7 +23,7 @@ public class FrameEdit extends JFrame
 		/* Création des Composants */
 		/*-------------------------*/
         this.ctrl = ctrl;
-        this.panneauInfo = new PanneauInfo();
+        this.panneauInfo = new PanneauInfo(ctrl);
         this.panneauChoix = new PanneauChoix(ctrl, this, this.panneauInfo);
 
         /*-------------------------*/
@@ -42,6 +42,6 @@ public class FrameEdit extends JFrame
 
     public void majInfoClasse(String nomClasse) 
 	{
-        this.panneauInfo.majInfoClasse(nomClasse, this.ctrl);
+        this.panneauInfo.majInfoClasse(nomClasse);
     }
 }
