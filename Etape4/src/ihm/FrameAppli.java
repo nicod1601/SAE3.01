@@ -5,7 +5,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
-import java.util.ArrayList;
 import javax.swing.*;
 import src.Controleur;
 
@@ -62,16 +61,19 @@ public class FrameAppli extends JFrame
 	public void viderLstClass()
 	{
 		this.panneauPrincipal.viderListeClasses();
+		this.desactiverEdit();
 	}
 
 	public void ajouterFichier(String nomFichier)
 	{
 		this.panneauFichier.ajouterFichier(nomFichier);
+		this.activerEdit();
 	}
 
 	public void viderListe()
 	{
 		this.panneauFichier.viderListe();
+		this.desactiverEdit();
 	}
 
 	public void selectionner(int index)
@@ -92,5 +94,15 @@ public class FrameAppli extends JFrame
 	public DefaultListModel<String> getModeleFichiers()
 	{
 		return this.panneauFichier.getModeleFichiers();
+	}
+
+	public void activerEdit()
+	{
+		this.panneauMenu.activerEdit();
+	}
+
+	public void desactiverEdit()
+	{
+		this.panneauMenu.desactiverEdit();
 	}
 }

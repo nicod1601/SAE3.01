@@ -1,5 +1,6 @@
 package src.ihm;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -12,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
-
 import src.Controleur;
 import src.metier.Attribut;
 import src.metier.Couleur;
@@ -68,7 +67,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	{
 		super.paintComponent(g);
 		this.lstFleches.clear();
-		this.lstCordFleche.clear(); // AJOUTÉ
+		this.lstCordFleche.clear();
 		
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -273,8 +272,6 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			
 			if (distance <= tolerance)
 			{
-				System.out.println("Flèche cliquée à la position (" + x + ", " + y + ")");
-				System.out.println("Index de la flèche : " + cpt);
 				this.indexFlecheSelec = cpt;
 				return;
 			}
@@ -583,15 +580,6 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	}
 
 
-
-
-
-
-
-
-
-
-
 	/*--------------------------------------------*/
 	/*               OUTILS                       */
 	/*--------------------------------------------*/
@@ -672,8 +660,6 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	//exporter le panneau en image
 	public void exporterEnImage(String chemin, File fichier)
 	{
-		System.out.println("preferedsize" + this.getPreferredSize());
-		System.out.println("size" + this.getSize());
 	
 		BufferedImage image = new BufferedImage(
 			this.getWidth(), 
@@ -688,7 +674,6 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 
 		try {
 			ImageIO.write(image, "png", fichier);
-			System.out.println("Image sauvegardée : " + chemin);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -700,10 +685,6 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		if(dossier) 
 		{
 			this.lstClass = this.ctrl.getLstClass();
-			for (CreeClass classe : this.lstClass) 
-			{
-				System.out.println(classe.getNom());
-			}
 		} 
 		else
 		{
@@ -720,10 +701,6 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			}
 
 			this.lstClass.add(nouvelleClasse);
-			for (CreeClass classe : this.lstClass)
-			{
-				System.out.println(classe.getNom());
-			}
 		}
 		this.repaint();
 	}
@@ -738,7 +715,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		this.offsetX = 0;
 		this.offsetY = 0;
 		this.lstFleches.clear();
-		this.lstCordFleche.clear(); // AJOUTÉ
+		this.lstCordFleche.clear();
 		this.indexFlecheSelec = -1;
 		this.repaint();
 	}

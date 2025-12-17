@@ -89,12 +89,24 @@ public class PanneauMenu extends JPanel implements ActionListener
 		this.stylerBoutonQuitter();
 		
 		// Style des items du menu File
-		for (int i = 0; i < this.fileMenu.getItemCount(); i++) 
+		for (int cpt = 0; cpt < this.fileMenu.getItemCount(); cpt++) 
 		{
-			JMenuItem item = this.fileMenu.getItem(i);
+			JMenuItem item = this.fileMenu.getItem(cpt);
+			
 			if (item != null)
 			{
 				this.stylerMenuItem(item);
+			}
+		}
+
+		for(int cpt =0; cpt < this.editMenu.getItemCount(); cpt++)
+		{
+			JMenuItem item = this.editMenu.getItem(cpt);
+			
+			if (item != null)
+			{
+				this.stylerMenuItem(item);
+				item.setEnabled(false);
 			}
 		}
 	}
@@ -402,5 +414,21 @@ public class PanneauMenu extends JPanel implements ActionListener
 		popup.setBackground(Couleur.COULEUR_MENU.getColor());
 		popup.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 10));
 		popup.setBorder(BorderFactory.createLineBorder(Couleur.COULEUR_HOVER.getColor(), 1));
+	}
+
+	public void activerEdit()
+	{
+		for(int cpt=0; cpt < this.editMenu.getItemCount(); cpt++)
+		{
+			this.editMenu.getItem(cpt).setEnabled(true);
+		}
+	}
+
+	public void desactiverEdit()
+	{
+		for(int cpt=0; cpt < this.editMenu.getItemCount(); cpt++)
+		{
+			this.editMenu.getItem(cpt).setEnabled(false);
+		}
 	}
 }
