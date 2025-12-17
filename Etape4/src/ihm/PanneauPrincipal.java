@@ -431,7 +431,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		// Texte : nom de la classe (centré)
 		String nomClasse = classe.getNom();
 		int largeurNom = g2.getFontMetrics().stringWidth(nomClasse);
-		String typeClass = classe.getNom();
+		String typeClass = classe.getType();
 		int largeurTypeClass = g2.getFontMetrics().stringWidth(typeClass) + 25;
 
 		//taille de la police en fonction du zoom
