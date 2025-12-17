@@ -794,4 +794,9 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		this.indexFlecheSelec = -1;
 		this.repaint();
 	}
+
+	public void majDessin()
+	{
+		this.repaint();
+	}
 }

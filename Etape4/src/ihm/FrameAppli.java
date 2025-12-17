@@ -61,6 +61,11 @@ public class FrameAppli extends JFrame
 		this.panneauPrincipal.majListeClasses(dossier, nomFichier);
 	}
 
+	public void majIHM()
+	{
+		this.panneauPrincipal.majDessin();
+	}
+
 	public void viderLstClass()
 	{
 		this.panneauPrincipal.viderListeClasses();

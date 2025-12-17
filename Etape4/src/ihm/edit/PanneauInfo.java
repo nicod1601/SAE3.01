@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.*;
@@ -20,6 +21,7 @@ public class PanneauInfo extends JPanel implements ActionListener
 	private JPanel[] tabPanel;
 	private JTextField[] tabTxtMult;
 	private JPanel panelGrid;
+	private CreeClass saveCle;
 
 	private JButton btnModif;
 	private JButton btnValid;
@@ -33,6 +35,7 @@ public class PanneauInfo extends JPanel implements ActionListener
 		this.ctrl = ctrl;
 		this.creerComposant();
 		this.addPosition();
+		this.action();
 
 		this.setVisible(false);
 	}
@@ -55,6 +58,7 @@ public class PanneauInfo extends JPanel implements ActionListener
 					for (Map.Entry<CreeClass, List<List<String>>> entry : mult.getMapMultiplicites().entrySet())
 					{
 						cle = entry.getKey();
+						this.saveCle = cle;
 						List<List<String>> liste = entry.getValue();
 
 						for(List<String> valeur : liste)
@@ -64,7 +68,7 @@ public class PanneauInfo extends JPanel implements ActionListener
 						}
 					}
 
-					this.panelGrid = new JPanel(new GridLayout(taille, 1));
+					this.panelGrid = new JPanel(new GridLayout(taille + 1, 1));
 					this.tabPanel     = new JPanel[taille];
 					this.tabTitre     = new JLabel[taille];
 					this.tabTxtMult   = new JTextField[taille];
@@ -79,6 +83,7 @@ public class PanneauInfo extends JPanel implements ActionListener
 						this.tabTxtMult[cpt1] = new JTextField();
 						this.tabTxtMult[cpt1].setText("" + lstInfo.get(cpt1));
 						this.tabTxtMult[cpt1].setHorizontalAlignment(JTextField.CENTER);
+						this.tabTxtMult[cpt1].setEnabled(false);
 
 					}
 
@@ -87,8 +92,14 @@ public class PanneauInfo extends JPanel implements ActionListener
 						this.tabTitre[cpt2] = new JLabel();
 						this.tabTitre[cpt2].setText(cle.getNom() + cpt2);
 					}
+					System.out.println(mult);
 				}
 			}
+
+			this.btnModif = new JButton("Modifier");
+			this.btnValid = new JButton("Valider");
+
+			
 		}
 		else
 		{
@@ -96,6 +107,8 @@ public class PanneauInfo extends JPanel implements ActionListener
 			this.tabPanel     = new JPanel[0];
 			this.tabTitre     = new JLabel[0];
 			this.tabTxtMult   = new JTextField[0];
+			this.btnModif = new JButton("Modifier");
+			this.btnValid = new JButton("Valider");
 			this.nomClass     = null;
 		}
 		
@@ -114,13 +127,74 @@ public class PanneauInfo extends JPanel implements ActionListener
 
 				this.panelGrid.add(this.tabPanel[cpt]);
 			}
+
+			JPanel panelBtn = new JPanel();
+			panelBtn.add(this.btnModif);
+			panelBtn.add(this.btnValid);
+
+			this.panelGrid.add(panelBtn);
+
 		}
 
 		this.add(this.panelGrid);
 	}
 
+	private void action()
+	{
+		if(this.nomClass != null)
+		{
+			for(int cpt1 =0; cpt1 < this.tabTxtMult.length; cpt1++)
+			{
+				this.tabTxtMult[cpt1].addActionListener(this);
+			}
+
+			this.btnModif.addActionListener(this);
+			this.btnValid.addActionListener(this);
+		}
+	}
+
 	public void actionPerformed(ActionEvent e)
 	{
+		if(e.getSource() == this.btnValid)
+		{
+
+			HashMap<CreeClass, List<List<String>>> nouvelleMap = new HashMap<>();
+			List<List<String>> liste = new ArrayList<>();
+
+			for (int i = 0; i < this.tabTxtMult.length; i++)
+			{
+				String txt = this.tabTxtMult[i].getText();
+
+				txt = txt.replace("[", "").replace("]", "");
+				String[] parts = txt.split(",");
+
+				List<String> pair = new ArrayList<>();
+				pair.add(parts[0].trim());
+				pair.add(parts[1].trim());
+
+				liste.add(pair);
+
+				
+			}
+
+			nouvelleMap.put(this.saveCle, liste);
+
+			for(int cpt = 0; cpt < this.ctrl.getLstClass().size(); cpt++)
+			{
+				if(this.ctrl.getLstClass().get(cpt).getNom().equals(this.nomClass))
+				{
+					this.ctrl.setHashMap(this.ctrl.getLstClass().get(cpt), nouvelleMap);
+				}
+			}
+		}
+
+		if(e.getSource() == this.btnModif)
+		{
+			for(int cpt1 =0; cpt1 < this.tabTxtMult.length; cpt1++)
+			{
+				this.tabTxtMult[cpt1].setEnabled(true);
+			}
+		}
 	}
 
 	public void majInfoClasse(String nom)
@@ -131,6 +205,7 @@ public class PanneauInfo extends JPanel implements ActionListener
 			this.nomClass = nom;
 			this.creerComposant();
 			this.addPosition();
+			this.action();
 			this.setVisible(true);
 			
 		}
@@ -138,7 +213,7 @@ public class PanneauInfo extends JPanel implements ActionListener
 
 	public void clearInfo()
 	{
-		this.removeAll();            // 🔴 OBLIGATOIRE
+		this.removeAll();
 
 		this.panelGrid  = new JPanel(new GridLayout());
 		this.tabPanel   = new JPanel[0];

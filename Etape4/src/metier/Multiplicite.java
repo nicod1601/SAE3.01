@@ -3,6 +3,7 @@ package src.metier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.io.Serializable;
 /**
  * Gère le calcul des multiplicités entre différentes classes du modèle.
@@ -144,6 +145,51 @@ public class Multiplicite implements Serializable
 	 * @return une HashMap associant une classe à ses relations de multiplicités
 	 */
 	public HashMap<CreeClass, List<List<String>>> getMapMultiplicites() {return mapMultiplicites;}
+
+	public void setHashMap(HashMap<CreeClass, List<List<String>>> nouvelleMap)
+	{
+
+		System.out.println("=== mapMultiplicites ===");
+		for (Map.Entry<CreeClass, List<List<String>>> entry : this.mapMultiplicites.entrySet())
+		{
+			System.out.println("Classe liée : " + entry.getKey().getNom());
+
+			for (List<String> pair : entry.getValue())
+			{
+				System.out.println("   [" + pair.get(0) + ", " + pair.get(1) + "]");
+			}
+		}
+
+		System.out.println("=== nouvelleMap ===");
+		for (Map.Entry<CreeClass, List<List<String>>> entry : nouvelleMap.entrySet())
+		{
+			System.out.println("Classe liée : " + entry.getKey().getNom());
+
+			for (List<String> pair : entry.getValue())
+			{
+				System.out.println("   [" + pair.get(0) + ", " + pair.get(1) + "]");
+			}
+		}
+
+
+		if (nouvelleMap == null)
+			return;
+
+		this.mapMultiplicites.clear();
+		this.mapMultiplicites.putAll(nouvelleMap);
+
+
+		System.out.println("=== Verif de la mise nouvelle mapMultiplicites ===");
+		for (Map.Entry<CreeClass, List<List<String>>> entry : this.mapMultiplicites.entrySet())
+		{
+			System.out.println("Classe liée : " + entry.getKey().getNom());
+
+			for (List<String> pair : entry.getValue())
+			{
+				System.out.println("   [" + pair.get(0) + ", " + pair.get(1) + "]");
+			}
+		}
+	}
 
 	public int getNb()
 	{
