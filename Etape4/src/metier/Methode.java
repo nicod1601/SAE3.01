@@ -10,6 +10,9 @@ import java.util.List;
  */
 public class Methode implements Serializable
 {
+	/** Version pour Serializable */
+	private static final long serialVersionUID = 1L;
+	
 	/** La visibilité de la méthode (public, private, protected, etc.) */
 	private String visibilite;
 	
@@ -28,6 +31,9 @@ public class Methode implements Serializable
 	/** Liste des paramètres de la méthode, chaque paramètre étant représenté par un tableau de chaînes [type, nom] */
 	private List<String[]> lstParametres;
 
+	/**
+	 * Constructeur sans paramètres 
+	 */
 	/**
 	 * Crée d'une nouvelle methode.
 	 *

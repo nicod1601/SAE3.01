@@ -23,9 +23,13 @@ public class LectureFichier
 	 */
 	public static LectureFichier factoryLectureFichier(String data)
 	{
-		if (data.endsWith(".xml"))
+		if (data.endsWith(".ser") )
 		{
-			return new LectureFichier(new GererData());
+			return new LectureFichier(new GererData(),data ,0);
+		}
+		else if (data.endsWith(".xml"))
+		{
+			return new LectureFichier(new GererData(),data ,1);
 		}
 		
 		LectureFichier.verifdata(data);
@@ -33,11 +37,12 @@ public class LectureFichier
 		
 	}
 
-	private LectureFichier(GererData gererData)
+	private LectureFichier(GererData gererDatan,String data, int dummy)
 	{
-		this.lstMetiersXML = gererData.getLstCreeClassesXML();
-		gererData.lireXML();
-		this.lstMetiersXML = gererData.getLstCreeClassesXML();
+		if (dummy == 0)
+			this.lstMetiersXML = gererDatan.chargerBinaire(data);
+		else
+			this.lstMetiersXML = gererDatan.importerDepuisXML(data);
 	}
 	/**
 	 * Création d'un nouvel objet CreeClass.
@@ -61,7 +66,7 @@ public class LectureFichier
 			{
 				String line = sc.nextLine();
 
-				if(line.equals("") || line.contains("{") || line.contains("]"))
+				if(line.equals("") || line.contains("{") || line.contains("}"))
 					continue;
 				
 				/*--------------------------*/

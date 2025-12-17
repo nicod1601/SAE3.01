@@ -15,7 +15,9 @@ import java.io.Serializable;
  */
 public class Multiplicite implements Serializable
 {
-
+	/** Version pour Serializable */
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Map contenant, pour chaque classe liée, une liste de paires de multiplicités.
 	 * Chaque paire représente la multiplicité côté classe principale puis côté autre classe.

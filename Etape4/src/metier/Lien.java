@@ -21,6 +21,9 @@ public class Lien implements Serializable
 	/*║       Attribut         ║*/
 	/*╚════════════════════════╝*/
 	
+	/** Version pour Serializable */
+	private static final long serialVersionUID = 1L;
+
 	/** Liste des classes liées par attributs (classes référencées via les attributs de la classe courante) */
 	private List<CreeClass>        lstLienAttribut;
 	
@@ -89,7 +92,10 @@ public class Lien implements Serializable
 		{
 			for(CreeClass c : lstClass)
 			{
-				if(att.getType().contains(c.getNom()) )
+				if((att.getType().contains(c.getNom())
+				    && att.getType().contains("["))
+				    ||att.getType().contains(c.getNom() )
+				)
 				{
 					this.lstLienAttribut.add(c);
 					creeClass.deplacerAttribut(att);

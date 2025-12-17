@@ -14,6 +14,9 @@ import java.util.*;
  */
 public class CreeClass implements Serializable
 {
+	/** Version pour Serializable */
+	private static final long serialVersionUID = 1L;
+	
 	/** Nom de la classe */
 	private String nom;
 	/** type : class, interface, record*/
@@ -183,7 +186,7 @@ public class CreeClass implements Serializable
 		}
 
 		String type = motSuivant;
-
+		System.out.println(type);
 		// Dernier mot forcément le nom
 		String nom = sc.next();
 
@@ -204,7 +207,7 @@ public class CreeClass implements Serializable
 			Attribut attr = new Attribut(visibilite, type, nom, estStatic,valeur);
 			this.lstAttribut.add(attr);
 		}
-
+		
 		if (!nom.isEmpty() && !estFinal)
 		{
 			nom = nom.replace(";", "");
@@ -395,8 +398,11 @@ public class CreeClass implements Serializable
 	 */
 	public void deplacerAttribut(Attribut att)
 	{
-		this.lstClassAttribut.add(att);
-		this.lstAttribut.remove(att);
+		if(this.lstAttribut.contains(att))
+		{
+			this.lstClassAttribut.add(att);
+			this.lstAttribut.remove(att);
+		}
 	}
 
 	/**

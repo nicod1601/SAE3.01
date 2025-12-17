@@ -15,6 +15,9 @@ import java.io.Serializable;
  */
 public class Attribut implements Serializable
 {
+	/** Version pour Serializable */
+	private static final long serialVersionUID = 1L;
+	
 	/** La visibilité de l'attribut (public, private, protected, etc.) */
 	private String visibilite;
 	
@@ -33,6 +36,10 @@ public class Attribut implements Serializable
 	/** Valeur du final*/
 	private String valeurFinal = null;
 
+	/**
+	 * Constructeur sans paramètres pour Serializable
+	 */
+	public Attribut() { }
 	/**
      * Crée un nouvel attribut.
      *
