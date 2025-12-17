@@ -180,7 +180,7 @@ public class PanneauChoix extends JPanel implements MouseListener
 			CreeClass classe = this.getClasseByNom(nomClasse);
 			if (classe != null && this.panneauInfo != null)
 			{
-				this.panneauInfo.majInfoClasse(nomClasse, this.ctrl);
+				this.panneauInfo.majInfoClasse(nomClasse);
 			}
 		}
 	}

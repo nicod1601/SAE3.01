@@ -144,4 +144,9 @@ public class Multiplicite implements Serializable
 	 * @return une HashMap associant une classe à ses relations de multiplicités
 	 */
 	public HashMap<CreeClass, List<List<String>>> getMapMultiplicites() {return mapMultiplicites;}
+
+	public int getNb()
+	{
+		return this.mapMultiplicites.size();
+	}
 }
