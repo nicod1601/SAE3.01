@@ -342,9 +342,9 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			this.repaint();
 		}
 	}
-
 	public void mouseDragged(MouseEvent e) 
 	{
+		if (SwingUtilities.isLeftMouseButton(e)) 
 		if (this.inClass == true && this.indexSelectionner >= 0)
 		{
 			CreeClass classeSelectionnee = this.lstClass.get(this.indexSelectionner);
@@ -450,17 +450,61 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			g2.drawString("<<" + typeClass + ">>", posX + (width - largeurTypeClass) / 2, posY + 40);
 
 		int cptAttr = 1;
+
+		// Pre-calculer la largeur maximale pour l'alignement des types d'attributs
+		int maxLargeurType = 0;
+		for (Attribut attr : lstAttributs) 
+		{
+			String finale = "";
+
+			if (attr.isEstFinal()) 
+			{
+				finale = " <<freeze>>";
+			}
+
+			String typeAttr = ": " + attr.getType() + finale;
+			int largeurType = g2.getFontMetrics().stringWidth(typeAttr);
+
+			if (largeurType > maxLargeurType) 
+			{
+				maxLargeurType = largeurType;
+			}
+		}
+
+		int maxLargeurType2 = 0;
+		for (Methode meth : lstMethodes) 
+		{
+			String type = "";
+			if (!classe.getNom().equals(meth.getNom()))
+			{
+				type = " : " + meth.getType();
+			}
+			if(type.equals(" : void")){type = "";}
+
+			int largeurType = g2.getFontMetrics().stringWidth(type);
+
+			if (largeurType > maxLargeurType2) 
+			{
+				maxLargeurType2 = largeurType;
+			}
+		}
+
+		int maxLargeur = Math.max(maxLargeurType,maxLargeurType2);
+
 		// Attributs ---------------------------------------------------------------------------------------------------
 		for(Attribut attr : lstAttributs) 
 		{
-			String symbole = "";
-			String finale = "";
-			String typeAttr = "";
+			String symbole        = "";
+			String finale         = "";
+			String typeAttr       = "";
 			String AlligneGauche;
+			String nomAttr;
 			
 			if (cptAttr >= 4 && zoom == 1)
 			{
 				AlligneGauche = "...";
+				g2.drawString(AlligneGauche, posX + 10, posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20));
+				break; // Sortir de la boucle après avoir dessiné "..."
 			}
 			else 
 			{
@@ -477,25 +521,23 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 					finale = " <<freeze>>";
 				}
 
-				String nomAttr = attr.getNom();
-				typeAttr = ": " + attr.getType() + finale;
-				AlligneGauche = " " + symbole + " " + nomAttr;
+				nomAttr        = attr.getNom();
+				typeAttr       = ": " + attr.getType() + finale;
+				AlligneGauche  = " "  + symbole        + " "    + nomAttr;
 			}
 			
-			int largeurType = g2.getFontMetrics().stringWidth(typeAttr);
-			int xGauche = posX + 10; 
-			int xType = posX + width - largeurType - 10; 
+			int xGauche = posX + 10;
+			int yPos = posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20);
+			
+			int xType = posX + width - maxLargeur - 10;
 
-			g2.drawString(AlligneGauche, xGauche, posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20));
-			g2.drawString(typeAttr, xType, posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20));
+			g2.drawString(AlligneGauche, xGauche, yPos);
+			g2.drawString(typeAttr, xType, yPos);
 
-			if (cptAttr >= 4)
-			{
-				break;
-			}
+
 			if(attr.isEstStatic()) 
 			{
-				int yUnderline = posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20) + 2;
+				int yUnderline = yPos + 2;
 				g2.setColor(Couleur.GRIS.getColor());
 				g2.drawLine(xGauche, yUnderline, xGauche + g2.getFontMetrics().stringWidth(AlligneGauche), yUnderline);
 				g2.setColor(Couleur.NOIR.getColor());
@@ -561,9 +603,8 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 				if(type.equals(" : void")){type = "";}
 
 				AlligneGauche = symbole + " " + nomMethode + debP + listP + finP;
-				int largeurType = g2.getFontMetrics().stringWidth(type);
 				int xGauche = posX + 10; 
-				int xType = posX + width - largeurType - 10;
+				int xType = posX + width - maxLargeur - 10;
 
 				int yPos = posY + heightTitre + heightAttributs + 20 + (index * 20);
 
