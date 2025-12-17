@@ -4,6 +4,7 @@ import src.ihm.IhmCui;
 
 import src.metier.Attribut;
 import src.metier.CreeClass;
+import src.metier.GererData;
 import src.metier.LectureFichier;
 import src.metier.LectureRepertoire;
 import src.metier.Methode;
@@ -40,6 +41,8 @@ public class Controleur
 	
 	/** Liste des classes métier analysées */
 	private List<CreeClass> lstMetiers;
+
+
 	
 	/** Référence vers l'interface utilisateur en mode console */
 	private IhmCui          ihmCui;
@@ -195,7 +198,21 @@ public class Controleur
 	public CreeClass CreerClass(String chemin)
 	{
 		LectureFichier lf = LectureFichier.factoryLectureFichier(chemin);
-		return lf.getClasse();
+		if (lf.getLstCreeClassesXML() == null)
+		{
+			return lf.getClasse();
+		}
+		else
+		{
+			this.lstMetiers = lf.getLstCreeClassesXML();
+			return null;
+		}
+	}
+
+	public void sauvegarderXML(List<CreeClass> lstMetiers)
+	{
+		GererData gererData = new GererData();
+		gererData.sauvegarderXML(this.lstMetiers);
 	}
 
 	/*╔════════════════════════╗*/

@@ -413,7 +413,8 @@ public class PanneauInfo extends JPanel implements ActionListener
 						for (CreeClass cc : this.ctrl.getLstClass()) if (cc.getNom().equals(otherName)) { otherClass = cc; break; }
 						if (otherClass == null) continue;
 						// find combos in row
-						JComboBox left = null; JComboBox right = null;
+						JComboBox left = null;
+						JComboBox right = null;
 						for (Component comp : row.getComponents())
 						{
 							if (comp instanceof JComboBox cb)
@@ -434,6 +435,7 @@ public class PanneauInfo extends JPanel implements ActionListener
 					// remplacer la map existante
 					classeToUpdate.getMultiplicite().getMapMultiplicites().clear();
 					classeToUpdate.getMultiplicite().getMapMultiplicites().putAll(newMap);
+					ctrl.sauvegarderXML(this.ctrl.getLstClass());
 				}
 			}
 		}

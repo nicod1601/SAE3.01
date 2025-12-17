@@ -3,7 +3,7 @@ package src.metier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import java.io.Serializable;
 /**
  * Gère le calcul des multiplicités entre différentes classes du modèle.
  * <p>
@@ -13,7 +13,7 @@ import java.util.List;
  * @author Équipe 3 SAE 3.01
  * @version 1.0
  */
-public class Multiplicite 
+public class Multiplicite implements Serializable
 {
 
 	/**

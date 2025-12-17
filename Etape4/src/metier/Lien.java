@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.io.Serializable;
 /**
  * Classe Lien
  * 
@@ -15,7 +15,7 @@ import java.util.HashMap;
  * @author Équipe 3 SAE 3.01
  * @version 1.0
  */
-public class Lien
+public class Lien implements Serializable
 {
 	/*╔════════════════════════╗*/
 	/*║       Attribut         ║*/

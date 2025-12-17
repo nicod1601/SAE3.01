@@ -1,13 +1,16 @@
 package src.metier;
 
-import java.io.FileInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.util.List;
 import java.util.Scanner;
 
 public class LectureFichier
 {
 
 	private CreeClass classe;
+
+	private List<CreeClass> lstMetiersXML = null;
 	
 	/**
 	 * Factory qui crée des objets {@link CreeClass}.
@@ -20,10 +23,22 @@ public class LectureFichier
 	 */
 	public static LectureFichier factoryLectureFichier(String data)
 	{
+		if (data.endsWith(".xml"))
+		{
+			return new LectureFichier(new GererData());
+		}
+		
 		LectureFichier.verifdata(data);
 		return new LectureFichier(data);
+		
 	}
 
+	private LectureFichier(GererData gererData)
+	{
+		this.lstMetiersXML = gererData.getLstCreeClassesXML();
+		gererData.lireXML();
+		this.lstMetiersXML = gererData.getLstCreeClassesXML();
+	}
 	/**
 	 * Création d'un nouvel objet CreeClass.
 	 *
@@ -174,5 +189,10 @@ public class LectureFichier
 	public CreeClass getClasse()
 	{
 		return this.classe;
+	}
+
+	public List<CreeClass> getLstCreeClassesXML()
+	{
+		return this.lstMetiersXML;
 	}
 }

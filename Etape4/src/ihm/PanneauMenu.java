@@ -217,16 +217,9 @@ public class PanneauMenu extends JPanel implements ActionListener
 			File fichierSelectionne = chooser.getSelectedFile();
 			String nomFichier = "" + fichierSelectionne;
 			
-			if (this.estFichierJava(fichierSelectionne))
-			{
-				this.frameAppli.ajouterFichier(fichierSelectionne.getName());
-				this.afficherMessageSucces("Fichier " + fichierSelectionne.getName() + " chargé avec succès", "Chargement du fichier");
-				this.frameAppli.majListeClasses(false, nomFichier);
-			}
-			else
-			{
-				this.afficherMessageErreur("Veuillez sélectionner un fichier .java", "Format invalide");
-			}
+			this.frameAppli.ajouterFichier(fichierSelectionne.getName());
+			this.afficherMessageSucces("Fichier " + fichierSelectionne.getName() + " chargé avec succès", "Chargement du fichier");
+			this.frameAppli.majListeClasses(false, nomFichier);
 		}
 	}
 

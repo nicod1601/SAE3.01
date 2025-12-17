@@ -1,4 +1,5 @@
 package src.metier;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -11,7 +12,7 @@ import java.util.*;
  * @author Équipe 3 SAE 3.01
  * @version 1.0
  */
-public class CreeClass
+public class CreeClass implements Serializable
 {
 	/** Nom de la classe */
 	private String nom;

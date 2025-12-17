@@ -1,14 +1,14 @@
 package src.metier;
 
+import java.io.Serializable;
 import java.util.List;
-
 /**
  * Cette classe représente une Methode.
  * Elle contient les informations de base et quelques utilitaires.
  * @author Équipe 3 SAE 3.01
  * @version 1.0
  */
-public class Methode
+public class Methode implements Serializable
 {
 	/** La visibilité de la méthode (public, private, protected, etc.) */
 	private String visibilite;

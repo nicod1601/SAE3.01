@@ -1,5 +1,7 @@
 package src.metier;
 
+import java.io.Serializable;
+
 /**
  * Cette classe représente un Attribut d'une classe Java.
  * Elle contient les informations de base sur un attribut (visibilité, type, nom, etc.)
@@ -11,7 +13,7 @@ package src.metier;
  * @author Équipe SAE 3.01
  * @version 1.0
  */
-public class Attribut
+public class Attribut implements Serializable
 {
 	/** La visibilité de l'attribut (public, private, protected, etc.) */
 	private String visibilite;
