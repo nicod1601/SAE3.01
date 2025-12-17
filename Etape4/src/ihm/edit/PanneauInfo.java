@@ -71,13 +71,15 @@ public class PanneauInfo extends JPanel implements ActionListener
 
 					for(int cpt2 =0; cpt2 < this.tabPanel.length; cpt2++)
 					{
-						this.tabPanel[cpt2] = new JPanel(new BorderLayout());
+						this.tabPanel[cpt2] = new JPanel(new GridLayout(2,1));
 					}
 
 					for(int cpt1 =0; cpt1 < this.tabTxtMult.length; cpt1++)
 					{
 						this.tabTxtMult[cpt1] = new JTextField();
 						this.tabTxtMult[cpt1].setText("" + lstInfo.get(cpt1));
+						this.tabTxtMult[cpt1].setHorizontalAlignment(JTextField.CENTER);
+
 					}
 
 					for(int cpt2 =0; cpt2 < this.tabTitre.length; cpt2++)
@@ -105,8 +107,10 @@ public class PanneauInfo extends JPanel implements ActionListener
 		{
 			for(int cpt =0; cpt < this.tabPanel.length; cpt++)
 			{
-				this.tabPanel[cpt].add(this.tabTitre[cpt], BorderLayout.NORTH);
-				this.tabPanel[cpt].add(this.tabTxtMult[cpt]);
+				this.tabPanel[cpt].add(this.tabTitre[cpt]);
+				JPanel panel = new JPanel(new BorderLayout());
+				panel.add(this.tabTxtMult[cpt]);
+				this.tabPanel[cpt].add(panel);
 
 				this.panelGrid.add(this.tabPanel[cpt]);
 			}
