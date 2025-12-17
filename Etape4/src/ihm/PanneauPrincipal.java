@@ -23,6 +23,8 @@ import src.metier.Multiplicite;
 
 public class PanneauPrincipal extends JPanel implements MouseListener, MouseMotionListener
 {
+	private static final int PROPORTION = 20;
+	
 	private Controleur ctrl;
 	private FrameAppli frame;
 	
@@ -31,8 +33,9 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	private int sourisX;
 	private int sourisY;
 	
-	private double offsetX = 0;
-	private double offsetY = 0;
+	
+	private double offsetX;
+	private double offsetY;
 
 	private boolean rightMousePressed;
 	private boolean inClass;
@@ -44,21 +47,28 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	// Controleur
 	public PanneauPrincipal(Controleur ctrl, FrameAppli frame) 
 	{
-		this.setLayout(new BorderLayout());
-		this.setBackground(Couleur.BLANC.getColor());
+		
+
 		this.ctrl = ctrl;
 		this.frame = frame;
-		this.lstClass = new ArrayList<>();
+
 		this.indexSelectionner = -1;
+		//this.indexFlecheSelec = -1;
 		this.sourisX = 0;
 		this.sourisY = 0;
-		this.inClass = false;
-		this.rightMousePressed = false;
 
-		this.indexFlecheSelec = -1;
+		this.offsetX = 0;
+		this.offsetY = 0;
+
+		this.rightMousePressed = false;
+		this.inClass = false;
+
+		this.lstClass = new ArrayList<>();
 		this.lstFleches    = new ArrayList<>();
 		this.lstCordFleche = new ArrayList<>();
 
+		this.setLayout(new BorderLayout());
+		this.setBackground(Couleur.BLANC.getColor());
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 	}
@@ -97,9 +107,9 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			if(lstAttributs == null && lstMethodes == null)
 				continue;
 
-			int heightTitre     = 2 * 24;
-			int heightAttributs = 0;
-			int heightMethodes  = 0;
+			int heightTitre = !classe.getType().equals("class") ? (2 * PROPORTION + 10) : (2 * PROPORTION);
+			int heightAttributs = (lstAttributs.size() > 3 ? 4 : lstAttributs.size()) * PROPORTION + PROPORTION;
+			int heightMethodes  = (lstMethodes.size()  > 3 ? 4 : lstMethodes.size() ) * PROPORTION + PROPORTION;
 
 			if(lstAttributs != null)
 				heightAttributs = (lstAttributs.size() > 3 ? 4 : lstAttributs.size()) * 20 + 20;
@@ -197,6 +207,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			{
 				for (CreeClass c2 : mapMultiplC.keySet())
 				{
+					int nbFleches = 0;
 					for (List<String> multi : mapMultiplC.get(c2))
 					{
 						if (!multi.isEmpty())
@@ -211,16 +222,18 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 
 							if (!multi.get(0).equals("0..*") && IhmCui.verfiDoublon(lstClassMultiC, lstClassMultiClef, associations))
 							{
-								boolean estBidirectionnel = multi.get(0).equals("1..*") && multi.get(1).equals("1..*") ? true : false;
+									String role = c.getLstClassAttribut().get(nbFleches++).getNom();
+									
+									boolean estBidirectionnel = multi.get(0).equals("1..*") && multi.get(1).equals("1..*") ? true : false;
 
-								this.lstFleches.add(new Fleche (c,c2,"association",multi.get(0),multi.get(1), estBidirectionnel));
+									this.lstFleches.add(new Fleche (c,c2,"association",multi.get(0),multi.get(1), estBidirectionnel, role));
 
-								List<List<String>> classMuLti = new ArrayList<List<String>>();
+									List<List<String>> classMuLti = new ArrayList<List<String>>();
 
-								classMuLti.add(lstClassMultiC);
-								classMuLti.add(lstClassMultiClef);
+									classMuLti.add(lstClassMultiC);
+									classMuLti.add(lstClassMultiClef);
 
-								associations.add(classMuLti);
+									associations.add(classMuLti);
 							}
 						}
 					}
@@ -232,7 +245,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		for (Fleche fl : this.lstFleches)
 		{
 			fl.dessiner(g2,espace);
-			espace += 20;
+			espace += PROPORTION;
 		}
 
 		/*---------------------------------------------*/
@@ -246,17 +259,20 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			List<Attribut> lstAttributs = c.getLstAttribut();
 			List<Methode>  lstMethodes  = c.getLstMethode();
 
-			int heightTitre = 2 * 40;
-			int heightAttributs = (lstAttributs.size() > 3 ? 4 : lstAttributs.size()) * 40 + 40;
-			int heightMethodes  = (lstMethodes.size()  > 3 ? 4 : lstMethodes.size() ) * 40 + 40;
+			int zoom = 2;
+			int tailleZoom = PROPORTION * zoom;
+
+			int heightTitre = 2 * PROPORTION * zoom;
+			int heightAttributs = (lstAttributs.size() > 3 ? 4 : lstAttributs.size()) * tailleZoom + tailleZoom;
+			int heightMethodes  = (lstMethodes.size()  > 3 ? 4 : lstMethodes.size() ) * tailleZoom + tailleZoom;
 			int totalHeight = heightTitre + heightAttributs + heightMethodes;
 
 			//calculer la largeur nécessaire
 			int width = calculerLargeur(c, lstAttributs,  lstMethodes, 2);
 
 			// Utiliser les positions ACTUELLES de la classe pour dessiner
-			dessinerRectangle(c.getPosX()-c.getLargeur()/2, c.getPosY()-c.getHauteur()/2, width, totalHeight, g2, heightTitre, heightAttributs, this.indexSelectionner, 2);
-			dessinerContenu  (c, lstAttributs, lstMethodes, g2, c.getPosX()-c.getLargeur()/2, c.getPosY()-c.getHauteur()/2, width, heightTitre, heightAttributs, 2);
+			dessinerRectangle(c.getPosX()-c.getLargeur()/2, c.getPosY()-c.getHauteur()/2, width, totalHeight, g2, heightTitre, heightAttributs, this.indexSelectionner, zoom);
+			dessinerContenu  (c, lstAttributs, lstMethodes, g2, c.getPosX()-c.getLargeur()/2, c.getPosY()-c.getHauteur()/2, width, heightTitre, heightAttributs, zoom);
 		}
 			
 		// Restauration transform
@@ -520,7 +536,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			if (cptAttr >= 4 && zoom == 1)
 			{
 				AlligneGauche = "...";
-				g2.drawString(AlligneGauche, posX + 10, posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20));
+				g2.drawString(AlligneGauche, posX + 10, posY + heightTitre + PROPORTION + (lstAttributs.indexOf(attr) * PROPORTION));
 				break; // Sortir de la boucle après avoir dessiné "..."
 			}
 			else 
@@ -544,7 +560,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			}
 			
 			int xGauche = posX + 10;
-			int yPos = posY + heightTitre + 20 + (lstAttributs.indexOf(attr) * 20);
+			int yPos = posY + heightTitre + PROPORTION + (lstAttributs.indexOf(attr) * PROPORTION);
 			
 			int xType = posX + width - maxLargeur - 10;
 
@@ -573,7 +589,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 
 			if (cptMeth >= 4 && zoom == 1)
 			{
-				g2.drawString("...", posX + 10, posY + heightTitre + heightAttributs + 20 + (index * 20));
+				g2.drawString("...", posX + 10, posY + heightTitre + heightAttributs + PROPORTION + (index * PROPORTION));
 			}
 			else 
 			{
@@ -595,7 +611,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 					for (int i = 0; i < params.size() && i <= 2; i++)
 					{
 						String[] p = params.get(i);
-						if (i == 2 && zoom == 1 && params.size() > 3)
+						if (i == 2 && zoom == 1 && params.size() >= 3)
 						{
 							listP += "... ";
 							break;
@@ -623,14 +639,14 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 				int xGauche = posX + 10; 
 				int xType = posX + width - maxLargeur - 10;
 
-				int yPos = posY + heightTitre + heightAttributs + 20 + (index * 20);
+				int yPos = posY + heightTitre + heightAttributs + PROPORTION + (index * PROPORTION);
 
 				g2.drawString(AlligneGauche, xGauche, yPos);
 				g2.drawString(type, xType, yPos);
 
 				if(meth.isEstStatic()) 
 				{
-					int yUnderline = posY + heightTitre + heightAttributs + 20 + (lstMethodes.indexOf(meth) * 20) + 2;
+					int yUnderline = posY + heightTitre + heightAttributs + PROPORTION + (lstMethodes.indexOf(meth) * PROPORTION) + 2;
 					g2.setColor(Couleur.GRIS.getColor());
 					g2.drawLine(xGauche, yUnderline, xGauche + g2.getFontMetrics().stringWidth(AlligneGauche), yUnderline);
 					g2.setColor(Couleur.NOIR.getColor());
@@ -650,7 +666,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	public int calculerLargeur(CreeClass classe, List<Attribut> lstAttributs, List<Methode> lstMethodes, int zoom)
 	{
 		// Calculer la largeur nécessaire
-		int width = 200 * zoom;
+		int width = PROPORTION * 10 * zoom;
 		for (Methode meth : lstMethodes) 
 		{
 			String str = "";
@@ -749,14 +765,12 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		} 
 		else
 		{
-			System.out.println("Nom Fichier reçu : " + nomFichier);
 			CreeClass nouvelleClasse = this.ctrl.CreerClass(nomFichier);
 			
 			for (CreeClass classe : this.lstClass)
 			{
 				if (classe.getNom().equals(nouvelleClasse.getNom()))
 				{
-					System.out.println("Classe déjà existante : " + nouvelleClasse.getNom());
 					return;
 				}
 			}

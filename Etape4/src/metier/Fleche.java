@@ -16,13 +16,14 @@ public class Fleche
 	private String typeLien;
 	private String multipliciteSource;
 	private String multipliciteCible;
+	private String role;
 	
 	private boolean bidirectionnel;
 	
 	private int posXFin;
 	private int posYFin;
 	
-	public Fleche(CreeClass source, CreeClass cible, String typeLien, String multSrc, String multCible, boolean bidir)
+	public Fleche(CreeClass source, CreeClass cible, String typeLien, String multSrc, String multCible, boolean bidir, String role)
 	{
 		this.source             = source;
 		this.cible              = cible;
@@ -30,10 +31,17 @@ public class Fleche
 		this.multipliciteSource = multSrc;
 		this.multipliciteCible  = multCible;
 		this.bidirectionnel     = bidir;
+		this.role               = role;
 		this.posXFin            = 0;
 		this.posYFin            = 0;
 	}
 
+	public Fleche(CreeClass source, CreeClass cible, String typeLien, String multSrc, String multCible, boolean bidir)
+	{
+		this(source,cible,typeLien,multSrc,multCible,bidir,"");
+	}
+
+	
 	// Getters
 	public int getPosXFin()      { return posXFin;  }
 	public int getPosYFin()      { return posYFin;  }
@@ -80,8 +88,8 @@ public class Fleche
 		double deltaY = centreYArrivee - centreYDepart;
 		
 		// Déterminer les points de connexion selon la position relative des classes
-		int pointXDepart = centreXDepart;
-		int pointYDepart = centreYDepart;
+		int pointXDepart  = centreXDepart;
+		int pointYDepart  = centreYDepart;
 		int pointXArrivee = centreXArrivee;
 		int pointYArrivee = centreYArrivee;
 		
@@ -180,9 +188,17 @@ public class Fleche
 		if (this.multipliciteCible != null && !this.multipliciteCible.isEmpty()) 
 		{
 			g2.setColor(Couleur.NOIR.getColor());
-			int xTextCible = pointXDepart + (pointXArrivee - pointXDepart) * 9 / 10;
-			int yTextCible = pointYDepart + (pointYArrivee - pointYDepart) * 9 / 10 - 5;
+			int xTextCible = pointXDepart + (pointXArrivee - pointXDepart) * 90 / 100;
+			int yTextCible = pointYDepart + (pointYArrivee - pointYDepart) * 90 / 100 - 5;
 			g2.drawString(multipliciteCible, xTextCible, yTextCible);
+		}
+
+		// Afficher le rôle si défini
+		if (!role.isEmpty())
+		{
+			int xTextCible = pointXDepart + (pointXArrivee - pointXDepart) * 70 / 100 - role.length();
+			int yTextCible = pointYDepart + (pointYArrivee - pointYDepart) * 70 / 100 - 5;
+			g2.drawString(role, xTextCible , yTextCible);
 		}
 
 		// Sauvegarder la position finale pour la sélection
@@ -301,7 +317,7 @@ public class Fleche
 					}
 				}
 				
-				Fleche fleche = new Fleche(cl1, cl2, "association", multSrc, multCible, bidir);
+				Fleche fleche = new Fleche(cl1, cl2, "association", multSrc, multCible, bidir, role);
 				fleche.dessiner(g2, decalage);
 				lstFleches.add(fleche);
 			}
@@ -356,4 +372,7 @@ public class Fleche
 		
 		return lstFleches;
 	}
+
+	public void setRole(String role) {this.role = role;}
+
 }
