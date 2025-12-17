@@ -660,26 +660,24 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	//exporter le panneau en image
 	public void exporterEnImage(String chemin, File fichier)
 	{
-	
-		BufferedImage image = new BufferedImage(
-			this.getWidth(), 
-			this.getHeight(), 
-			BufferedImage.TYPE_INT_ARGB
-		);
+		BufferedImage image = new BufferedImage(this.getWidth(),
+		                                        this.getHeight(), 
+		                                        BufferedImage.TYPE_INT_RGB);
+		Graphics2D    g     = image.createGraphics();
 
-		Graphics2D g2d = image.createGraphics();
+		this.printAll(g);
+		g.dispose();
 
-		this.paint(g2d); 
-		g2d.dispose();
-
-		try {
+		try 
+		{
 			ImageIO.write(image, "png", fichier);
-		} catch (IOException e) {
+		} catch (IOException e) 
+		{
 			e.printStackTrace();
 		}
 	}
 
-	//mettre a jour la liste des classes -----------------------------------------------------------------------------
+	//mettre a jour la liste des classes
 	public void majListeClasses(boolean dossier, String nomFichier)
 	{
 		if(dossier) 

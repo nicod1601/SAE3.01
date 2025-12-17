@@ -185,17 +185,17 @@ public class PanneauMenu extends JPanel implements ActionListener
 	{
 		JFileChooser dialogueEnregistrement = new JFileChooser();
 
-		dialogueEnregistrement.setDialogTitle("Enregistrer les positions sous...");
-		dialogueEnregistrement.setCurrentDirectory(new File("./enreg"));
+		dialogueEnregistrement.setDialogTitle     ("Enregistrer les positions sous..."                      );
+		dialogueEnregistrement.setCurrentDirectory(new File( System.getProperty("user.home") + "/Downloads"));
 	
-		dialogueEnregistrement.setSelectedFile(new File("Export.png"));
+		dialogueEnregistrement.setSelectedFile    (new File("Export.png")                                   );
 	
 		int choixUtilisateur = dialogueEnregistrement.showSaveDialog(this.getParent());
 	
 		if (choixUtilisateur == JFileChooser.APPROVE_OPTION) 
 		{
 			File   fichierAEnregistrer = dialogueEnregistrement.getSelectedFile();
-			String cheminAbsolu = fichierAEnregistrer.getAbsolutePath();
+			String cheminAbsolu        = fichierAEnregistrer   .getAbsolutePath();
 			
 			this.frameAppli.exporterEnImage(cheminAbsolu, fichierAEnregistrer);
 
@@ -231,19 +231,16 @@ public class PanneauMenu extends JPanel implements ActionListener
 		}
 
 		JFileChooser chooser = this.creerFileChooser(JFileChooser.FILES_AND_DIRECTORIES, "Sélectionner un dossier contenant des fichiers .java");
+		chooser.setSelectedFile(new File("../data"));
 		
 		int resultat = chooser.showOpenDialog(this);
-    
+
 		if (resultat == JFileChooser.APPROVE_OPTION) 
 		{
 			this.dossierOuvert = chooser.getSelectedFile();
 			this.chargerFichiersDossier();
 			this.ctrl.LectureRepertoire(this.dossierOuvert);
 			this.frameAppli.majListeClasses(true, null);
-		}
-		else
-		{
-			this.chargerFichiersDossier();
 		}
 	}
 
