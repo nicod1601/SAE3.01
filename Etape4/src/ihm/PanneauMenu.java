@@ -231,7 +231,9 @@ public class PanneauMenu extends JPanel implements ActionListener
 		}
 
 		JFileChooser chooser = this.creerFileChooser(JFileChooser.FILES_AND_DIRECTORIES, "Sélectionner un dossier contenant des fichiers .java");
-		chooser.setSelectedFile(new File("../data"));
+		chooser.setCurrentDirectory(new File("../"));
+		chooser.setSelectedFile(new File("data"));
+
 		
 		int resultat = chooser.showOpenDialog(this);
 
