@@ -277,7 +277,7 @@ public class GererData
 					writer.print(m.getType() + " " + m.getNom() + "(");
 					
 					List<String[]> params = m.getLstParametres();
-					if (params != null)
+					if (params != null && !params.isEmpty())
 					{
 						for (int i = 0; i < params.size(); i++)
 						{
