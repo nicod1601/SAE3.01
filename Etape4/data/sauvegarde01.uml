@@ -1,8 +1,8 @@
 Classe:Disque
-[type=class;abstract=false;mere=Rond;posX=50;posY=50;largeur=336;hauteur=240;interfaces=ISurface]
+[type=class;abstract=false;mere=Rond;posX=35;posY=9;largeur=336;hauteur=240;interfaces=ISurface]
 	Attribut:private static int autoIncre
-	Attribut:private static final int MAXLENGTH=10 
-	Attribut:private final String NOM="NOM allo" 
+	Attribut:private static final int MAXLENGTH=10
+	Attribut:private final String NOM=NOM allo
 	Attribut:private String pkTuTaffiche
 	# Attributs de classe:
 	Attribut:private Point[] tabPoints
@@ -19,11 +19,11 @@ Classe:Disque
 	Methode:public double calculerSurface()
 
 Classe:ISurface
-[type=interface;abstract=false;mere=;posX=436;posY=50;largeur=200;hauteur=110]
+[type=interface;abstract=false;mere=;posX=93;posY=278;largeur=200;hauteur=110]
 	Methode:public abstract double calculerSurface()
 
 Classe:Musique
-[type=record;abstract=false;mere=;posX=686;posY=50;largeur=342;hauteur=230;interfaces=ISurface]
+[type=record;abstract=false;mere=;posX=15;posY=438;largeur=342;hauteur=230;interfaces=ISurface]
 	Attribut:private String nom
 	Attribut:private int durre
 	Attribut:private int plusLong
@@ -37,7 +37,7 @@ Classe:Musique
 	Methode:public double calculerSurface()
 
 Classe:Point
-[type=class;abstract=false;mere=;posX=1078;posY=50;largeur=264;hauteur=220]
+[type=class;abstract=false;mere=;posX=819;posY=202;largeur=264;hauteur=220]
 	Attribut:private String nom
 	Attribut:private int x
 	Attribut:private int y
@@ -52,7 +52,7 @@ Classe:Point
 	Methode:public void setY(int y)
 
 Classe:Rond
-[type=class;abstract=false;mere=;posX=50;posY=340;largeur=200;hauteur=140]
+[type=class;abstract=false;mere=;posX=820;posY=52;largeur=200;hauteur=140]
 	Attribut:private double rayon
 	Methode:public void Rond(double rayon)
 	Methode:public double getRayon()

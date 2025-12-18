@@ -68,7 +68,7 @@ public class PanneauMenu extends JPanel implements ActionListener
 
 		/*Composants Edit */
 		this.editMenu.add(new JMenuItem("📄 Modif Fichier"));
-		this.editMenu.add(new JMenuItem("💾 Sauvegarde XML"));
+		this.editMenu.add(new JMenuItem("💾 Sauvegarder"));
 
 		this.menuBar.add(fileMenu);
 		this.menuBar.add(editMenu);
