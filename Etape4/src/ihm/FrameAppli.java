@@ -37,7 +37,7 @@ public class FrameAppli extends JFrame
 		this.panneauMenu      = new PanneauMenu(ctrl, this);
 		this.panneauPrincipal = new PanneauPrincipal(ctrl, this);
 
-		this.panneauPrincipal.setPreferredSize(new Dimension(screenSize.width, screenSize.height));
+		this.panneauPrincipal.setPreferredSize(new Dimension(screenSize.width * 2, screenSize.height * 2));
 		
 		JScrollPane scrollFrame = new JScrollPane(this.panneauPrincipal,
 		                                          JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -45,6 +45,7 @@ public class FrameAppli extends JFrame
 
 		scrollFrame.getVerticalScrollBar().setUnitIncrement(50);
 		scrollFrame.getHorizontalScrollBar().setUnitIncrement(50);
+		scrollFrame.setPreferredSize(new Dimension(800, 600)); // Largeur, Hauteur
 
 		/*-------------------------*/
 		/* Position des Composants */

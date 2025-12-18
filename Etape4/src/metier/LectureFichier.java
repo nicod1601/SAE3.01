@@ -138,6 +138,8 @@ public class LectureFichier
 				}
 				if (line.contains("enum"))
 				{
+					// Ne pas traiter les enums : marquer la classe comme ignorée
+					this.classe = null;
 					break; //On ne gère pas les enums pour l'instant
 				}
 

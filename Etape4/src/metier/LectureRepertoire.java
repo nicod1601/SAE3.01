@@ -37,7 +37,7 @@ public class LectureRepertoire
 				if (f.getName().endsWith(".java"))
 				{
 					LectureFichier lecture = LectureFichier.factoryLectureFichier(f.getPath());
-					if (lecture != null)
+					if (lecture != null && lecture.getClasse() != null)
 					{
 						this.lstClass.add(lecture.getClasse());
 					}

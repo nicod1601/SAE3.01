@@ -236,7 +236,7 @@ public class Controleur
 	 * 
 	 * @return La liste des classes métier
 	 */
-	public List<CreeClass> getLstClass(      )    { return new ArrayList<CreeClass>(this.lstMetiers);                          }
+	public List<CreeClass> getLstClass(      )    { return this.lstMetiers == null ? new ArrayList<CreeClass>() : new ArrayList<CreeClass>(this.lstMetiers); }
 	
 	/**
 	 * Retourne la liste des noms des classes analysées.
