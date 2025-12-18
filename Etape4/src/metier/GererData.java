@@ -231,7 +231,6 @@ public class GererData
 					}
 					
 					String nomClasse = originalLine.substring(7).trim();
-					System.out.println("DEBUG: Nouvelle classe: " + nomClasse);
 					currentClass = new CreeClass();
 					currentClass.setNom(nomClasse);
 					currentClass.setLstAttribut(new ArrayList<>());
@@ -250,25 +249,21 @@ public class GererData
 				else if (originalLine.startsWith("\t") && originalLine.trim().equals("# Attributs de classe:") && currentClass != null)
 				{
 					inClassAttributs = true;
-					System.out.println("DEBUG: Début attributs de classe");
 				}
 				// Si c'est un attribut (avec tab)
 				else if (originalLine.startsWith("\t") && originalLine.trim().startsWith("Attribut:") && currentClass != null)
 				{
 					String attributStr = originalLine.trim().substring(9).trim(); // Enlever "Attribut:"
-					System.out.println("DEBUG: Parsing attribut: " + attributStr);
 					Attribut attr = parserAttribut(attributStr);
 					if (attr != null)
 					{
 						if (inClassAttributs)
 						{
 							currentClass.getLstClassAttribut().add(attr);
-							System.out.println("DEBUG: Attribut de classe ajouté: " + attr.getNom());
 						}
 						else
 						{
 							currentClass.getLstAttribut().add(attr);
-							System.out.println("DEBUG: Attribut normal ajouté: " + attr.getNom());
 						}
 					}
 				}
@@ -276,12 +271,10 @@ public class GererData
 				else if (originalLine.startsWith("\t") && originalLine.trim().startsWith("Methode:") && currentClass != null)
 				{
 					String methodeStr = originalLine.trim().substring(8).trim(); // Enlever "Methode:"
-					System.out.println("DEBUG: Parsing méthode: " + methodeStr);
 					Methode meth = parserMethode(methodeStr);
 					if (meth != null)
 					{
 						currentClass.getLstMethode().add(meth);
-						System.out.println("DEBUG: Méthode ajoutée: " + meth.getNom());
 					}
 				}
 			}
@@ -294,31 +287,6 @@ public class GererData
 			
 			this.lstMetiers = result;
 			System.out.println("✅ Import UML réussi. Classes chargées: " + result.size());
-			
-			// DEBUG: Afficher ce qui a été chargé
-			for (CreeClass c : result)
-			{
-				System.out.println("=== CLASSE: " + c.getNom() + " ===");
-				System.out.println("Type: " + c.getType());
-				System.out.println("Mère: " + c.getMere());
-				System.out.println("Interfaces: " + c.getInterfaces());
-				System.out.println("Attributs normaux (" + c.getLstAttribut().size() + "):");
-				for (Attribut a : c.getLstAttribut())
-				{
-					System.out.println("  - " + a.getVisibilite() + " " + a.getType() + " " + a.getNom());
-				}
-				System.out.println("Attributs classe (" + c.getLstClassAttribut().size() + "):");
-				for (Attribut a : c.getLstClassAttribut())
-				{
-					System.out.println("  - " + a.getVisibilite() + " " + a.getType() + " " + a.getNom());
-				}
-				System.out.println("Méthodes (" + c.getLstMethode().size() + "):");
-				for (Methode m : c.getLstMethode())
-				{
-					System.out.println("  - " + m.getVisibilite() + " " + m.getType() + " " + m.getNom());
-				}
-				System.out.println();
-			}
 			
 			// Recréer les liens et multiplicités
 			if (!result.isEmpty())
@@ -408,13 +376,10 @@ public class GererData
 	{
 		try
 		{
-			System.out.println("DEBUG parserAttribut: '" + ligne + "'");
-			
 			// Séparer en mots
 			String[] mots = ligne.split("\\s+");
 			if (mots.length < 3)
 			{
-				System.out.println("DEBUG: Pas assez de mots: " + mots.length);
 				return null;
 			}
 			
@@ -439,7 +404,6 @@ public class GererData
 			// Type
 			if (index >= mots.length)
 			{
-				System.out.println("DEBUG: Pas de type");
 				return null;
 			}
 			String type = mots[index++];
@@ -470,8 +434,6 @@ public class GererData
 				}
 			}
 			
-			System.out.println("DEBUG: Création attribut - vis:" + visibilite + " type:" + type + " nom:" + nom + " static:" + estStatic + " final:" + estFinal);
-			
 			// Créer l'attribut
 			if (estFinal && valeur != null)
 			{
@@ -480,7 +442,6 @@ public class GererData
 			else
 			{
 				Attribut attr = new Attribut(visibilite, type, nom, estStatic);
-				System.out.println("DEBUG: Attribut créé: " + attr.getNom());
 				return attr;
 			}
 		}
@@ -497,15 +458,12 @@ public class GererData
 	{
 		try
 		{
-			System.out.println("DEBUG parserMethode: '" + ligne + "'");
-			
 			// Chercher les parenthèses
 			int parenOuvrante = ligne.indexOf("(");
 			int parenFermante = ligne.indexOf(")");
 			
 			if (parenOuvrante == -1 || parenFermante == -1)
 			{
-				System.out.println("DEBUG: Pas de parenthèses trouvées");
 				return null;
 			}
 			
@@ -518,7 +476,6 @@ public class GererData
 			String[] motsAvant = avantParen.split("\\s+");
 			if (motsAvant.length < 2)
 			{
-				System.out.println("DEBUG: Pas assez de mots avant parenthèses");
 				return null;
 			}
 			
@@ -550,7 +507,6 @@ public class GererData
 			// Type retour
 			if (index >= motsAvant.length)
 			{
-				System.out.println("DEBUG: Pas de type de retour");
 				return null;
 			}
 			String typeRetour = motsAvant[index++];
@@ -558,7 +514,6 @@ public class GererData
 			// Nom méthode
 			if (index >= motsAvant.length)
 			{
-				System.out.println("DEBUG: Pas de nom de méthode");
 				return null;
 			}
 			String nomMethode = motsAvant[index++];
@@ -585,8 +540,6 @@ public class GererData
 					}
 				}
 			}
-			
-			System.out.println("DEBUG: Création méthode - vis:" + visibilite + " type:" + typeRetour + " nom:" + nomMethode);
 			
 			return new Methode(visibilite, typeRetour, nomMethode, estStatic, estAbstract, lstParametres);
 		}

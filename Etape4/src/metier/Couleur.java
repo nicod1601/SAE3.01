@@ -23,7 +23,10 @@ public enum Couleur
 	BLANC                   (new Color(255, 255, 255)),
 	COULEUR_MENU            (new Color(55, 66, 77   )),
 	COULEUR_ACCENT          (new Color(52, 152, 219 )),
-	COULEUR_DANGER          (new Color(231, 76, 60  ));
+	COULEUR_DANGER          (new Color(231, 76, 60  )),
+	COULEUR_PRIMAIRE        (new Color(63, 81, 181  )),
+	COULEUR_SECONDAIRE      (new Color(92, 107, 192 )),
+	COULEUR_TEXTE_G         (new Color(33, 33, 33   ));
 
 	private final Color color;
 
