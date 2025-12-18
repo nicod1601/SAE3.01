@@ -111,6 +111,7 @@ public class PanneauFichier extends JPanel
 	public void viderListe()
 	{
 		this.modeleFichiers.clear();
+		this.ctrl.viderLstMetier();
 	}
 	
 	/**

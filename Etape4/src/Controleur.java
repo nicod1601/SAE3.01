@@ -211,6 +211,11 @@ public class Controleur
 		this.frame.majIHM();
 	}
 
+	public void viderLstMetier()
+	{
+		this.lstMetiers = new ArrayList<>();
+	}
+
 	/*╔════════════════════════╗*/
 	/*║       Getters          ║*/
 	/*╚════════════════════════╝*/
