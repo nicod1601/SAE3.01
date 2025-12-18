@@ -8,6 +8,7 @@ import src.metier.GererData;
 import src.metier.LectureFichier;
 import src.metier.LectureRepertoire;
 import src.metier.Methode;
+import src.metier.Fleche;
 
 import src.ihm.FrameAppli;
 
@@ -135,6 +136,62 @@ public class Controleur
 		return lstMetiers;
 	}
 
+	/**
+	 * Effectue la lecture d'un répertoire et met à jour la liste des classes.
+	 * 
+	 * @param dossier Le répertoire à analyser
+	 */
+	public void LectureRepertoire(File dossier)
+	{
+		LectureRepertoire lecture = new LectureRepertoire(dossier);
+		this.lstMetiers           = lecture.getLstClass();
+	}
+
+	/**
+	 * Crée une nouvelle instance de CreeClass à partir d'un chemin de fichier.
+	 * 
+	 * @param chemin Le chemin du fichier à analyser
+	 * @return L'objet CreeClass créé
+	 */
+	public CreeClass CreerClass(String chemin)
+	{
+		LectureFichier lf = LectureFichier.factoryLectureFichier(chemin);
+		if (lf.getLstCreeClassesXML() == null)
+		{
+			return lf.getClasse();
+		}
+		else
+		{
+			this.lstMetiers = lf.getLstCreeClassesXML();
+			return null;
+		}
+	}
+
+	/**
+	 * Sauvegarde la liste des classes métier au format XML.
+	 * 
+	 * @param lstMetiers La liste des classes à sauvegarder
+	 */
+	public void sauvegarderXML(List<CreeClass> lstMetiers)
+	{
+		GererData gererData = new GererData();
+		gererData.sauvegarderProjet(this.lstMetiers);
+	}
+
+	public Fleche ajouterFleche(CreeClass classeDepart, CreeClass classeArrivee, String typeLien, String roleDepart, String roleArrivee, boolean isNavigable)
+	{
+		Fleche fleche = new Fleche(classeDepart, classeArrivee, typeLien, roleDepart, roleArrivee, isNavigable);
+		return fleche;
+	}
+
+	/**
+	 * Met à jour l'interface utilisateur.
+	 */
+	public void majIHM()
+	{
+		this.frame.majIHM();
+	}
+
 	/*╔════════════════════════╗*/
 	/*║       Getters          ║*/
 	/*╚════════════════════════╝*/
@@ -179,43 +236,16 @@ public class Controleur
 		return lstNomCreeClass;
 	}
 
-	/**
-	 * Effectue la lecture d'un répertoire et met à jour la liste des classes.
-	 * 
-	 * @param dossier Le répertoire à analyser
-	 */
-	public void LectureRepertoire(File dossier)
-	{
-		LectureRepertoire lecture = new LectureRepertoire(dossier);
-		this.lstMetiers           = lecture.getLstClass();
-	}
+	//╔════════════════════════╗*/
+	/*║       Setters          ║*/
+	/*╚════════════════════════╝*/
 
 	/**
-	 * Crée une nouvelle instance de CreeClass à partir d'un chemin de fichier.
+	 * Met à jour la map de multiplicité d'une classe spécifique.
 	 * 
-	 * @param chemin Le chemin du fichier à analyser
-	 * @return L'objet CreeClass créé
+	 * @param c La classe dont la map doit être mise à jour
+	 * @param nouvelleMap La nouvelle map de multiplicité
 	 */
-	public CreeClass CreerClass(String chemin)
-	{
-		LectureFichier lf = LectureFichier.factoryLectureFichier(chemin);
-		if (lf.getLstCreeClassesXML() == null)
-		{
-			return lf.getClasse();
-		}
-		else
-		{
-			this.lstMetiers = lf.getLstCreeClassesXML();
-			return null;
-		}
-	}
-
-	public void sauvegarderXML(List<CreeClass> lstMetiers)
-	{
-		GererData gererData = new GererData();
-		gererData.sauvegarderProjet(this.lstMetiers);
-	}
-
 	public void setHashMap(CreeClass c, HashMap<CreeClass, List<List<String>>> nouvelleMap)
 	{
 		System.out.println("Controleur");
@@ -232,10 +262,13 @@ public class Controleur
 		this.majIHM();
 	}
 
-	public void majIHM()
+	public void setRole(Fleche f ,String role)
 	{
-		this.frame.majIHM();
+		f.setRole(role);
+		this.majIHM();
 	}
+
+	
 
 	/*╔════════════════════════╗*/
 	/*║          Main          ║*/

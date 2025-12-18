@@ -167,7 +167,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			{
 				for (CreeClass classeMere : c.getLien().getLstLienHeritage())
 				{
-					this.lstFleches.add(new Fleche(classeMere, c, "heritage", "", "", false));
+					this.lstFleches.add(this.ctrl.ajouterFleche(classeMere, c, "heritage", "", "", false));
 				}
 			}
 		}
@@ -182,7 +182,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			{
 				for (CreeClass classeInterface : c.getLien().getLstLienInterface())
 				{
-					this.lstFleches.add(new Fleche(classeInterface, c, "interface", "", "", false));
+					this.lstFleches.add(this.ctrl.ajouterFleche(classeInterface, c, "interface", "", "", false));
 				}
 			}
 		}
