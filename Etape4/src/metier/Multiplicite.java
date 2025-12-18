@@ -25,6 +25,10 @@ public class Multiplicite implements Serializable
 	 */
 	HashMap<CreeClass, List<List<String>>> mapMultiplicites;
 
+	private ArrayList<Integer> lstIdMulti;
+	private int compteurId;
+
+
 	/**
 	 * Constructeur de la classe Multiplicite.
 	 * Initialise simplement la HashMap stockant les multiplicités.
@@ -32,6 +36,8 @@ public class Multiplicite implements Serializable
 	public Multiplicite() 
 	{
 		this.mapMultiplicites = new HashMap<CreeClass, List<List<String>>>();
+		this.lstIdMulti = new ArrayList<Integer>();
+		this.compteurId = 0;
 	}
 
 	/**
@@ -107,6 +113,8 @@ public class Multiplicite implements Serializable
 				lstMultiplPair.add(lstMultiplC.get(cpt));
 				lstMultiplPair.add(lstMultiplAutre.get(cpt));
 				lstToutMultipl.add(lstMultiplPair);
+
+				this.lstIdMulti.add(compteurId++);
 			}
 
 			// Ajouter à la map seulement si des multiplicités ont été trouvées
@@ -195,4 +203,33 @@ public class Multiplicite implements Serializable
 	{
 		return this.mapMultiplicites.size();
 	}
+
+	public int getIdAssociation(int index)
+	{
+		return this.lstIdMulti.get(index);
+	}
+
+	public ArrayList<Integer> getLstIdAsso()
+	{
+		return this.lstIdMulti;
+	}
+
+	public String getAssociationParId(int id)
+	{
+		int index = this.lstIdMulti.indexOf(id);
+		if (index == -1) return null;
+
+		for (List<List<String>> lst : mapMultiplicites.values())
+		{
+			if (index < lst.size())
+			{
+				List<String> pair = lst.get(index);
+				return pair.get(0) +  pair.get(1);
+			}
+			index -= lst.size();
+		}
+		return null;
+	}
+
+
 }

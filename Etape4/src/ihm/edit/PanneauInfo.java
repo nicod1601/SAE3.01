@@ -22,6 +22,8 @@ public class PanneauInfo extends JPanel implements ActionListener
 	private JPanel[] tabPanel;
 	private JTextField[] tabTxtMult;
 	private JPanel panelGrid;
+	private ArrayList<JButton> lstBtnRole;
+	private PopUp pop;
 	
 	// Stockage de toutes les clés et leurs indices correspondants
 	private ArrayList<CreeClass> listeCles;
@@ -247,6 +249,8 @@ public class PanneauInfo extends JPanel implements ActionListener
 				this.tabPanel = new JPanel[tailleTotale];
 				this.tabTitre = new JLabel[tailleTotale];
 				this.tabTxtMult = new JTextField[tailleTotale * 2];
+				this.lstBtnRole = new ArrayList<JButton>();
+				this.pop = new PopUp(this.ctrl);
 
 				for(int cpt2 = 0; cpt2 < this.tabPanel.length; cpt2++) 
 				{
@@ -268,6 +272,12 @@ public class PanneauInfo extends JPanel implements ActionListener
 					this.tabTitre[cpt2] = new JLabel(lstTitres.get(cpt2));
 					this.stylerLabel(this.tabTitre[cpt2]);
 					this.stylerLabelDescription(this.tabTitre[cpt2]);
+				}
+
+				for(int cpt5=0; cpt5 < this.tabPanel.length; cpt5++ )
+				{
+					this.lstBtnRole.add(new JButton("+ Role"));
+					this.stylerBouton(this.lstBtnRole.get(cpt5), false);
 				}
 			}
 
@@ -291,6 +301,8 @@ public class PanneauInfo extends JPanel implements ActionListener
 			//stylerBouton(this.btnModif, false);
 			stylerBouton(this.btnValid, true);
 			this.nomClass = null;
+			this.lstBtnRole = new ArrayList<JButton>();
+			this.pop = new PopUp(this.ctrl);
 		}
 	}
 
@@ -301,20 +313,31 @@ public class PanneauInfo extends JPanel implements ActionListener
 		{
 			for(int cpt =0; cpt < this.tabPanel.length; cpt++)
 			{
-				this.tabPanel[cpt].add(this.tabTitre[cpt], BorderLayout.NORTH);
+				JPanel panelHaut = new JPanel(new GridLayout(1,2));
+				panelHaut.add(this.tabTitre[cpt]);
+
+				JPanel panelBtn = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+				panelBtn.add(this.lstBtnRole.get(cpt));
+				
+				panelHaut.add(panelBtn);
+
+				panelHaut.setOpaque(false);
+				panelBtn.setOpaque(false);
 				
 				JPanel panelChamps = new JPanel(new GridLayout(1, 2, 5, 0));
 				panelChamps.add(this.tabTxtMult[cpt * 2]);     
 				panelChamps.add(this.tabTxtMult[cpt * 2 + 1]);
 				
+				this.tabPanel[cpt].add(panelHaut,BorderLayout.NORTH);
 				this.tabPanel[cpt].add(panelChamps);
 				this.panelGrid.add(this.tabPanel[cpt]);
 			}
+
 			if(this.tabPanel.length != 0 )
 			{
 				JPanel panelBtn = new JPanel();
-				//panelBtn.add(this.btnModif);
 				panelBtn.add(this.btnValid);
+				panelBtn.setOpaque(false);
 				this.panelGrid.add(panelBtn);
 			}
 
@@ -331,8 +354,10 @@ public class PanneauInfo extends JPanel implements ActionListener
 			{
 				this.tabTxtMult[cpt1].addActionListener(this);
 			}
-
-			//this.btnModif.addActionListener(this);
+			for(int cpt = 0; cpt < this.lstBtnRole.size(); cpt++)
+			{
+				this.lstBtnRole.get(cpt).addActionListener(this);
+			}
 			this.btnValid.addActionListener(this);
 		}
 	}
@@ -420,13 +445,26 @@ public class PanneauInfo extends JPanel implements ActionListener
 			}
 		}
 
-		/*if(e.getSource() == this.btnModif) 
+		for(int cpt = 0; cpt < this.lstBtnRole.size(); cpt++)
 		{
-			for(int cpt1 = 0; cpt1 < this.tabTxtMult.length; cpt1++)
+			if(this.lstBtnRole.get(cpt) == e.getSource())
 			{
-				this.tabTxtMult[cpt1].setEnabled(true);
+				int indexSource = cpt * 2;      
+				int indexCible  = cpt * 2 + 1;
+				
+				// Vérifier que les index sont valides
+				if(indexCible < this.tabTxtMult.length)
+				{
+					String multiSource = this.tabTxtMult[indexSource].getText().trim();
+					String multiCible  = this.tabTxtMult[indexCible].getText().trim();
+
+					this.pop.getFleche(cpt, multiSource , multiCible);
+
+					
+
+				}
 			}
-		}*/
+		}
 	}
 
 	/**

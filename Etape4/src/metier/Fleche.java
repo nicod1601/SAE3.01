@@ -396,4 +396,43 @@ public class Fleche
 
 	public void setRole(String role) {this.role = role;}
 
+	public boolean  getAssociationParId(int id, String deb, String fin)
+	{
+		String lSource = this.source.getMultiplicite().getAssociationParId(id);
+		String lCible  = this.cible.getMultiplicite().getAssociationParId(id);
+
+		String finale = ("" + deb + fin).trim();
+
+
+		if(lSource != null)
+		{
+			System.out.println(lSource + "   |   " + finale);
+			if(lSource.equals(finale))
+			{
+				return true;
+			}
+		}
+
+		System.out.println();
+
+
+		if(lCible != null)
+		{
+			System.out.println(lCible);
+			if(lCible.equals(finale))
+			{
+				return true;
+			}
+		}
+	
+		return false;
+
+	}
+
+	public String toString() {
+		return "Fleche [source=" + source + ", cible=" + cible + ", typeLien=" + typeLien + ", multipliciteSource="
+				+ multipliciteSource + ", multipliciteCible=" + multipliciteCible + ", role=" + role
+				+ ", bidirectionnel=" + bidirectionnel + ", posXFin=" + posXFin + ", posYFin=" + posYFin + "]";
+	}
+
 }

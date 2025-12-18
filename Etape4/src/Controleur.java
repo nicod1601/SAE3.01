@@ -44,6 +44,8 @@ public class Controleur
 	/** Liste des classes métier analysées */
 	private List<CreeClass> lstMetiers;
 
+	private List<Fleche> lstFleches;
+
 
 	
 	/** Référence vers l'interface utilisateur en mode console */
@@ -87,6 +89,7 @@ public class Controleur
 			if(niv == 5 )
 			{
 				this.frame = new FrameAppli(this);
+				this.lstFleches = new ArrayList<Fleche>();
 			}
 
 		} while (this.niv != 0);
@@ -260,6 +263,20 @@ public class Controleur
 		return lstNomCreeClass;
 	}
 
+	public Fleche getFleche(int id, String source, String cible)
+	{
+		System.out.println("ID :" + id + "Source : " + source + "Cibe : " + cible);
+		
+		for(int cpt = 0; cpt < this.lstFleches.size(); cpt++)
+		{
+			if(this.lstFleches.get(cpt).getAssociationParId(id, source, cible))
+			{
+				return this.lstFleches.get(cpt);
+			}
+		}
+		return null;
+	}
+
 	//╔════════════════════════╗*/
 	/*║       Setters          ║*/
 	/*╚════════════════════════╝*/
@@ -287,6 +304,11 @@ public class Controleur
 	{
 		f.setRole(role);
 		this.majIHM();
+	}
+
+	public void setLstFleche(List<Fleche> lst)
+	{
+		this.lstFleches = lst;
 	}
 
 	

@@ -49,8 +49,6 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	// Controleur
 	public PanneauPrincipal(Controleur ctrl, FrameAppli frame) 
 	{
-		
-
 		this.ctrl = ctrl;
 		this.frame = frame;
 
@@ -248,6 +246,8 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			fl.dessiner(g2,espaceFl);
 			espaceFl += ESPACE_Y;
 		}
+
+		this.ctrl.setLstFleche(this.lstFleches);
 
 		/*---------------------------------------------*/
 		/* Zoom d'une Class                            */

@@ -582,4 +582,15 @@ public class CreeClass implements Serializable
 		this.largeur = l;
 	}
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("CreeClass{");
+        sb.append("nom=").append(nom);
+        sb.append('}');
+        return sb.toString();
+    }
+
+	
+
 }
