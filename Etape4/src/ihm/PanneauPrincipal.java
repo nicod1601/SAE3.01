@@ -23,9 +23,9 @@ import src.metier.Multiplicite;
 
 public class PanneauPrincipal extends JPanel implements MouseListener, MouseMotionListener
 {
-	private static final int ECART_BORD = 20;
-	private static final int ESPACE_Y   = 15;
-	private static final int ESPACE_FL  = 25;
+	public static final int ECART_BORD = 20;
+	public static final int ESPACE_Y   = 15;
+	public static final int ESPACE_FL  = 25;
 	
 	private Controleur ctrl;
 	private FrameAppli frame;
@@ -418,7 +418,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			
 			classeSelectionnee.setPosX(newX);
 			classeSelectionnee.setPosY(newY);
-			
+
 			repaint();
 		}
 	}
@@ -582,7 +582,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 				String listP = "";
 				if (params != null)
 				{
-					for (int i = 0; i < params.size(); i++)
+					for (int i = 0; i < params.size() && i <= 2; i++)
 					{
 						String[] p = params.get(i);
 						if (i == 2 && zoom == 1 && params.size() >= 3)
@@ -592,11 +592,12 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 						}
 						else 
 						{
-							listP += p[1] + " : " + p[0];
+							String pType = p.length > 0 ? p[0] : "";
+							String pName = p.length > 1 ? p[1] : (p.length == 1 ? p[0] : "");
+							listP += pName + " : " + pType;
 							if (i < params.size() - 1)
 								listP += ",   ";
 						}
-						
 					}
 				}
 
@@ -659,12 +660,13 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			{
 				for (int i = 0; i < params.size(); i++)
 				{
-					String[] p = params.get(i); 
-					str += p[1] + " : " + p[0];
-					str += ",   ";
-					if (i > 2 && zoom == 1)
+					String[] p = params.get(i);
+					String pType = p.length > 0 ? p[0] : "";
+					String pName = p.length > 1 ? p[1] : (p.length == 1 ? p[0] : "");
+					str += pName + " : " + pType;
+					if (i < params.size() - 1  && i < 2)
 					{
-						break;
+						str += ",   ";
 					}
 				}
 			}
@@ -822,10 +824,13 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		this.lstCordFleche.clear();
 		this.indexFlecheSelec = -1;
 		this.repaint();
+		this.frame.majTaileScroll();
 	}
 
 	public void majDessin()
 	{
 		this.repaint();
 	}
+
+	
 }

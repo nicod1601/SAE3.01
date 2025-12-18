@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 import java.io.File;
 import javax.swing.*;
 import src.Controleur;
+import src.metier.CreeClass;
 
 
 public class FrameAppli extends JFrame 
@@ -14,6 +15,7 @@ public class FrameAppli extends JFrame
 	private PanneauPrincipal panneauPrincipal;
 	private PanneauFichier   panneauFichier;
 	private PanneauMenu      panneauMenu;
+	private JScrollPane      scrollFrame;
 
 	private Controleur ctrl;
 
@@ -37,15 +39,14 @@ public class FrameAppli extends JFrame
 		this.panneauMenu      = new PanneauMenu(ctrl, this);
 		this.panneauPrincipal = new PanneauPrincipal(ctrl, this);
 
-		this.panneauPrincipal.setPreferredSize(new Dimension(screenSize.width * 2, screenSize.height * 2));
+		this.panneauPrincipal.setPreferredSize(new Dimension(screenSize.width + 10, screenSize.height + 10));
 		
-		JScrollPane scrollFrame = new JScrollPane(this.panneauPrincipal,
+		this.scrollFrame = new JScrollPane(this.panneauPrincipal,
 		                                          JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 		                                          JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 		scrollFrame.getVerticalScrollBar().setUnitIncrement(50);
 		scrollFrame.getHorizontalScrollBar().setUnitIncrement(50);
-		scrollFrame.setPreferredSize(new Dimension(800, 600)); // Largeur, Hauteur
 
 		/*-------------------------*/
 		/* Position des Composants */
@@ -57,9 +58,61 @@ public class FrameAppli extends JFrame
 		this.setVisible(true);
 	}
 
+	public int largeurTotal()
+	{
+		int largeurTotal = 0;
+		for ( CreeClass c : this.ctrl.getLstClass() )
+		{
+			largeurTotal += this.panneauPrincipal.calculerLargeur(c, c.getLstAttribut(), c.getLstMethode(), 1);
+		}
+		return largeurTotal / (int)(Math.sqrt(this.ctrl.getLstClass().size()));
+	}
+	public int hauteurTotal()
+	{
+		int hauteurMax = 0;
+		for ( CreeClass c : this.ctrl.getLstClass() )
+		{
+			int heightTitre = !c.getType().equals("class") ? 2 * PanneauPrincipal.ECART_BORD + panneauPrincipal.ESPACE_Y : 2 * panneauPrincipal.ECART_BORD;
+			int heightAttributs = panneauPrincipal.ESPACE_Y;
+			int heightMethodes  = panneauPrincipal.ESPACE_Y;
+
+			if(c.getLstAttribut() != null)
+				heightAttributs = c.getLstAttribut().size() > 3 ? 4 * panneauPrincipal.ESPACE_Y + panneauPrincipal.ECART_BORD : c.getLstAttribut().size() * panneauPrincipal.ESPACE_Y + panneauPrincipal.ECART_BORD;
+
+			if(c.getLstMethode() != null)
+				heightMethodes  = c.getLstMethode().size()  > 3 ? 4 * panneauPrincipal.ESPACE_Y + panneauPrincipal.ECART_BORD : c.getLstMethode().size()  * panneauPrincipal.ESPACE_Y + panneauPrincipal.ECART_BORD;
+
+			int totalHeight = heightTitre + heightAttributs + heightMethodes;
+			hauteurMax += totalHeight;
+		}
+		return hauteurMax / (int)(Math.sqrt(this.ctrl.getLstClass().size()));
+	}
+
+	public void majTaileScroll()
+	{
+		if (this.panneauPrincipal == null) return;
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+		int lar = this.largeurTotal();
+		int hau = this.hauteurTotal();
+
+		this.panneauPrincipal.setPreferredSize(
+			new Dimension(screenSize.width + lar, screenSize.height + hau)
+		);
+
+		// 🔴 IMPORTANT
+		this.panneauPrincipal.revalidate(); // recalcul layout + scrollbars
+
+	}
 	public void majListeClasses(boolean dossier, String nomFichier)
 	{
 		this.panneauPrincipal.majListeClasses(dossier, nomFichier);
+		
+		this.majTaileScroll();
+
+		this.panneauPrincipal.revalidate();
+		this.panneauPrincipal.repaint();
 	}
 
 	public void majIHM()
