@@ -23,7 +23,7 @@ public class Fleche
 	private int posXFin;
 	private int posYFin;
 	
-	public Fleche(CreeClass source, CreeClass cible, String typeLien, String multSrc, String multCible, boolean bidir, String role)
+	public Fleche(CreeClass source, CreeClass cible, String typeLien, String multSrc, String multCible, boolean bidir)
 	{
 		this.source             = source;
 		this.cible              = cible;
@@ -31,16 +31,11 @@ public class Fleche
 		this.multipliciteSource = multSrc;
 		this.multipliciteCible  = multCible;
 		this.bidirectionnel     = bidir;
-		this.role               = role;
 		this.posXFin            = 0;
 		this.posYFin            = 0;
-	}
+		this.role               = "";
 
-	public Fleche(CreeClass source, CreeClass cible, String typeLien, String multSrc, String multCible, boolean bidir)
-	{
-		this(source,cible,typeLien,multSrc,multCible,bidir,"");
 	}
-
 	
 	// Getters
 	public int getPosXFin()      { return posXFin;  }
@@ -175,6 +170,18 @@ public class Fleche
 		
 		// Réinitialiser le stroke
 		g2.setStroke(new BasicStroke(1f));
+
+		double angleRotation = Math.atan2(pointYArrivee - pointYDepart, pointXArrivee - pointXDepart);
+			
+
+		if(angleRotation > 1.5)
+		{
+			angleRotation -= Math.PI;
+		}
+		else if (angleRotation < -1.5)
+		{ 
+			angleRotation += Math.PI;
+		}
 		
 		// Afficher les multiplicités
 		if (this.multipliciteSource != null && !this.multipliciteSource.isEmpty()) 
@@ -182,7 +189,10 @@ public class Fleche
 			g2.setColor(Couleur.NOIR.getColor());
 			int xTextSrc = pointXDepart + (pointXArrivee - pointXDepart) / 10;
 			int yTextSrc = pointYDepart + (pointYArrivee - pointYDepart) / 10 - 5;
+			g2.rotate(angleRotation, xTextSrc, yTextSrc);
 			g2.drawString(multipliciteSource, xTextSrc, yTextSrc);
+			g2.rotate(-angleRotation, xTextSrc, yTextSrc);
+
 		}
 		
 		if (this.multipliciteCible != null && !this.multipliciteCible.isEmpty()) 
@@ -190,15 +200,26 @@ public class Fleche
 			g2.setColor(Couleur.NOIR.getColor());
 			int xTextCible = pointXDepart + (pointXArrivee - pointXDepart) * 90 / 100;
 			int yTextCible = pointYDepart + (pointYArrivee - pointYDepart) * 90 / 100 - 5;
+
+			g2.rotate(angleRotation, xTextCible, yTextCible);
 			g2.drawString(multipliciteCible, xTextCible, yTextCible);
+			g2.rotate(-angleRotation, xTextCible, yTextCible);
+
 		}
 
 		// Afficher le rôle si défini
 		if (!role.isEmpty())
 		{
-			int xTextCible = pointXDepart + (pointXArrivee - pointXDepart) * 70 / 100 - role.length();
+			g2.setColor(Couleur.NOIR.getColor());
+
+			// Position du text
+			int xTextCible = pointXDepart + (pointXArrivee - pointXDepart) * 70 / 100;
 			int yTextCible = pointYDepart + (pointYArrivee - pointYDepart) * 70 / 100 - 5;
-			g2.drawString(role, xTextCible , yTextCible);
+			
+			// Appliquer la rotation selon l'angle de la flèche
+			g2.rotate(angleRotation, xTextCible, yTextCible);
+			g2.drawString(role, xTextCible, yTextCible);
+			g2.rotate(-angleRotation, xTextCible, yTextCible);
 		}
 
 		// Sauvegarder la position finale pour la sélection
@@ -317,7 +338,7 @@ public class Fleche
 					}
 				}
 				
-				Fleche fleche = new Fleche(cl1, cl2, "association", multSrc, multCible, bidir, role);
+				Fleche fleche = new Fleche(cl1, cl2, "association", multSrc, multCible, bidir);
 				fleche.dessiner(g2, decalage);
 				lstFleches.add(fleche);
 			}
