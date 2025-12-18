@@ -1,62 +1,126 @@
-Classe Disque type=class abstract=false posX=50 posY=50 largeur=336 hauteur=240
-	Extends Rond
-	Implements ISurface 
-		Attribut private static int autoIncre
-		Attribut private static final int MAXLENGTH=10 
-		Attribut private final String NOM="NOM allo" 
-		Attribut private String pkTuTaffiche
-		Attribut: private Point[] tabPoints
-		Attribut: private Point reponsable
-		Attribut: private Point centre
-		Methode public null Disque(Point centre, double rayon)
-		Methode public null Disque(Point cente)
-		Methode public double calculerAire()
-		Methode public double calculerPerimetre()
-		Methode public Disque testGenerique(int a, int b, int c, int d, int e, int f, int g, int h)
-		Methode public void setX(int x)
-		Methode public void setY(int y)
-		Methode public Point getCentre()
-		Methode public double calculerSurface()
+Classe FrameAppli type=class abstract=false posX=50 posY=50 largeur=402 hauteur=180
+	Extends JFrame
+	Implements aucune
+		Attribut private Controleur ctrl
+		Attribut: private PanneauPrincipal panneauPrincipal
+		Attribut: private PanneauFichier panneauFichier
+		Attribut: private PanneauMenu panneauMenu
+		Methode public null FrameAppli ()
+		Methode public void majListeClasses ()
+		Methode public void majIHM ()
+		Methode public void viderLstClass ()
+		Methode public void ajouterFichier ()
+		Methode public void viderListe ()
+		Methode public void selectionner ()
+		Methode public void selectionnerList ()
+		Methode public void exporterEnImage ()
+		Methode public DefaultListModel<String> getModeleFichiers ()
+		Methode public void activerEdit ()
+		Methode public void desactiverEdit ()
 
-Classe ISurface type=interface abstract=false posX=436 posY=50 largeur=200 hauteur=110
+Classe IhmCui type=class abstract=false posX=502 posY=50 largeur=798 hauteur=180
 	Extends aucune
 	Implements aucune
-		Methode public abstract double calculerSurface()
+		Attribut private Controleur ctrl
+		Methode public null IhmCui ()
+		Methode public String replaceVisibilite ()
+		Methode public static int choixNiv ()
+		Methode public void affichageNiv1 ()
+		Methode public String structAffichageNiv2Niv3 ()
+		Methode public void affichageNiv2 ()
+		Methode public void affichageNiv3 ()
+		Methode public static boolean verfiDoublon ()
+		Methode public void affichageNiv4 ()
 
-Classe Musique type=record abstract=false posX=686 posY=50 largeur=342 hauteur=230
-	Extends aucune
-	Implements ISurface 
-		Attribut private String nom
-		Attribut private int durre
-		Attribut private int plusLong
-		Methode public null Musique(String nom, int durre, int plusLong)
-		Methode public String nom()
-		Methode public String nom(String nom)
-		Methode public int durre()
-		Methode public int durre(int durre)
-		Methode public int plusLong()
-		Methode public int plusLong(int plusLong)
-		Methode public double calculerSurface()
-
-Classe Point type=class abstract=false posX=1078 posY=50 largeur=264 hauteur=220
-	Extends aucune
+Classe PanneauFichier type=class abstract=false posX=1350 posY=50 largeur=348 hauteur=220
+	Extends JPanel
 	Implements aucune
-		Attribut private String nom
-		Attribut private int x
-		Attribut private int y
-		Attribut: private Disque[] lstDisqueAssocies
-		Methode public null Point(String nom, int x, int y)
-		Methode public String getNom()
-		Methode public void setNom(String nom)
-		Methode public int getX()
-		Methode public void setX(int x)
-		Methode public int getY()
-		Methode public void setY(int y)
+		Attribut private Controleur ctrl
+		Attribut private JList<String> listeFichiers
+		Attribut private DefaultListModel<String> modeleFichiers
+		Attribut: private FrameAppli frame
+		Methode public null PanneauFichier ()
+		Methode private void configurerPanneau ()
+		Methode private void creerComposants ()
+		Methode private JLabel creerLabelEnTete ()
+		Methode private JList<String> creerListeFichiers ()
+		Methode public DefaultListModel<String> getModeleFichiers ()
+		Methode public void ajouterFichier ()
+		Methode public void viderListe ()
+		Methode public java.util.List<String> getFichiersSelectionnes ()
+		Methode public java.util.List<String> getTousFichiers ()
+		Methode public void selectionnerList ()
 
-Classe Rond type=class abstract=false posX=1392 posY=50 largeur=200 hauteur=140
-	Extends aucune
-	Implements aucune
-		Attribut private double rayon
-		Methode public null Rond(double rayon)
-		Methode public double getRayon()
+Classe PanneauMenu type=class abstract=false posX=1748 posY=50 largeur=444 hauteur=240
+	Extends JPanel
+	Implements ActionListener 
+		Attribut private JMenuBar menuBar
+		Attribut private JMenu fileMenu
+		Attribut private JMenu editMenu
+		Attribut private JButton quitter
+		Attribut private JScrollPane scroll
+		Attribut private Controleur ctrl
+		Attribut private File dossierOuvert
+		Attribut private FrameEdit frameEdit
+		Attribut: private FrameAppli frameAppli
+		Methode public null PanneauMenu ()
+		Methode private void creerMenus ()
+		Methode private void appliquerStyle ()
+		Methode private void activerEcouteurs ()
+		Methode public void actionPerformed ()
+		Methode private void ouvrirFrameEdit ()
+		Methode public void exporterEnImage ()
+		Methode public void ouvrirFichier ()
+		Methode private void ouvrirDossier ()
+		Methode private void chargerFichiersDossier ()
+		Methode private void viderListe ()
+		Methode private JFileChooser creerFileChooser ()
+		Methode private boolean estFichierJava ()
+		Methode private void afficherMessageSucces ()
+		Methode private void afficherMessageAvertissement ()
+		Methode private void afficherMessageErreur ()
+		Methode private void stylerMenuItem ()
+		Methode public void mouseEntered ()
+		Methode public void mouseExited ()
+		Methode private void stylerBoutonQuitter ()
+		Methode public void mouseEntered ()
+		Methode public void mouseExited ()
+		Methode private void stylerMenu ()
+		Methode public void mouseEntered ()
+		Methode public void mouseExited ()
+		Methode public void activerEdit ()
+		Methode public void desactiverEdit ()
+
+Classe PanneauPrincipal type=class abstract=false posX=2242 posY=50 largeur=408 hauteur=240
+	Extends JPanel
+	Implements MouseListener MouseMotionListener 
+		Attribut private static final int PROPORTION=20 
+		Attribut private Controleur ctrl
+		Attribut private int indexSelectionner
+		Attribut private int indexFlecheSelec
+		Attribut private int sourisX
+		Attribut private int sourisY
+		Attribut private double offsetX
+		Attribut private double offsetY
+		Attribut private boolean rightMousePressed
+		Attribut private boolean inClass
+		Attribut private List<CreeClass> lstClass
+		Attribut private List<Fleche> lstFleches
+		Attribut private List<Integer[]> lstCordFleche
+		Attribut: private FrameAppli frame
+		Methode public null PanneauPrincipal ()
+		Methode protected void paintComponent ()
+		Methode public void mouseClicked ()
+		Methode public void mousePressed ()
+		Methode public void mouseReleased ()
+		Methode public void mouseDragged ()
+		Methode public void mouseEntered ()
+		Methode public void mouseExited ()
+		Methode public void mouseMoved ()
+		Methode public void dessinerRectangle ()
+		Methode public void selectionner ()
+		Methode public void exporterEnImage ()
+		Methode public void majListeClasses ()
+		Methode public void viderListeClasses ()
+		Methode public void majDessin ()
 

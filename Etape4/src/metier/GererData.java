@@ -274,18 +274,7 @@ public class GererData
 					writer.print("\t\tMethode " + m.getVisibilite() + " ");
 					if (m.isEstStatic()) writer.print("static ");
 					if (m.estAbstract()) writer.print("abstract ");
-					writer.print(m.getType() + " " + m.getNom() + "(");
-					
-					List<String[]> params = m.getLstParametres();
-					if (params != null && !params.isEmpty())
-					{
-						for (int i = 0; i < params.size(); i++)
-						{
-							writer.print(params.get(i)[0] + " " + params.get(i)[1]);
-							if (i < params.size() - 1) writer.print(", ");
-						}
-					}
-					writer.println(")");
+					writer.print(m.getType() + " " + m.getNom() + " ()\n");
 				}
 				
 				// Ligne vide entre les classes
