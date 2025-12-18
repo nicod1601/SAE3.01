@@ -7,6 +7,36 @@ import java.util.Scanner;
 
 public class GererData
 {
+	// === SAUVEGARDER .ser ===
+	public void sauvegarderSER(List<CreeClass> classes)
+	{
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("../data/sauvegarde01.ser")))
+		{
+			oos.writeObject(classes);
+			System.out.println("✅ Sauvegarde .ser réussie");
+		}
+		catch (IOException e)
+		{
+			System.out.println("❌ Erreur sauvegarde .ser : " + e.getMessage());
+		}
+	}
+	
+	// === CHARGER .ser ===
+	public List<CreeClass> chargerSER()
+	{
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("../data/sauvegarde01.ser")))
+		{
+			List<CreeClass> classes = (List<CreeClass>) ois.readObject();
+			System.out.println("✅ Chargement .ser réussi : " + classes.size() + " classes");
+			return classes;
+		}
+		catch (IOException | ClassNotFoundException e)
+		{
+			System.out.println("❌ Erreur chargement .ser : " + e.getMessage());
+			return null;
+		}
+	}
+	
 	// === LIRE FICHIER .uml ===
 	public List<CreeClass> chargerUML()
 	{
@@ -137,7 +167,7 @@ public class GererData
 					
 					// Enlever les parenthèses
 					if(paramsStr.length() > 0)
-					paramsStr = paramsStr.substring(1, paramsStr.length() - 1);
+						paramsStr = paramsStr.substring(1, paramsStr.length() - 1);
 					
 					List<String[]> lstParams = new ArrayList<>();
 					if (!paramsStr.isEmpty())

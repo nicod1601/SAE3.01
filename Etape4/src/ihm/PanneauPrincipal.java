@@ -757,16 +757,20 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	//mettre a jour la liste des classes
 	public void majListeClasses(boolean dossier, String nomFichier)
 	{
-		if(dossier) 
+		if(dossier)
 		{
 			this.lstClass = this.ctrl.getLstClass();
 		} 
 		else
 		{
 			CreeClass nouvelleClasse = this.ctrl.CreerClass(nomFichier);
-			if(nouvelleClasse == null)
+			if(nouvelleClasse == null && nomFichier.endsWith(".uml"))
 			{
-				this.lstClass = this.ctrl.getLstClass();
+				this.lstClass = this.ctrl.chargerUML();
+			}
+			else if (nouvelleClasse == null && nomFichier.endsWith(".ser"))
+			{
+				this.lstClass = this.ctrl.chargerSER();
 			}
 			else
 			{
