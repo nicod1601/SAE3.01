@@ -243,11 +243,7 @@ public class IhmCui
 				}
 
 				res += String.format("%s %s : %s", symbole, attribut.getNom(), attribut.getType());
-
-				if(attribut.isEstFinal())
-				{
-					res += " <<freeze>>"+" = "+attribut.getValeur();
-				}
+				res += " <<attribut.getPropriete()>>"+" = "+attribut.getValeur();
 				res += reset + "\n";
 			}
 

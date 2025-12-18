@@ -31,7 +31,7 @@ public class Attribut implements Serializable
 	private boolean estStatic;
 	
 	/** Indique si l'attribut est final (constante) */
-	private boolean estFinal;
+	private String propriete;
 
 	/** Valeur du final*/
 	private String valeurFinal = null;
@@ -47,7 +47,7 @@ public class Attribut implements Serializable
 	 * @param type Le type de l'attribut (ex: int, String, etc.)
 	 * @param nom Le nom de l'attribut
 	 * @param estStatic Indique si l'attribut est statique
-	 * @param estFinal Indique si l'attribut est final (constante)
+	 * @param propriete Indique si l'attribut est final (constante)
      */
 	public Attribut(String visibilite, String type, String nom, boolean estStatic)
 	{
@@ -55,13 +55,13 @@ public class Attribut implements Serializable
 		this.type = type;
 		this.nom = nom;
 		this.estStatic = estStatic;
-		this.estFinal = false;
+		this.propriete = "";
 	}
 
 	public Attribut(String visibilite, String type, String nom, boolean estStatic, String valeur)
 	{
 		this(visibilite, type, nom, estStatic);
-		this.estFinal = true;
+		this.propriete = "frozen";
 		this.valeurFinal = this.checkValeur(valeur);
 	}
 
@@ -123,9 +123,9 @@ public class Attribut implements Serializable
 	 *
 	 * @return true si l'attribut est final, false sinon
 	 */
-	public boolean isEstFinal()
+	public String ispropriete()
 	{
-		return estFinal;
+		return propriete;
 	}
 
 	/**
@@ -136,6 +136,11 @@ public class Attribut implements Serializable
 	public String getValeur()
 	{
 		return this.valeurFinal;
+	}
+
+	public String getPropriete()
+	{
+		return this.propriete;
 	}
 
 }

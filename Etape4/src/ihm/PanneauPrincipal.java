@@ -23,9 +23,9 @@ import src.metier.Multiplicite;
 
 public class PanneauPrincipal extends JPanel implements MouseListener, MouseMotionListener
 {
-	public static final int ECART_BORD = 20;
-	public static final int ESPACE_Y   = 15;
-	public static final int ESPACE_FL  = 25;
+	 static final int ECART_BORD = 20;
+	 static final int ESPACE_Y   = 15;
+	 static final int ESPACE_FL  = 25;
 	
 	private Controleur ctrl;
 	private FrameAppli frame;
@@ -418,7 +418,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			
 			classeSelectionnee.setPosX(newX);
 			classeSelectionnee.setPosY(newY);
-
+			
 			repaint();
 		}
 	}
@@ -503,7 +503,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		for(Attribut attr : lstAttributs) 
 		{
 			String symbole        = "";
-			String finale         = "";
+			String propriete      = "";
 			String typeAttr       = "";
 			String AlligneGauche;
 			String nomAttr;
@@ -524,19 +524,21 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 				default:          symbole = "~ "; break;
 			}
 
-			if(attr.isEstFinal()) 
-			{
-				finale = " <<freeze>>";
-			}
 
 			nomAttr        = attr.getNom();
-			typeAttr       = ": " + attr.getType() + finale;
-			AlligneGauche  = " "  + symbole        + " "    + nomAttr;
+			typeAttr       = ": " +  attr.getType() + " " ;
+
+			if (!attr.getPropriete().isEmpty())
+			{
+			 typeAttr += "{" + attr.getPropriete() + "}" ;
+			}
+			
+			AlligneGauche  = " "  + symbole        + " " + nomAttr;
 			
 			int xGauche = posX + 10;
 			int yPos = posY + heightTitre + ecartBord + (lstAttributs.indexOf(attr) * espaceZoom);
 			
-			int xType = posX + width - maxLargeur - 10;
+			int xType = posX + width - maxLargeur - 30;
 
 			g2.drawString(AlligneGauche, xGauche, yPos);
 			g2.drawString(typeAttr, xType, yPos);
@@ -582,7 +584,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 				String listP = "";
 				if (params != null)
 				{
-					for (int i = 0; i < params.size() && i <= 2; i++)
+					for (int i = 0; i < params.size(); i++)
 					{
 						String[] p = params.get(i);
 						if (i == 2 && zoom == 1 && params.size() >= 3)
@@ -592,12 +594,11 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 						}
 						else 
 						{
-							String pType = p.length > 0 ? p[0] : "";
-							String pName = p.length > 1 ? p[1] : (p.length == 1 ? p[0] : "");
-							listP += pName + " : " + pType;
+							listP += p[1] + " : " + p[0];
 							if (i < params.size() - 1)
 								listP += ",   ";
 						}
+						
 					}
 				}
 
@@ -660,13 +661,12 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			{
 				for (int i = 0; i < params.size(); i++)
 				{
-					String[] p = params.get(i);
-					String pType = p.length > 0 ? p[0] : "";
-					String pName = p.length > 1 ? p[1] : (p.length == 1 ? p[0] : "");
-					str += pName + " : " + pType;
-					if (i < params.size() - 1  && i < 2)
+					String[] p = params.get(i); 
+					str += p[1] + " : " + p[0];
+					str += ",   ";
+					if (i > 2 && zoom == 1)
 					{
-						str += ",   ";
+						break;
 					}
 				}
 			}
@@ -687,11 +687,8 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		// Vérifier aussi la largeur des attributs
 		for (Attribut attr : lstAttributs)
 		{
-			String str = attr.getNom() + " : " + attr.getType();
-			if (attr.isEstFinal())
-			{
-				str += " <<freeze>>";
-			}
+			String str = attr.getNom() + " : " + attr.getType() + " " + "{" + attr.getPropriete() + "}" ;
+			
 			if (width < str.length() * 8 * zoom)
 			{
 				width = str.length() * 8 * zoom;
@@ -707,14 +704,8 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		int maxLargeurType = 0;
 		for (Attribut attr : lstAttributs) 
 		{
-			String finale = "";
 
-			if (attr.isEstFinal()) 
-			{
-				finale = " <<freeze>>";
-			}
-
-			String typeAttr = ": " + attr.getType() + finale;
+			String typeAttr = ": " + attr.getType() + attr.getPropriete();
 			int largeurType = g2.getFontMetrics().stringWidth(typeAttr);
 
 			if (largeurType > maxLargeurType) 
@@ -824,13 +815,10 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		this.lstCordFleche.clear();
 		this.indexFlecheSelec = -1;
 		this.repaint();
-		this.frame.majTaileScroll();
 	}
 
 	public void majDessin()
 	{
 		this.repaint();
 	}
-
-	
 }

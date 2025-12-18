@@ -249,9 +249,9 @@ public class GererData
 				{
 					writer.print("\t\tAttribut " + a.getVisibilite() + " ");
 					if (a.isEstStatic()) writer.print("static ");
-					if (a.isEstFinal()) writer.print("final ");
+					if (a.getPropriete().equals("frozen")) writer.print("final ");
 					writer.print(a.getType() + " " + a.getNom());
-					if (a.isEstFinal() && a.getValeur() != null)
+					if (a.getPropriete().equals("frozen") && a.getValeur() != null)
 						writer.print("=" + a.getValeur());
 					writer.println();
 				}
@@ -261,9 +261,9 @@ public class GererData
 				{
 					writer.print("\t\tAttribut: " + a.getVisibilite() + " ");
 					if (a.isEstStatic()) writer.print("static ");
-					if (a.isEstFinal()) writer.print("final ");
+					if (a.getPropriete().equals("frozen")) writer.print("final ");
 					writer.print(a.getType() + " " + a.getNom());
-					if (a.isEstFinal() && a.getValeur() != null)
+					if (a.getPropriete().equals("frozen") && a.getValeur() != null)
 						writer.print("=" + a.getValeur());
 					writer.println();
 				}

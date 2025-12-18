@@ -37,12 +37,12 @@ public class LectureFichier
 		
 	}
 
-	private LectureFichier(GererData gererDatan,String data, int dummy)
+	private LectureFichier(GererData gererData,String data, int dummy)
 	{
 		if (dummy == 0)
-			this.lstMetiersXML = gererDatan.chargerSER();
+			this.lstMetiersXML = gererData.chargerSER();
 		else
-			this.lstMetiersXML = gererDatan.chargerUML();
+			this.lstMetiersXML = gererData.chargerUML();
 	}
 	/**
 	 * Création d'un nouvel objet CreeClass.
