@@ -23,7 +23,9 @@ import src.metier.Multiplicite;
 
 public class PanneauPrincipal extends JPanel implements MouseListener, MouseMotionListener
 {
-	private static final int PROPORTION = 20;
+	private static final int ECART_BORD = 20;
+	private static final int ESPACE_Y   = 15;
+	private static final int ESPACE_FL  = 25;
 	
 	private Controleur ctrl;
 	private FrameAppli frame;
@@ -91,6 +93,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		int espacementY = 50;
 		int largeurMax = this.getWidth() - 100;
 		
+		
 		/*---------------------------------------------*/
 		/* Dessiner les associations avec associations */
 		/*---------------------------------------------*/
@@ -107,15 +110,15 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			if(lstAttributs == null && lstMethodes == null)
 				continue;
 
-			int heightTitre = !classe.getType().equals("class") ? (2 * PROPORTION + 10) : (2 * PROPORTION);
-			int heightAttributs = (lstAttributs.size() > 3 ? 4 : lstAttributs.size()) * PROPORTION + PROPORTION;
-			int heightMethodes  = (lstMethodes.size()  > 3 ? 4 : lstMethodes.size() ) * PROPORTION + PROPORTION;
+			int heightTitre = !classe.getType().equals("class") ? 2 * ECART_BORD + ESPACE_Y : 2 * ECART_BORD;
+			int heightAttributs = ESPACE_Y;
+			int heightMethodes  = ESPACE_Y;
 
 			if(lstAttributs != null)
-				heightAttributs = (lstAttributs.size() > 3 ? 4 : lstAttributs.size()) * 20 + 20;
+				heightAttributs = lstAttributs.size() > 3 ? 4 * ESPACE_Y + ECART_BORD : lstAttributs.size() * ESPACE_Y + ECART_BORD;
 
 			if(lstMethodes != null)
-				heightMethodes = (lstMethodes.size()  > 3 ? 4 : lstMethodes.size() ) * 20 + 20;
+				heightMethodes  = lstMethodes.size()  > 3 ? 4 * ESPACE_Y + ECART_BORD : lstMethodes.size()  * ESPACE_Y + ECART_BORD;
 
 			int totalHeight = heightTitre + heightAttributs + heightMethodes;
 
@@ -239,11 +242,11 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			}
 		}
 
-		int espace = 0;
+		int espaceFl = 0;
 		for (Fleche fl : this.lstFleches)
 		{
-			fl.dessiner(g2,espace);
-			espace += PROPORTION;
+			fl.dessiner(g2,espaceFl);
+			espaceFl += ESPACE_Y;
 		}
 
 		/*---------------------------------------------*/
@@ -258,11 +261,10 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			List<Methode>  lstMethodes  = c.getLstMethode();
 
 			int zoom = 2;
-			int tailleZoom = PROPORTION * zoom;
 
-			int heightTitre = 2 * PROPORTION * zoom;
-			int heightAttributs = (lstAttributs.size() > 3 ? 4 : lstAttributs.size()) * tailleZoom + tailleZoom;
-			int heightMethodes  = (lstMethodes.size()  > 3 ? 4 : lstMethodes.size() ) * tailleZoom + tailleZoom;
+			int heightTitre     = !c.getType().equals("class") ? 2 * ECART_BORD * zoom : ECART_BORD * 2 + ESPACE_Y * zoom;
+			int heightAttributs = ECART_BORD * 2 + lstAttributs.size() * ESPACE_Y * zoom;
+			int heightMethodes  = ECART_BORD * 2 + lstMethodes.size()  * ESPACE_Y * zoom;
 			int totalHeight = heightTitre + heightAttributs + heightMethodes;
 
 			//calculer la largeur nécessaire
@@ -460,28 +462,245 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	public void dessinerContenu(CreeClass classe, List<Attribut> lstAttributs, List<Methode> lstMethodes, Graphics2D g2, int posX, int posY, int width, int heightTitre, int heightAttributs, int zoom)
 	{
 		// Texte : nom de la classe (centré)
-		String nomClasse = classe.getNom();
-		int largeurNom = g2.getFontMetrics().stringWidth(nomClasse);
 		String typeClass = classe.getType();
-		int largeurTypeClass = g2.getFontMetrics().stringWidth(typeClass) + 25;
+		String nomClasse = classe.getNom();
+		
+		int largeurNom;
+		int largeurTypeClass;
+		int espaceZoom =  0;
+		int ecartBord  =  0;
 
 		//taille de la police en fonction du zoom
 		if (zoom == 2)
 		{
-			g2.setFont(new Font("Arial", Font.PLAIN, 16));
+			g2.setFont(new Font("Arial", Font.PLAIN, 24));
+			largeurNom       = g2.getFontMetrics().stringWidth(nomClasse);
+			largeurTypeClass = g2.getFontMetrics().stringWidth(typeClass) + 50;
+			espaceZoom = ESPACE_Y   * zoom;
+			ecartBord  = ECART_BORD * zoom;
+			
 		}
 		else
 		{
 			g2.setFont(new Font("Arial", Font.PLAIN, 12));
+			largeurNom       = g2.getFontMetrics().stringWidth(nomClasse);
+			largeurTypeClass = g2.getFontMetrics().stringWidth(typeClass) + 25;
+			espaceZoom = ESPACE_Y  ;
+			ecartBord  = ECART_BORD;
 		}
 
-		g2.drawString(nomClasse, posX + (width - largeurNom) / 2, posY + 25);
+		// Titre -------------------------------------------------------------------------------------------------------------------
+		g2.drawString(nomClasse, posX + (width - largeurNom) / 2, posY + ecartBord);
 
 		if(!typeClass.equals("class"))
-			g2.drawString("<<" + typeClass + ">>", posX + (width - largeurTypeClass) / 2, posY + 40);
+			g2.drawString("<<" + typeClass + ">>", posX + (width - largeurTypeClass) / 2, posY + ecartBord + espaceZoom);
 
+		
+		int maxLargeur = this.largeurMax(classe, lstAttributs, lstMethodes, g2);
+		
 		int cptAttr = 1;
+		// Attributs ---------------------------------------------------------------------------------------------------
+		for(Attribut attr : lstAttributs) 
+		{
+			String symbole        = "";
+			String finale         = "";
+			String typeAttr       = "";
+			String AlligneGauche;
+			String nomAttr;
+			
+			//sort de la boucle si on est au 4eme attribut
+			if (cptAttr >= 4 && zoom == 1)
+			{
+				AlligneGauche = "...";
+				g2.drawString(AlligneGauche, posX + 10, posY + heightTitre + ecartBord + (lstAttributs.indexOf(attr) * espaceZoom));
+				break; // Sortir de la boucle après avoir dessiné "..."
+			}
 
+			switch (attr.getVisibilite())
+			{
+				case "public":    symbole = "+ "; break;
+				case "private":   symbole = "- "; break;
+				case "protected": symbole = "# "; break;
+				default:          symbole = "~ "; break;
+			}
+
+			if(attr.isEstFinal()) 
+			{
+				finale = " <<freeze>>";
+			}
+
+			nomAttr        = attr.getNom();
+			typeAttr       = ": " + attr.getType() + finale;
+			AlligneGauche  = " "  + symbole        + " "    + nomAttr;
+			
+			int xGauche = posX + 10;
+			int yPos = posY + heightTitre + ecartBord + (lstAttributs.indexOf(attr) * espaceZoom);
+			
+			int xType = posX + width - maxLargeur - 10;
+
+			g2.drawString(AlligneGauche, xGauche, yPos);
+			g2.drawString(typeAttr, xType, yPos);
+
+
+			if(attr.isEstStatic()) 
+			{
+				int yUnderline = yPos + 2;
+				g2.setColor(Couleur.GRIS.getColor());
+				g2.drawLine(xGauche, yUnderline, xGauche + g2.getFontMetrics().stringWidth(AlligneGauche), yUnderline);
+				g2.setColor(Couleur.NOIR.getColor());
+			}
+
+			cptAttr++;
+		}
+
+		int cptMeth = 1;
+		// Méthodes -----------------------------------------------------------------------------------------------------
+		int index = 0;
+		for (Methode meth : lstMethodes) 
+		{
+			String symbole = "";
+			String AlligneGauche;
+
+			if (cptMeth >= 4 && zoom == 1)
+			{
+				g2.drawString("...", posX + 10, posY + heightTitre + heightAttributs + ecartBord + (index * espaceZoom));
+			}
+			else 
+			{
+				switch (meth.getVisibilite())
+				{
+					case "public":    symbole = "+ "; break;
+					case "private":   symbole = "- "; break;
+					case "protected": symbole = "# "; break;
+					default:          symbole = "~ "; break;
+				}
+
+				String nomMethode = meth.getNom();
+				String debP = " (";
+
+				List<String[]> params = meth.getLstParametres();
+				String listP = "";
+				if (params != null)
+				{
+					for (int i = 0; i < params.size(); i++)
+					{
+						String[] p = params.get(i);
+						if (i == 2 && zoom == 1 && params.size() >= 3)
+						{
+							listP += "... ";
+							break;
+						}
+						else 
+						{
+							listP += p[1] + " : " + p[0];
+							if (i < params.size() - 1)
+								listP += ",   ";
+						}
+						
+					}
+				}
+
+				String finP = ")";
+				String type = "";
+				if (!classe.getNom().equals(meth.getNom()))
+				{
+					type = " : " + meth.getType();
+				}
+
+				if(type.equals(" : void")){type = "";}
+
+				AlligneGauche = symbole + " " + nomMethode + debP + listP + finP;
+				int xGauche = posX + 10; 
+				int xType = posX + width - maxLargeur - 10;
+
+				int yPos = posY + heightTitre + heightAttributs + ecartBord + (index * espaceZoom);
+
+				g2.drawString(AlligneGauche, xGauche, yPos);
+				g2.drawString(type, xType, yPos);
+
+				if(meth.isEstStatic()) 
+				{
+					int yUnderline = posY + heightTitre + heightAttributs + ecartBord + (lstMethodes.indexOf(meth) * espaceZoom) + 2;
+					g2.setColor(Couleur.GRIS.getColor());
+					g2.drawLine(xGauche, yUnderline, xGauche + g2.getFontMetrics().stringWidth(AlligneGauche), yUnderline);
+					g2.setColor(Couleur.NOIR.getColor());
+				}
+
+				index++;
+			}
+			cptMeth++;
+		}
+	}
+
+	/*--------------------------------------------*/
+	/*               OUTILS                       */
+	/*--------------------------------------------*/
+
+	public int calculerLargeur(CreeClass classe, List<Attribut> lstAttributs, List<Methode> lstMethodes, int zoom)
+	{
+		// Calculer la largeur nécessaire
+		int width = 200;
+		for (Methode meth : lstMethodes) 
+		{
+			String str = "";
+
+			switch (meth.getVisibilite())
+			{
+				case "public":    str += "+ "; break;
+				case "private":   str += "- "; break;
+				case "protected": str += "# "; break;
+				default:          str += "~ "; break;
+			}
+
+			str += meth.getNom() + " (";
+
+			List<String[]> params = meth.getLstParametres();
+			if (params != null && !params.isEmpty())
+			{
+				for (int i = 0; i < params.size(); i++)
+				{
+					String[] p = params.get(i); 
+					str += p[1] + " : " + p[0];
+					str += ",   ";
+					if (i > 2 && zoom == 1)
+					{
+						break;
+					}
+				}
+			}
+
+			str += ")";
+
+			if (!classe.getNom().equals(meth.getNom()))
+			{
+				str += " : " + meth.getType();
+			}
+
+			if(width < str.length() * 6 * zoom)
+			{
+				width = str.length() * 6 * zoom;
+			}
+		}
+
+		// Vérifier aussi la largeur des attributs
+		for (Attribut attr : lstAttributs)
+		{
+			String str = attr.getNom() + " : " + attr.getType();
+			if (attr.isEstFinal())
+			{
+				str += " <<freeze>>";
+			}
+			if (width < str.length() * 8 * zoom)
+			{
+				width = str.length() * 8 * zoom;
+			}
+		}
+
+		return width;
+	}
+
+	public int largeurMax(CreeClass classe, List<Attribut> lstAttributs, List<Methode> lstMethodes,  Graphics2D g2)
+	{
 		// Pre-calculer la largeur maximale pour l'alignement des types d'attributs
 		int maxLargeurType = 0;
 		for (Attribut attr : lstAttributs) 
@@ -519,207 +738,10 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 				maxLargeurType2 = largeurType;
 			}
 		}
-
-		int maxLargeur = Math.max(maxLargeurType,maxLargeurType2);
-
-		// Attributs ---------------------------------------------------------------------------------------------------
-		for(Attribut attr : lstAttributs) 
-		{
-			String symbole        = "";
-			String finale         = "";
-			String typeAttr       = "";
-			String AlligneGauche;
-			String nomAttr;
-			
-			if (cptAttr >= 4 && zoom == 1)
-			{
-				AlligneGauche = "...";
-				g2.drawString(AlligneGauche, posX + 10, posY + heightTitre + PROPORTION + (lstAttributs.indexOf(attr) * PROPORTION));
-				break; // Sortir de la boucle après avoir dessiné "..."
-			}
-			else 
-			{
-				switch (attr.getVisibilite())
-				{
-					case "public":    symbole = "+ "; break;
-					case "private":   symbole = "- "; break;
-					case "protected": symbole = "# "; break;
-					default:          symbole = "~ "; break;
-				}
-
-				if(attr.isEstFinal()) 
-				{
-					finale = " <<freeze>>";
-				}
-
-				nomAttr        = attr.getNom();
-				typeAttr       = ": " + attr.getType() + finale;
-				AlligneGauche  = " "  + symbole        + " "    + nomAttr;
-			}
-			
-			int xGauche = posX + 10;
-			int yPos = posY + heightTitre + PROPORTION + (lstAttributs.indexOf(attr) * PROPORTION);
-			
-			int xType = posX + width - maxLargeur - 10;
-
-			g2.drawString(AlligneGauche, xGauche, yPos);
-			g2.drawString(typeAttr, xType, yPos);
-
-
-			if(attr.isEstStatic()) 
-			{
-				int yUnderline = yPos + 2;
-				g2.setColor(Couleur.GRIS.getColor());
-				g2.drawLine(xGauche, yUnderline, xGauche + g2.getFontMetrics().stringWidth(AlligneGauche), yUnderline);
-				g2.setColor(Couleur.NOIR.getColor());
-			}
-
-			cptAttr++;
-		}
-
-		int cptMeth = 1;
-		// Méthodes -----------------------------------------------------------------------------------------------------
-		int index = 0;
-		for (Methode meth : lstMethodes) 
-		{
-			String symbole = "";
-			String AlligneGauche;
-
-			if (cptMeth >= 4 && zoom == 1)
-			{
-				g2.drawString("...", posX + 10, posY + heightTitre + heightAttributs + PROPORTION + (index * PROPORTION));
-			}
-			else 
-			{
-				switch (meth.getVisibilite())
-				{
-					case "public":    symbole = "+ "; break;
-					case "private":   symbole = "- "; break;
-					case "protected": symbole = "# "; break;
-					default:          symbole = "~ "; break;
-				}
-
-				String nomMethode = meth.getNom();
-				String debP = " (";
-
-				List<String[]> params = meth.getLstParametres();
-				String listP = "";
-				if (params != null)
-				{
-					for (int i = 0; i < params.size() && i <= 2; i++)
-					{
-						String[] p = params.get(i);
-						if (i == 2 && zoom == 1 && params.size() >= 3)
-						{
-							listP += "... ";
-							break;
-						}
-						else 
-						{
-							listP += p[1] + " : " + p[0];
-							if (i < params.size() - 1)
-								listP += ",   ";
-						}
-						
-					}
-				}
-
-				String finP = ")";
-				String type = "";
-				if (!classe.getNom().equals(meth.getNom()))
-				{
-					type = " : " + meth.getType();
-				}
-
-				if(type.equals(" : void")){type = "";}
-
-				AlligneGauche = symbole + " " + nomMethode + debP + listP + finP;
-				int xGauche = posX + 10; 
-				int xType = posX + width - maxLargeur - 10;
-
-				int yPos = posY + heightTitre + heightAttributs + PROPORTION + (index * PROPORTION);
-
-				g2.drawString(AlligneGauche, xGauche, yPos);
-				g2.drawString(type, xType, yPos);
-
-				if(meth.isEstStatic()) 
-				{
-					int yUnderline = posY + heightTitre + heightAttributs + PROPORTION + (lstMethodes.indexOf(meth) * PROPORTION) + 2;
-					g2.setColor(Couleur.GRIS.getColor());
-					g2.drawLine(xGauche, yUnderline, xGauche + g2.getFontMetrics().stringWidth(AlligneGauche), yUnderline);
-					g2.setColor(Couleur.NOIR.getColor());
-				}
-
-				index++;
-			}
-			cptMeth++;
-		}
+		
+		return Math.max(maxLargeurType,maxLargeurType2);
 	}
 
-
-	/*--------------------------------------------*/
-	/*               OUTILS                       */
-	/*--------------------------------------------*/
-
-	public int calculerLargeur(CreeClass classe, List<Attribut> lstAttributs, List<Methode> lstMethodes, int zoom)
-	{
-		// Calculer la largeur nécessaire
-		int width = PROPORTION * 10 * zoom;
-		for (Methode meth : lstMethodes) 
-		{
-			String str = "";
-
-			switch (meth.getVisibilite())
-			{
-				case "public":    str += "+ "; break;
-				case "private":   str += "- "; break;
-				case "protected": str += "# "; break;
-				default:          str += "~ "; break;
-			}
-
-			str += meth.getNom() + " (";
-
-			List<String[]> params = meth.getLstParametres();
-			if (params != null && !params.isEmpty())
-			for (int i = 0; i < params.size() && i <= 2; i++)
-			{
-				String[] p = params.get(i); 
-				str += p[1] + " : " + p[0];
-				if (i < params.size() - 1  && i < 2)
-				{
-					str += ",   ";
-				}
-			}
-
-			str += ")";
-
-			if (!classe.getNom().equals(meth.getNom()))
-			{
-				str += " : " + meth.getType();
-			}
-
-			if(width < str.length() * 6 * zoom)
-			{
-				width = str.length() * 6 * zoom;
-			}
-		}
-
-		// Vérifier aussi la largeur des attributs
-		for (Attribut attr : lstAttributs)
-		{
-			String str = attr.getNom() + " : " + attr.getType();
-			if (attr.isEstFinal())
-			{
-				str += " <<freeze>>";
-			}
-			if (width < str.length() * 8 * zoom)
-			{
-				width = str.length() * 8 * zoom;
-			}
-		}
-
-		return width;
-	}
 
 	//selectionner une class
 	public void selectionner(int index)

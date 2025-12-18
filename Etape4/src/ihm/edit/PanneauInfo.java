@@ -378,6 +378,22 @@ public class PanneauInfo extends JPanel implements ActionListener
 							return;
 						}
 
+						if (!pair.get(0).contains("..") || !pair.get(1).contains(".."))
+						{
+							JOptionPane.showMessageDialog
+							(
+								this,
+								"Erreur : Au moins une multiplicité est invalide.\n" +
+								"Format attendu : '0..*', '1..*', '1..1', etc.\n" +
+								"Valeurs actuelles : " + pair.get(0) + " et " + pair.get(1),
+								"Format de multiplicité invalide",
+								JOptionPane.ERROR_MESSAGE
+							);
+
+							this.majInfoClasse(this.nomClass);
+							return;
+						}
+
 
 						listePourCetteCle.add(pair);
 					}
