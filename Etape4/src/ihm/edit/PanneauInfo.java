@@ -32,7 +32,7 @@ public class PanneauInfo extends JPanel implements ActionListener
     private ArrayList<Integer> listeIndexDebut;
     private ArrayList<Integer> listeNbPaires;
     
-    private JButton btnModif;
+    //private JButton btnModif;
     private JButton btnValid;
     private Controleur ctrl;
 
@@ -64,7 +64,7 @@ public class PanneauInfo extends JPanel implements ActionListener
      */
     private void stylerBouton(JButton bouton, boolean estPrimaire)
     {
-        bouton.setFont(FONT_LABEL);
+        bouton.setFont(new Font("Segoe UI", Font.BOLD, 14));
         bouton.setFocusPainted(false);
         bouton.setBorderPainted(false);
         bouton.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -85,29 +85,6 @@ public class PanneauInfo extends JPanel implements ActionListener
             BorderFactory.createLineBorder(Couleur.COULEUR_BORDURE.getColor(), 1, true),
             new EmptyBorder(5, 15, 5, 15)
         ));
-        
-        // Effet hover
-        bouton.addMouseListener(new java.awt.event.MouseAdapter()
-        {
-            public void mouseEntered(java.awt.event.MouseEvent evt)
-            {
-                if(bouton.isEnabled())
-                {
-                    bouton.setBackground(Couleur.COULEUR_HOVER.getColor());
-                }
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt)
-            {
-                if(estPrimaire)
-                {
-                    bouton.setBackground(Couleur.VERT.getColor());
-                } 
-                else
-                {
-                    bouton.setBackground(Couleur.COULEUR_ACCENT.getColor());
-                }
-            }
-        });
     }
 
     /**
@@ -115,35 +92,19 @@ public class PanneauInfo extends JPanel implements ActionListener
      */
     private void stylerTextField(JTextField textField)
     {
-        textField.setFont(FONT_CHAMP);
+        textField.setFont(new Font("Segoe UI", Font.BOLD, 20));
         textField.setHorizontalAlignment(JTextField.CENTER);
-        textField.setBackground(Couleur.COULEUR_LISTE.getColor());
-        textField.setForeground(Couleur.COULEUR_TEXTE.getColor());
-        textField.setCaretColor(Couleur.COULEUR_TEXTE.getColor());
-        textField.setBorder(BorderFactory.createCompoundBorder(
+        textField.setForeground(Couleur.VERT.getColor());
+		textField.setDisabledTextColor(Couleur.NOIR.getColor());
+
+		textField.setCaretColor(Couleur.COULEUR_TEXTE.getColor());
+        
+        textField.setBorder(BorderFactory.createCompoundBorder
+		(
             BorderFactory.createLineBorder(Couleur.COULEUR_BORDURE.getColor(), 1, true),
             new EmptyBorder(5, 10, 5, 10)
         ));
         textField.setPreferredSize(new Dimension(150, 32));
-        
-        // Effet focus
-        textField.addFocusListener(new java.awt.event.FocusAdapter()
-        {
-            public void focusGained(java.awt.event.FocusEvent evt)
-            {
-                textField.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(Couleur.COULEUR_ACCENT.getColor(), 2, true),
-                    new EmptyBorder(4, 9, 4, 9)
-                ));
-            }
-            public void focusLost(java.awt.event.FocusEvent evt)
-            {
-                textField.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(Couleur.COULEUR_BORDURE.getColor(), 1, true),
-                    new EmptyBorder(5, 10, 5, 10)
-                ));
-            }
-        });
     }
 
     /**
@@ -151,7 +112,7 @@ public class PanneauInfo extends JPanel implements ActionListener
      */
     private void stylerLabel(JLabel label)
     {
-        label.setFont(FONT_TITRE);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 14));
         label.setForeground(Couleur.COULEUR_TEXTE.getColor());
         label.setBorder(new EmptyBorder(5, 0, 8, 0));
     }
@@ -161,7 +122,7 @@ public class PanneauInfo extends JPanel implements ActionListener
      */
     private void stylerLabelDescription(JLabel label)
     {
-        label.setFont(FONT_LABEL);
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         label.setForeground(Couleur.COULEUR_TEXTE_SECONDAIRE.getColor());
     }
 
@@ -294,28 +255,29 @@ public class PanneauInfo extends JPanel implements ActionListener
 				for(int cpt2 = 0; cpt2 < this.tabPanel.length; cpt2++) 
 				{
 					this.tabPanel[cpt2] = new JPanel(new BorderLayout(10, 8));
-					stylerPanelContenu(this.tabPanel[cpt2]);
+					this.stylerPanelContenu(this.tabPanel[cpt2]);
 				}
 
 				for(int cpt1 = 0; cpt1 < this.tabTxtMult.length; cpt1++) 
 				{
 					this.tabTxtMult[cpt1] = new JTextField();
 					this.tabTxtMult[cpt1].setText(lstInfoTotale.get(cpt1));
-					// Les champs sont activés par défaut si des données existent
-					this.tabTxtMult[cpt1].setEnabled(false);
-					stylerTextField(this.tabTxtMult[cpt1]);
+					if(cpt1 %2 == 0)
+						this.tabTxtMult[cpt1].setEnabled(false);
+					this.stylerTextField(this.tabTxtMult[cpt1]);
 				}
 
 				for(int cpt2 = 0; cpt2 < this.tabTitre.length; cpt2++) 
 				{
 					this.tabTitre[cpt2] = new JLabel(lstTitres.get(cpt2));
-					stylerLabel(this.tabTitre[cpt2]);
+					this.stylerLabel(this.tabTitre[cpt2]);
+					this.stylerLabelDescription(this.tabTitre[cpt2]);
 				}
             }
 
-            this.btnModif = new JButton("Modifier");
+           // this.btnModif = new JButton("Modifier");
             this.btnValid = new JButton("Valider");
-            stylerBouton(this.btnModif, false);
+            //stylerBouton(this.btnModif, false);
             stylerBouton(this.btnValid, true);
         } 
         else 
@@ -328,9 +290,9 @@ public class PanneauInfo extends JPanel implements ActionListener
             this.listeCles.clear();
             this.listeIndexDebut.clear();
             this.listeNbPaires.clear();
-            this.btnModif = new JButton("Modifier");
+            //this.btnModif = new JButton("Modifier");
             this.btnValid = new JButton("Valider");
-            stylerBouton(this.btnModif, false);
+            //stylerBouton(this.btnModif, false);
             stylerBouton(this.btnValid, true);
             this.nomClass = null;
 		}
@@ -352,11 +314,14 @@ public class PanneauInfo extends JPanel implements ActionListener
                 this.tabPanel[cpt].add(panelChamps);
                 this.panelGrid.add(this.tabPanel[cpt]);
             }
+			if(this.tabPanel.length != 0 )
+			{
+				JPanel panelBtn = new JPanel();
+				//panelBtn.add(this.btnModif);
+				panelBtn.add(this.btnValid);
+				this.panelGrid.add(panelBtn);
+			}
 
-            JPanel panelBtn = new JPanel();
-            panelBtn.add(this.btnModif);
-            panelBtn.add(this.btnValid);
-            this.panelGrid.add(panelBtn);
         }
 
         this.add(this.panelGrid);
@@ -371,7 +336,7 @@ public class PanneauInfo extends JPanel implements ActionListener
                 this.tabTxtMult[cpt1].addActionListener(this);
             }
 
-            this.btnModif.addActionListener(this);
+            //this.btnModif.addActionListener(this);
             this.btnValid.addActionListener(this);
         }
     }
@@ -432,13 +397,13 @@ public class PanneauInfo extends JPanel implements ActionListener
             }
         }
 
-        if(e.getSource() == this.btnModif) 
+        /*if(e.getSource() == this.btnModif) 
         {
             for(int cpt1 = 0; cpt1 < this.tabTxtMult.length; cpt1++)
             {
                 this.tabTxtMult[cpt1].setEnabled(true);
             }
-        }
+        }*/
     }
 
     /**
@@ -482,25 +447,23 @@ public class PanneauInfo extends JPanel implements ActionListener
             
             // Récupérer la multiplicité de la classe cible
             Multiplicite multCible = classeCible.getMultiplicite();
+
             if(multCible == null) continue;
-            
-            // Vérifier si la classe cible a une relation vers la classe source
+
             HashMap<CreeClass, List<List<String>>> mapCible = multCible.getMapMultiplicites();
             
             if(mapCible.containsKey(classeSource))
             {
-                // Vérifier si les multiplicités ont réellement changé pour éviter les boucles
                 List<List<String>> multiplicitesActuelles = mapCible.get(classeSource);
                 
-                // Créer la liste inversée des multiplicités
                 List<List<String>> multiplicitesInversees = new ArrayList<>();
                 
                 for(List<String> paire : multiplicites)
                 {
                     // Inverser l'ordre : [source, cible] devient [cible, source]
                     List<String> paireInversee = new ArrayList<>();
-                    paireInversee.add(paire.get(1)); // Ancienne cible devient source
-                    paireInversee.add(paire.get(0)); // Ancienne source devient cible
+                    paireInversee.add(paire.get(1));
+                    paireInversee.add(paire.get(0)); 
                     multiplicitesInversees.add(paireInversee);
                 }
                 

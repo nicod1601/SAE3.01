@@ -298,6 +298,8 @@ public class PanneauMenu extends JPanel implements ActionListener
 			this.frameAppli.viderListe();
 			this.frameAppli.viderLstClass();
 			this.afficherMessageSucces("Liste vidée avec succès", "Liste vidée");
+			this.frameEdit.clearInfo();
+			this.frameEdit.dispose();
 		}
 	}
 
