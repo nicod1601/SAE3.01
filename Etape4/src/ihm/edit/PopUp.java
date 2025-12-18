@@ -4,10 +4,15 @@ import src.Controleur;
 
 import javax.swing.JOptionPane;
 
+
 public class PopUp
 {
-	public PopUp(Controlleur ctrl)
+
+	private Controleur ctrl;
+
+	public PopUp(Controleur ctrl)
 	{
+		this.ctrl = ctrl;
 		String role = JOptionPane.showInputDialog(
 				null,
 				"Entrez votre role :",
@@ -17,7 +22,7 @@ public class PopUp
 
 		if (role != null && !role.isEmpty())
 		{
-			ctrl.setRoleUser(role);
+			this.ctrl.setRole(null, role);
 			JOptionPane.showMessageDialog(null,
 					"Vous avez saisi : " + role);
 		}
@@ -26,10 +31,5 @@ public class PopUp
 			JOptionPane.showMessageDialog(null,
 					"Aucune saisie");
 		}
-	}
-	public static void main(String[] args)
-	{
-		PopUp pp = new PopUp();
-
 	}
 }
