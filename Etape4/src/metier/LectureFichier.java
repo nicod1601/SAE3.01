@@ -40,9 +40,9 @@ public class LectureFichier
 	private LectureFichier(GererData gererDatan,String data, int dummy)
 	{
 		if (dummy == 0)
-			this.lstMetiersXML = gererDatan.chargerBinaire();
+			this.lstMetiersXML = null;
 		else
-			this.lstMetiersXML = gererDatan.importerDepuisUML();
+			gererDatan.chargerUML();
 	}
 	/**
 	 * Création d'un nouvel objet CreeClass.

@@ -159,7 +159,7 @@ public class PanneauMenu extends JPanel implements ActionListener
 			case "Modif Fichier":
 				this.ouvrirFrameEdit();
 				break;
-			case "Sauvegarde XML":
+			case "Sauvegarder":
 				this.ctrl.sauvegarderXML(this.ctrl.getLstClass());
 				break;
 			default:

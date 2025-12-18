@@ -172,10 +172,13 @@ public class Controleur
 	 * 
 	 * @param lstMetiers La liste des classes à sauvegarder
 	 */
-	public void sauvegarderXML(List<CreeClass> lstMetiers)
+	public void sauvegarderXML(List<CreeClass> newLstMetiers)
 	{
 		GererData gererData = new GererData();
-		gererData.sauvegarderProjet(this.lstMetiers);
+		for(CreeClass c : newLstMetiers )
+			System.out.println(c.getNom());
+
+		gererData.sauvegarderUML(newLstMetiers);
 	}
 
 	public Fleche ajouterFleche(CreeClass classeDepart, CreeClass classeArrivee, String typeLien, String roleDepart, String roleArrivee, boolean isNavigable)
