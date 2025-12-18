@@ -5,9 +5,9 @@ Classe Disque type=class abstract=false posX=50 posY=50 largeur=336 hauteur=240
 		Attribut private static final int MAXLENGTH=10 
 		Attribut private final String NOM="NOM allo" 
 		Attribut private String pkTuTaffiche
-		Attribut:private Point[] tabPoints
-		Attribut:private Point reponsable
-		Attribut:private Point centre
+		Attribut: private Point[] tabPoints
+		Attribut: private Point reponsable
+		Attribut: private Point centre
 		Methode public null Disque(Point centre, double rayon)
 		Methode public null Disque(Point cente)
 		Methode public double calculerAire()
@@ -38,13 +38,13 @@ Classe Musique type=record abstract=false posX=686 posY=50 largeur=342 hauteur=2
 		Methode public int plusLong(int plusLong)
 		Methode public double calculerSurface()
 
-Classe Point type=class abstract=false posX=50 posY=340 largeur=264 hauteur=220
+Classe Point type=class abstract=false posX=1078 posY=50 largeur=264 hauteur=220
 	Extends aucune
 	Implements aucune
 		Attribut private String nom
 		Attribut private int x
 		Attribut private int y
-		Attribut:private Disque[] lstDisqueAssocies
+		Attribut: private Disque[] lstDisqueAssocies
 		Methode public null Point(String nom, int x, int y)
 		Methode public String getNom()
 		Methode public void setNom(String nom)
@@ -53,7 +53,7 @@ Classe Point type=class abstract=false posX=50 posY=340 largeur=264 hauteur=220
 		Methode public int getY()
 		Methode public void setY(int y)
 
-Classe Rond type=class abstract=false posX=364 posY=340 largeur=200 hauteur=140
+Classe Rond type=class abstract=false posX=1392 posY=50 largeur=200 hauteur=140
 	Extends aucune
 	Implements aucune
 		Attribut private double rayon

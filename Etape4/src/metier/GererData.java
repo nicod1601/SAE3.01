@@ -259,7 +259,7 @@ public class GererData
 				// Attributs de classe
 				for (Attribut a : c.getLstClassAttribut())
 				{
-					writer.print("\t\tAttribut:" + a.getVisibilite() + " ");
+					writer.print("\t\tAttribut: " + a.getVisibilite() + " ");
 					if (a.isEstStatic()) writer.print("static ");
 					if (a.isEstFinal()) writer.print("final ");
 					writer.print(a.getType() + " " + a.getNom());
