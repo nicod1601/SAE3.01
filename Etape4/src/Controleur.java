@@ -248,13 +248,10 @@ public class Controleur
 	 */
 	public void setHashMap(CreeClass c, HashMap<CreeClass, List<List<String>>> nouvelleMap)
 	{
-		System.out.println("Controleur");
-
 		for(CreeClass cl : this.lstMetiers)
 		{
 			if(c.getNom().equals(cl.getNom()))
 			{
-				System.out.println("j'en vois à la multi");
 				c.getMultiplicite().setHashMap(nouvelleMap);
 			}
 		}
