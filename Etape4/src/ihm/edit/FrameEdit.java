@@ -15,7 +15,7 @@ public class FrameEdit extends JFrame
 	{
 		this.setTitle("Edit du graph UML");
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		this.setSize(600, 400);
+		this.setSize(700, 600);
 		this.setLocationRelativeTo(null);
 		this.setLayout(new BorderLayout());
 

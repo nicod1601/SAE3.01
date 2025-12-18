@@ -109,7 +109,7 @@ public class PanneauInfo extends JPanel implements ActionListener
 	private void stylerLabel(JLabel label)
 	{
 		label.setFont(new Font("Segoe UI", Font.BOLD, 14));
-		label.setForeground(Couleur.COULEUR_TEXTE.getColor());
+		label.setForeground(Couleur.ROUGE.getColor());
 		label.setBorder(new EmptyBorder(5, 0, 8, 0));
 	}
 
@@ -301,7 +301,7 @@ public class PanneauInfo extends JPanel implements ActionListener
 		{
 			for(int cpt =0; cpt < this.tabPanel.length; cpt++)
 			{
-				this.tabPanel[cpt].add(this.tabTitre[cpt]);
+				this.tabPanel[cpt].add(this.tabTitre[cpt], BorderLayout.NORTH);
 				
 				JPanel panelChamps = new JPanel(new GridLayout(1, 2, 5, 0));
 				panelChamps.add(this.tabTxtMult[cpt * 2]);     
