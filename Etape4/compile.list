@@ -18,5 +18,6 @@ src/ihm/PanneauPrincipal.java
 src/ihm/edit/FrameEdit.java
 src/ihm/edit/PanneauChoix.java
 src/ihm/edit/PanneauInfo.java
+src/ihm/edit/PopUp.java
 
 src/Controleur.java
