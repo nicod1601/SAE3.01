@@ -136,6 +136,10 @@ public class LectureFichier
 					lineSc.close();
 					continue;
 				}
+				if (line.contains("enum"))
+				{
+					break; //On ne gère pas les enums pour l'instant
+				}
 
 				// Méthode / Constructeur / Attribut / Abstract
 				if ((line.contains("private") || line.contains("protected") || line.contains("public")
