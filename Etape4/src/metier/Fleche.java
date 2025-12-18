@@ -23,7 +23,7 @@ public class Fleche
 	private int posXFin;
 	private int posYFin;
 	
-	public Fleche(CreeClass source, CreeClass cible, String typeLien, String multSrc, String multCible, boolean bidir, String role)
+	public Fleche(CreeClass source, CreeClass cible, String typeLien, String multSrc, String multCible, boolean bidir)
 	{
 		this.source             = source;
 		this.cible              = cible;
@@ -31,16 +31,11 @@ public class Fleche
 		this.multipliciteSource = multSrc;
 		this.multipliciteCible  = multCible;
 		this.bidirectionnel     = bidir;
-		this.role               = role;
 		this.posXFin            = 0;
 		this.posYFin            = 0;
-	}
+		this.role               = "";
 
-	public Fleche(CreeClass source, CreeClass cible, String typeLien, String multSrc, String multCible, boolean bidir)
-	{
-		this(source,cible,typeLien,multSrc,multCible,bidir,"");
 	}
-
 	
 	// Getters
 	public int getPosXFin()      { return posXFin;  }
@@ -343,7 +338,7 @@ public class Fleche
 					}
 				}
 				
-				Fleche fleche = new Fleche(cl1, cl2, "association", multSrc, multCible, bidir, role);
+				Fleche fleche = new Fleche(cl1, cl2, "association", multSrc, multCible, bidir);
 				fleche.dessiner(g2, decalage);
 				lstFleches.add(fleche);
 			}

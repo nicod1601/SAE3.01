@@ -222,11 +222,9 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 
 							if (!multi.get(0).equals("0..*") && IhmCui.verfiDoublon(lstClassMultiC, lstClassMultiClef, associations))
 							{
-									String role = c.getLstClassAttribut().get(nbFleches++).getNom();
-									
 									boolean estBidirectionnel = multi.get(0).equals("1..*") && multi.get(1).equals("1..*") ? true : false;
 
-									this.lstFleches.add(new Fleche (c,c2,"association",multi.get(0),multi.get(1), estBidirectionnel, role));
+									this.lstFleches.add(new Fleche (c,c2,"association",multi.get(0),multi.get(1), estBidirectionnel));
 
 									List<List<String>> classMuLti = new ArrayList<List<String>>();
 
