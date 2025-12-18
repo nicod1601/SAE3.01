@@ -322,10 +322,10 @@ public class GererData
 		// Enlever les crochets
 		ligne = ligne.substring(1, ligne.length() - 1);
 		
-		String[] proprietes = ligne.split(";");
+		String[] proprietes = ligne.split(";"); //ATTENTION
 		for (String prop : proprietes)
 		{
-			String[] keyValue = prop.split("=", 2);
+			String[] keyValue = prop.split("=", 2);//ATTENTION
 			if (keyValue.length == 2)
 			{
 				String key = keyValue[0].trim();
@@ -358,7 +358,7 @@ public class GererData
 					case "interfaces":
 						if (!value.isEmpty())
 						{
-							String[] interfaces = value.split(",");
+							String[] interfaces = value.split(",");//ATTENTION
 							for (String inter : interfaces)
 							{
 								if (!inter.trim().isEmpty())
@@ -377,7 +377,7 @@ public class GererData
 		try
 		{
 			// Séparer en mots
-			String[] mots = ligne.split("\\s+");
+			String[] mots = ligne.split("\\s+");//ATTENTION
 			if (mots.length < 3)
 			{
 				return null;
@@ -473,7 +473,7 @@ public class GererData
 			String paramsStr = ligne.substring(parenOuvrante + 1, parenFermante).trim();
 			
 			// Parser avant parenthèses
-			String[] motsAvant = avantParen.split("\\s+");
+			String[] motsAvant = avantParen.split("\\s+");//ATTENTION
 			if (motsAvant.length < 2)
 			{
 				return null;
@@ -522,13 +522,13 @@ public class GererData
 			List<String[]> lstParametres = new ArrayList<>();
 			if (!paramsStr.isEmpty())
 			{
-				String[] params = paramsStr.split(",");
+				String[] params = paramsStr.split(",");//ATTENTION
 				for (String param : params)
 				{
 					param = param.trim();
 					if (!param.isEmpty())
 					{
-						String[] parts = param.split("\\s+");
+						String[] parts = param.split("\\s+");//ATTENTION
 						if (parts.length >= 2)
 						{
 							lstParametres.add(new String[]{parts[0], parts[1]});

@@ -766,16 +766,21 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		else
 		{
 			CreeClass nouvelleClasse = this.ctrl.CreerClass(nomFichier);
-			
-			for (CreeClass classe : this.lstClass)
+			if(nouvelleClasse == null)
 			{
-				if (classe.getNom().equals(nouvelleClasse.getNom()))
-				{
-					return;
-				}
+				this.lstClass = this.ctrl.getLstClass();
 			}
-
-			this.lstClass.add(nouvelleClasse);
+			else
+			{
+				for (CreeClass classe : this.lstClass)
+				{
+					if (classe.getNom().equals(nouvelleClasse.getNom()))
+					{
+						return;
+					}
+				}
+				this.lstClass.add(nouvelleClasse);
+			}
 		}
 		this.repaint();
 	}
