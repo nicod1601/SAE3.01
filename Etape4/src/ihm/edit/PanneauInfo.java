@@ -458,9 +458,7 @@ public class PanneauInfo extends JPanel implements ActionListener
 					String multiSource = this.tabTxtMult[indexSource].getText().trim();
 					String multiCible  = this.tabTxtMult[indexCible].getText().trim();
 
-					this.pop.getFleche(cpt, multiSource , multiCible);
-
-					
+					//this.pop.getFleche(cpt, multiSource , multiCible);
 
 				}
 			}

@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
@@ -20,12 +21,13 @@ import src.metier.CreeClass;
 import src.metier.Fleche;
 import src.metier.Methode;
 import src.metier.Multiplicite;
+import src.ihm.edit.PopUp;
 
 public class PanneauPrincipal extends JPanel implements MouseListener, MouseMotionListener
 {
-	 static final int ECART_BORD = 20;
-	 static final int ESPACE_Y   = 15;
-	 static final int ESPACE_FL  = 25;
+	static final int ECART_BORD = 20;
+	static final int ESPACE_Y   = 15;
+	static final int ESPACE_FL  = 25;
 	
 	private Controleur ctrl;
 	private FrameAppli frame;
@@ -35,6 +37,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	private int sourisX;
 	private int sourisY;
 	
+	private PopUp popup;
 	
 	private double offsetX;
 	private double offsetY;
@@ -45,6 +48,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	private List<CreeClass> lstClass;
 	private List<Fleche> lstFleches;
 	private List<Integer[]> lstCordFleche;
+	private Map<Integer, String> lstRole;
 	
 	// Controleur
 	public PanneauPrincipal(Controleur ctrl, FrameAppli frame) 
@@ -53,7 +57,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		this.frame = frame;
 
 		this.indexSelectionner = -1;
-		//this.indexFlecheSelec = -1;
+		this.indexFlecheSelec = -1;
 		this.sourisX = 0;
 		this.sourisY = 0;
 
@@ -66,6 +70,9 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		this.lstClass = new ArrayList<>();
 		this.lstFleches    = new ArrayList<>();
 		this.lstCordFleche = new ArrayList<>();
+		this.lstRole = new HashMap<Integer, String>();
+
+		this.popup = new PopUp(this.ctrl);
 
 		this.setLayout(new BorderLayout());
 		this.setBackground(Couleur.BLANC.getColor());
@@ -240,10 +247,30 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			}
 		}
 
+		if(!this.lstRole.isEmpty())
+		{
+			for (Fleche fl : this.lstFleches)
+			{
+				for (Map.Entry<Integer, String> entry : this.lstRole.entrySet())
+				{
+					Integer id = entry.getKey();
+					String role = entry.getValue();
+
+					this.lstFleches.get(id).setRole(role);
+				}
+			}
+		}
+
 		int espaceFl = 0;
 		for (Fleche fl : this.lstFleches)
 		{
-			fl.dessiner(g2,espaceFl);
+			fl.dessiner(g2, espaceFl);
+			
+			Integer[] coords = new Integer[2];
+			coords[0] = fl.getPosXFin();
+			coords[1] = fl.getPosYFin();
+			this.lstCordFleche.add(coords);
+			
 			espaceFl += ESPACE_Y;
 		}
 
@@ -291,7 +318,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		double realX = (e.getX() - offsetX);
 		double realY = (e.getY() - offsetY);
 
-		int tolerance = 5;
+		int tolerance = 10;
 
 		for(int cpt = 0; cpt < this.lstCordFleche.size(); cpt++) 
 		{
@@ -299,16 +326,39 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			
 			int x = tabInfo[0];
 			int y = tabInfo[1];
-			
-			// Calcul de la distance entre le clic et la pointe de la flèche
+
 			double distance = Math.sqrt(Math.pow(realX - x, 2) + Math.pow(realY - y, 2));
 			
 			if (distance <= tolerance)
 			{
 				this.indexFlecheSelec = cpt;
-				return;
+				System.out.println(">>> FLÈCHE DÉTECTÉE ! <<<");
+				
+				if (e.getClickCount() == 2)
+				{
+					System.out.println(">>> DOUBLE-CLIC DÉTECTÉ ! <<<");
+					if (cpt >= 0 && cpt < this.lstFleches.size())
+					{
+						Fleche fleche = this.lstFleches.get(cpt);
+						System.out.println(fleche);
+
+						this.popup.setIndexFleche(this.indexFlecheSelec);
+
+						
+						// Afficher une boîte de dialogue
+						/*JOptionPane.showMessageDialog(this, 
+							"Id : " + this.indexFlecheSelec + "\n" +
+							"De : " + fleche.getSource().getNom() + "\n" +
+							"Vers : " + fleche.getCible().getNom(), 
+							"Info Flèche",
+							JOptionPane.INFORMATION_MESSAGE);*/
+					}
+					return;
+				}
 			}
 		}
+
+
 
 		for(int cpt = 0; cpt < this.lstClass.size(); cpt++)
 		{
@@ -332,6 +382,8 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		}
 		this.repaint();
 	}
+
+
 	public void mousePressed(MouseEvent e)
 	{
 		this.inClass = false;
@@ -821,4 +873,11 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 	{
 		this.repaint();
 	}
+
+	public void setRole(int id, String role)
+	{
+		this.lstRole.put(id, role);
+		
+	}
+
 }

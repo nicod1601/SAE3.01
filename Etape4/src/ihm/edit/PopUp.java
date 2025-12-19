@@ -2,7 +2,6 @@ package src.ihm.edit;
 
 import javax.swing.JOptionPane;
 import src.Controleur;
-import src.metier.Fleche;
 
 
 public class PopUp
@@ -10,19 +9,19 @@ public class PopUp
 
 	private Controleur ctrl;
 
-	private Fleche fleche;
+	private Integer id;
 	private String role;
 
 	public PopUp(Controleur ctrl)
 	{
 		this.ctrl = ctrl;
 		this.role = null;
-		this.fleche = null;
+		this.id  = null;
 	}
 
 	public void afficher()
 	{
-		if(this.fleche != null)
+		if(this.id != null)
 		{
 			this.role = JOptionPane.showInputDialog
 			(
@@ -34,7 +33,7 @@ public class PopUp
 
 			if (this.role != null && !this.role.isEmpty())
 			{
-				this.ctrl.setRole(this.fleche, this.role);
+				this.ctrl.setRole(this.id, this.role);
 				JOptionPane.showMessageDialog(null,
 						"Vous avez saisi : " + this.role);
 			}
@@ -46,7 +45,7 @@ public class PopUp
 		}
 	}
 
-	public void getFleche(int id, String source, String cible)
+	/*public void getFleche(int id, String source, String cible)
 	{
 		System.out.println("flèche recherche");
 
@@ -56,7 +55,11 @@ public class PopUp
 			System.out.println("flèche trouver      " + this.fleche);
 			
 		this.afficher();
+	}*/
 
-		
+	public void setIndexFleche(int index)
+	{
+		this.id = index;
+		this.afficher();
 	}
 }

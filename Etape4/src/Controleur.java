@@ -277,6 +277,11 @@ public class Controleur
 		return null;
 	}
 
+	public Fleche getIndexFleche(int index)
+	{
+		return this.lstFleches.get(index);
+	}
+
 	//╔════════════════════════╗*/
 	/*║       Setters          ║*/
 	/*╚════════════════════════╝*/
@@ -300,9 +305,9 @@ public class Controleur
 		this.majIHM();
 	}
 
-	public void setRole(Fleche f ,String role)
+	public void setRole(int id ,String role)
 	{
-		f.setRole(role);
+		this.frame.setRole(id,role);
 		this.majIHM();
 	}
 
@@ -311,7 +316,6 @@ public class Controleur
 		this.lstFleches = lst;
 	}
 
-	
 
 	/*╔════════════════════════╗*/
 	/*║          Main          ║*/

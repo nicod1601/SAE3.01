@@ -70,9 +70,9 @@ public class PanneauMenu extends JPanel implements ActionListener
 		this.editMenu.add(new JMenuItem("📄 Modif Fichier"));
 		this.editMenu.add(new JMenuItem("💾 Sauvegarder"));
 
-		this.menuBar.add(fileMenu);
-		this.menuBar.add(editMenu);
-		this.menuBar.add(quitter);
+		this.menuBar.add(this.fileMenu);
+		this.menuBar.add(this.editMenu);
+		this.menuBar.add(this.quitter);
 	}
 
 	private void appliquerStyle()

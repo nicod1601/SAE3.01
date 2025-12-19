@@ -1,6 +1,5 @@
 package src.ihm;
 
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -56,6 +55,11 @@ public class FrameAppli extends JFrame
 		this.add(this.panneauMenu, BorderLayout.NORTH);
 
 		this.setVisible(true);
+	}
+
+	public void setRole(int id, String role)
+	{
+		this.panneauPrincipal.setRole(id, role);
 	}
 
 	public int largeurTotal()
