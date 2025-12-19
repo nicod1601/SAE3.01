@@ -863,6 +863,7 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		this.lstFleches.clear();
 		this.lstCordFleche.clear();
 		this.indexFlecheSelec = -1;
+		this.lstRole.clear();
 		this.repaint();
 	}
 
