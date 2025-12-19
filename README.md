@@ -6,7 +6,7 @@ En d'autres termes de générer des Diagrammes de classes respectant le formalis
 
 ##  Équipe 3 : Développeurs : 
 
-- Prévost Donovan
+- Donovan Prévost
 - Paul    Gricourt
 - Nicolas Delpech
 - William Millereux Bienvault
@@ -48,13 +48,13 @@ Etape4/
 
 ### Windows
 ```bash
-cd etape4
+cd Etape7
 Run.bat
 ```
 
 ### Linux
 ```bash
-cd etape4
+cd Etape7
 sed -i 's/\r$//' Run.sh
 chmod +x Run.sh
 ./Run.sh
@@ -63,7 +63,7 @@ chmod +x Run.sh
 ## Compilation manuelle
 
 ```bash
-cd etape4
+cd Etape7
 javac @compile.list -d class
 java -cp class src.Controleur
 ```
