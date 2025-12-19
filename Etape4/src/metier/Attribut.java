@@ -142,5 +142,25 @@ public class Attribut implements Serializable
 	{
 		return this.propriete;
 	}
+	public void setVisibilite(String visibilite) {
+		this.visibilite = visibilite;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+	public void setEstStatic(boolean estStatic) {
+		this.estStatic = estStatic;
+	}
+	public void setPropriete(String propriete) {
+		this.propriete = propriete;
+	}
+	public void setValeurFinal(String valeurFinal) {
+		this.valeurFinal = valeurFinal;
+	}
+
+	
 
 }

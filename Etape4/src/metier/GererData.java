@@ -166,7 +166,7 @@ public class GererData
 					paramsStr = paramsStr.trim();
 					
 					// Enlever les parenthèses
-					if(paramsStr.length() > 0)
+					if(paramsStr.length() > 1)
 						paramsStr = paramsStr.substring(1, paramsStr.length() - 1);
 					
 					List<String[]> lstParams = new ArrayList<>();
@@ -271,10 +271,25 @@ public class GererData
 				// Méthodes
 				for (Methode m : c.getLstMethode())
 				{
-					writer.print("\t\tMethode " + m.getVisibilite() + " ");
+					writer.print("\t\t\tMethode " + m.getVisibilite() + " ");
 					if (m.isEstStatic()) writer.print("static ");
 					if (m.estAbstract()) writer.print("abstract ");
-					writer.print(m.getType() + " " + m.getNom() + " ()\n");
+					writer.print(m.getType() + " " + m.getNom() + " (");
+
+					List<String[]> lstPram = m.getLstParametres();
+
+					if(lstPram != null)
+					{
+						for (int i = 0; i < lstPram.size(); i++)
+						{
+							String[] tabS = lstPram.get(i);
+							writer.print(tabS[0] + " " + tabS[1]);
+							if (i < lstPram.size() - 1)
+								writer.print(", ");
+						}
+					}
+						
+					writer.print(")\n");
 				}
 				
 				// Ligne vide entre les classes
