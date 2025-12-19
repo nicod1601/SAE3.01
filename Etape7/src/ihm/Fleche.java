@@ -427,19 +427,14 @@ public class Fleche
 
 		if(lSource != null)
 		{
-			System.out.println(lSource + "   |   " + finale);
 			if(lSource.equals(finale))
 			{
 				return true;
 			}
 		}
 
-		System.out.println();
-
-
 		if(lCible != null)
 		{
-			System.out.println(lCible);
 			if(lCible.equals(finale))
 			{
 				return true;

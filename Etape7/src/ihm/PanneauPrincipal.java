@@ -299,26 +299,20 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 		{
 			for(CreeClass classRole : this.lstRole.keySet())
 			{
-				System.out.println("classRole : " + classRole.getNom());
 				Map<Integer, String> hstemp = lstRole.get(classRole);
 
 				for (int id : hstemp.keySet())
 				{
-					System.out.println("classRole id : " + id);
 					for (Fleche fl : classRole.getLstFleches())
 					{
-						System.out.println("Fleche id : " + fl.getId());
 						if (fl.getId() == id)
 						{
 							// Recherche de la flèche correspondante dans la liste globale pour mettre à jour son rôle
 							for (int cpt = 0; cpt < lstFlechesGlobal.size(); cpt++)
 							{
-								System.out.println("Fleche Global Id : " + lstFlechesGlobal.get(cpt).getId());
 								if(fl.getSource().getNom().equals(lstFlechesGlobal.get(cpt).getSource().getNom()) &&
 								   fl.getId() == lstFlechesGlobal.get(cpt).getId())     
 								{
-									System.out.println("Class Role Fleche : " + fl.getSource().getNom());
-									System.out.println("Class Role Fleche Global : " + lstFlechesGlobal.get(cpt).getSource().getNom());
 									this.lstFlechesGlobal.get(cpt).setRole(hstemp.get(id));
 								}
 							}

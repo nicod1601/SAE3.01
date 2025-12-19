@@ -171,30 +171,7 @@ public class Multiplicite implements Serializable
 	 */
 	public void setHashMap(HashMap<CreeClass,List<List<String>>> nouvelleMap)
 	{
-		// Affichage de la map actuelle pour débogage
-		System.out.println("=== mapMultiplicites ===");
-		for (Map.Entry<CreeClass, List<List<String>>> entry : this.mapMultiplicites.entrySet())
-		{
-			System.out.println("Classe liée : " + entry.getKey().getNom());
-
-			for (List<String> pair : entry.getValue())
-			{
-				System.out.println("   [" + pair.get(0) + ", " + pair.get(1) + "]");
-			}
-		}
-
-		// Affichage de la nouvelle map pour débogage
-		System.out.println("=== nouvelleMap ===");
-		for (Map.Entry<CreeClass, List<List<String>>> entry : nouvelleMap.entrySet())
-		{
-			System.out.println("Classe liée : " + entry.getKey().getNom());
-
-			for (List<String> pair : entry.getValue())
-			{
-				System.out.println("   [" + pair.get(0) + ", " + pair.get(1) + "]");
-			}
-		}
-
+		
 		// Si la nouvelle map est null, ne rien faire
 		if (nouvelleMap == null)
 			return;
@@ -202,18 +179,6 @@ public class Multiplicite implements Serializable
 		// Remplacement de la map actuelle
 		this.mapMultiplicites.clear();
 		this.mapMultiplicites.putAll(nouvelleMap);
-
-		// Vérification après mise à jour
-		System.out.println("=== Verif de la mise nouvelle mapMultiplicites ===");
-		for (Map.Entry<CreeClass, List<List<String>>> entry : this.mapMultiplicites.entrySet())
-		{
-			System.out.println("Classe liée : " + entry.getKey().getNom());
-
-			for (List<String> pair : entry.getValue())
-			{
-				System.out.println("   [" + pair.get(0) + ", " + pair.get(1) + "]");
-			}
-		}
 	}
 
 	/**

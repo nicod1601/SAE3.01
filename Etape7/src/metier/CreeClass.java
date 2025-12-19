@@ -117,8 +117,6 @@ public class CreeClass implements Serializable
 
 		if (posOuv == -1 || posFerm == -1)
 		{
-			System.out.println("Parenthèses non trouvées");
-			System.out.println(constructeur);
 			return;
 		}
 
@@ -419,8 +417,6 @@ public class CreeClass implements Serializable
 		int posFerm = record.indexOf(")");
 		if (posOuv == -1 || posFerm == -1)
 		{
-			System.out.println("Problème de parenthèse");
-			System.out.println(record);
 			return;
 		}
 
@@ -495,10 +491,6 @@ public class CreeClass implements Serializable
 	{
 		for(int cpt = 0; cpt < this.lstFleches.size(); cpt++)
 		{
-			System.out.println(     "CreeClass :       " + this.getNom()                                  + "\n" +
-									"source :          " + source.getNom()                             + "\n" +
-									"Id de CreeClass : " + this.lstFleches.get(cpt).getId() + "\n" +
-									"Id de source :    " + id                                          + "\n"  );
 			if(this.lstFleches.get(cpt).getId() == id && this == source)
 			{
 				return this.lstFleches.get(cpt);

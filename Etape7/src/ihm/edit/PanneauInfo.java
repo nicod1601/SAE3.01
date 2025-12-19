@@ -586,8 +586,6 @@ public class PanneauInfo extends JPanel implements ActionListener
 					
 					// Informer le contrôleur de la mise à jour
 					this.ctrl.setHashMap(classeCible, mapCible);
-					
-					System.out.println("Mise à jour inverse : " + classeCible.getNom() + " → " + classeSource.getNom());
 				}
 			}
 		}
