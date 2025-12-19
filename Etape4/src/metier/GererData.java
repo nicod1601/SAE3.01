@@ -10,29 +10,28 @@ public class GererData
 	// === SAUVEGARDER .ser ===
 	public void sauvegarderSER(List<CreeClass> classes)
 	{
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("../data/sauvegarde01.ser")))
+		try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("../data/sauvegarde01.ser")))
 		{
-			oos.writeObject(classes);
-			System.out.println("✅ Sauvegarde .ser réussie");
+			objectOutputStream.writeObject(classes);
+			System.out.println("Sauvegarde .ser réussie");
 		}
 		catch (IOException e)
 		{
-			System.out.println("❌ Erreur sauvegarde .ser : " + e.getMessage());
+			System.out.println("Erreur sauvegarde .ser : " + e.getMessage());
 		}
 	}
 	
 	// === CHARGER .ser ===
 	public List<CreeClass> chargerSER()
 	{
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("../data/sauvegarde01.ser")))
+		try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("../data/sauvegarde01.ser")))
 		{
-			List<CreeClass> classes = (List<CreeClass>) ois.readObject();
-			System.out.println("✅ Chargement .ser réussi : " + classes.size() + " classes");
+			List<CreeClass> classes = (List<CreeClass>) objectInputStream.readObject();
 			return classes;
 		}
 		catch (IOException | ClassNotFoundException e)
 		{
-			System.out.println("❌ Erreur chargement .ser : " + e.getMessage());
+			System.out.println("Erreur chargement .ser : " + e.getMessage());
 			return null;
 		}
 	}
@@ -207,7 +206,7 @@ public class GererData
 		}
 		catch (IOException e)
 		{
-			System.out.println("❌ Erreur lecture fichier : " + e.getMessage());
+			System.out.println("Erreur lecture fichier : " + e.getMessage());
 		}
 		
 		return classes;
@@ -300,7 +299,7 @@ public class GererData
 		}
 		catch (IOException e)
 		{
-			System.out.println("❌ Erreur écriture fichier : " + e.getMessage());
+			System.out.println("Erreur écriture fichier : " + e.getMessage());
 		}
 	}
 }

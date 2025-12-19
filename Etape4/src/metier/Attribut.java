@@ -41,14 +41,14 @@ public class Attribut implements Serializable
 	 */
 	public Attribut() { }
 	/**
-     * Crée un nouvel attribut.
-     *
-     * @param visibilite La visibilité de l'attribut (public, private, protected, etc.)
+	 * Crée un nouvel attribut.
+	 *
+	 * @param visibilite La visibilité de l'attribut (public, private, protected, etc.)
 	 * @param type Le type de l'attribut (ex: int, String, etc.)
 	 * @param nom Le nom de l'attribut
 	 * @param estStatic Indique si l'attribut est statique
 	 * @param propriete Indique si l'attribut est final (constante)
-     */
+	 */
 	public Attribut(String visibilite, String type, String nom, boolean estStatic)
 	{
 		this.visibilite = visibilite;
