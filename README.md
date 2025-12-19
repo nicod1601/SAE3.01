@@ -15,33 +15,49 @@ En d'autres termes de générer des Diagrammes de classes respectant le formalis
 ## Structure du Projet
 
 ```
-Etape4/
-│ 
-├── class/                   # Fichiers compilés (généré)
-│              
-├── data/                    # Classes de données
-│   ├── Point.java
-│   ├── Disque.java
-│   └── Rond.java
-│
-│   
-├── src/
-│   ├──metier/               # Logique métier
-│   │    ├── Attribut.java
-│   │    ├── Methode.java
-│   │    ├── Lien.java
-│   │    ├── CreeClass.java
-|   │    ├── Multiplicite.java
-│   │    └── LectureRepertoire.java
-│   │
-│   ├── ihm/                 # Interface utilisateur
-│   │    └── IhmCui.java
-│   │
-│   └── Controleur.java      # Classe principale
-│
-├── compile.list             # Liste des fichiers à compiler
-├── Run.bat                  # Script d'exécution (Windows)
-└── Run.sh                   # Script d'exécution (Linux)
+├── README.md
+└── Etape7/
+    ├── compile.list             # Liste des fichiers à compiler
+    ├── Run.bat                  # Script d'exécution (Windows)
+    ├── Run.sh                   # Script d'exécution (Linux)
+    │
+    ├── data/                    # Données de test et sauvegardes
+    │   ├── Disque.java
+    │   ├── ISurface.java
+    │   ├── Musique.java
+    │   ├── Point.java
+    │   ├── Rond.java
+    │   ├── sauvegarde01.ser
+    │   ├── sauvegarde01.uml
+    │   └── txt.txt
+    │
+    └── src/
+        ├── Controleur.java      # Point d'entrée principal
+        │
+        ├── ihm/                 # Interface Graphique
+        │   ├── Fleche.java
+        │   ├── FrameAppli.java
+        │   ├── IhmCui.java
+        │   ├── PanneauFichier.java
+        │   ├── PanneauMenu.java
+        │   ├── PanneauPrincipal.java
+        │   │
+        │   └── edit/            # Composants d'édition
+        │       ├── FrameEdit.java
+        │       ├── PanneauChoix.java
+        │       ├── PanneauInfo.java
+        │       └── PopUp.java
+        │
+        └── metier/              # Logique métier
+            ├── Attribut.java
+            ├── Couleur.java
+            ├── CreeClass.java
+            ├── GererData.java
+            ├── LectureFichier.java
+            ├── LectureRepertoire.java
+            ├── Lien.java
+            ├── Methode.java
+            └── Multiplicite.java
 ```
 
 ## Exécution
