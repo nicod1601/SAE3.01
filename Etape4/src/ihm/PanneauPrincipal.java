@@ -258,17 +258,29 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			}
 		}
 
+		
 		int espaceFl = 0;
-		for (Fleche fl : this.lstFleches)
+		int maxDecalage = 60; // Décalage maximum avant de recommencer
+
+		for(int cpt = 0; cpt < this.lstFleches.size(); cpt++)
 		{
-			fl.dessiner(g2, espaceFl);
+			Fleche fleche = this.lstFleches.get(cpt);
+			
+			// Appliquer le décalage actuel
+			fleche.dessiner(g2, espaceFl);
 			
 			Integer[] coords = new Integer[2];
-			coords[0] = fl.getPosXFin();
-			coords[1] = fl.getPosYFin();
+			coords[0] = fleche.getPosXFin();
+			coords[1] = fleche.getPosYFin();
 			this.lstCordFleche.add(coords);
 			
+			// Incrémenter pour la prochaine flèche
 			espaceFl += ESPACE_Y;
+			
+			// Si on dépasse le décalage maximum, on recommence à 0
+			if (espaceFl > maxDecalage) {
+				espaceFl = 0;
+			}
 		}
 
 		this.ctrl.setLstFleche(this.lstFleches);
@@ -643,9 +655,9 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 						}
 						else 
 						{
-							listP += p[1] + " : " + p[0];
-							if (i < params.size() - 1)
-								listP += ",   ";
+							String pType = p.length > 0 ? p[0] : "";
+							String pName = p.length > 1 ? p[1] : (p.length == 1 ? p[0] : "");
+							listP += pName + " : " + pType;
 						}
 						
 					}
@@ -710,12 +722,13 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 			{
 				for (int i = 0; i < params.size(); i++)
 				{
-					String[] p = params.get(i); 
-					str += p[1] + " : " + p[0];
-					str += ",   ";
-					if (i > 2 && zoom == 1)
+					String[] p = params.get(i);
+					String pType = p.length > 0 ? p[0] : "";
+					String pName = p.length > 1 ? p[1] : (p.length == 1 ? p[0] : "");
+					str += pName + " : " + pType;
+					if (i < params.size() - 1  && i < 2)
 					{
-						break;
+						str += ",   ";
 					}
 				}
 			}

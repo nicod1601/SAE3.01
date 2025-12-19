@@ -171,9 +171,7 @@ public class Controleur
 	}
 
 	/**
-	 * Sauvegarde la liste des classes métier au format XML.
-	 * 
-	 * @param lstMetiers La liste des classes à sauvegarder
+	 * Permet de Sauvegarde la liste des classes métier au format XML.
 	 */
 	public void sauvegarderXML()
 	{
@@ -181,18 +179,25 @@ public class Controleur
 		gererData.sauvegarderUML(this.lstMetiers);
 	}
 
+	/** Permet de sauvegarder la liste des classes métier au format .ser */
 	public void sauvegarderSER()
 	{
 		GererData gererData = new GererData();
 		gererData.sauvegarderSER(this.lstMetiers);
 	}
 
+	/** Permet de recuper la liste des Class qui vas etre charger
+	 * @return List de CreeClass
+	 */
 	public List<CreeClass> chargerUML()
 	{
 		GererData gererData = new GererData();
 		return gererData.chargerUML();
 	}
 
+	/** Permet de recuper la liste des Class qui vas etre charger
+	 * @return List de CreeClass
+	 */
 	public List<CreeClass> chargerSER()
 	{
 		GererData gererData = new GererData();
@@ -200,6 +205,9 @@ public class Controleur
 
 	}
 
+	/** On cree une fleche 
+	 * @return Fleche
+	 */
 	public Fleche ajouterFleche(CreeClass classeDepart, CreeClass classeArrivee, String typeLien, String roleDepart, String roleArrivee, boolean isNavigable)
 	{
 		Fleche fleche = new Fleche(classeDepart, classeArrivee, typeLien, roleDepart, roleArrivee, isNavigable);

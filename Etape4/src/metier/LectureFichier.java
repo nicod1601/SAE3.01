@@ -25,11 +25,11 @@ public class LectureFichier
 	{
 		if (data.endsWith(".ser") )
 		{
-			return new LectureFichier(new GererData(),data ,0);
+			return new LectureFichier(new GererData() ,0);
 		}
 		else if (data.endsWith(".uml"))
 		{
-			return new LectureFichier(new GererData(),data ,1);
+			return new LectureFichier(new GererData() ,1);
 		}
 		
 		LectureFichier.verifdata(data);
@@ -37,7 +37,7 @@ public class LectureFichier
 		
 	}
 
-	private LectureFichier(GererData gererData,String data, int dummy)
+	private LectureFichier(GererData gererData, int dummy)
 	{
 		if (dummy == 0)
 			this.lstMetiersXML = gererData.chargerSER();
@@ -197,11 +197,17 @@ public class LectureFichier
 		}
 	}
 
+	/** On retourne la classe qu'on a cree
+	 * @return CreeClass
+	 */
 	public CreeClass getClasse()
 	{
 		return this.classe;
 	}
 
+	/** On retourne la list de CreeClass pour le cas ou c'est un fichier enregistree
+	 * @return Liste CreeClass
+	 */
 	public List<CreeClass> getLstCreeClassesXML()
 	{
 		return this.lstMetiersXML;

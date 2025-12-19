@@ -2,6 +2,9 @@ package src.metier;
 
 import java.awt.Color;
 
+/**
+ * Enume de Couleur pour avoir des couleur Près definit
+ */
 public enum Couleur 
 { 
 	COULEUR_FOND            (new Color(45, 52, 54   )),

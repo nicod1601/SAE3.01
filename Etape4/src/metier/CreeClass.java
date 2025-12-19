@@ -61,6 +61,7 @@ public class CreeClass implements Serializable
 	}
 
 	/**
+	 * On Instencie la List des Interface
 	 * 
 	 */
 	public void initLstInterface()
@@ -68,14 +69,14 @@ public class CreeClass implements Serializable
 		this.interfaces = new ArrayList<>();
 	}
 	
-	/** */
+	/** on Ajoute une Interface  */
 	public void addInterface(String inter)
 	{
 		this.interfaces.add(inter);
 	}
 
 	/**
-	 * 
+	 * On initialise les lien et les Multiplicitee
 	 */
 	public void initLienMulti()
 	{

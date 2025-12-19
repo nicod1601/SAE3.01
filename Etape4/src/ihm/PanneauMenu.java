@@ -54,8 +54,8 @@ public class PanneauMenu extends JPanel implements ActionListener
 	private void creerMenus()
 	{
 		this.menuBar = new JMenuBar();
-		this.fileMenu = new JMenu("  📁 File  ");
-		this.editMenu = new JMenu("  ✏️ Edit  ");
+		this.fileMenu = new JMenu("  📁 fichier  ");
+		this.editMenu = new JMenu("  ✏️ Editer  ");
 		this.quitter  = new JButton("✖ Quitter");
 
 		/* Composants File */
@@ -162,6 +162,11 @@ public class PanneauMenu extends JPanel implements ActionListener
 			case "Sauvegarder":
 				this.ctrl.sauvegarderXML();
 				this.ctrl.sauvegarderSER();
+				JOptionPane.showMessageDialog(
+					null,
+					"Savegarde Reussite.",
+					"Succès",
+					JOptionPane.INFORMATION_MESSAGE );
 				break;
 			default:
 				break;
