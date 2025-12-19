@@ -249,15 +249,12 @@ public class PanneauPrincipal extends JPanel implements MouseListener, MouseMoti
 
 		if(!this.lstRole.isEmpty())
 		{
-			for (Fleche fl : this.lstFleches)
+			for (Map.Entry<Integer, String> entry : this.lstRole.entrySet())
 			{
-				for (Map.Entry<Integer, String> entry : this.lstRole.entrySet())
-				{
-					Integer id = entry.getKey();
-					String role = entry.getValue();
+				Integer id = entry.getKey();
+				String role = entry.getValue();
 
-					this.lstFleches.get(id).setRole(role);
-				}
+				this.lstFleches.get(id).setRole(role);
 			}
 		}
 
