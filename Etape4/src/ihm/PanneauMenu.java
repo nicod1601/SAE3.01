@@ -210,44 +210,41 @@ public class PanneauMenu extends JPanel implements ActionListener
 
 	public void ouvrirFichier() 
 	{	
-		if (!this.frameAppli.getModeleFichiers().isEmpty())
+		if (this.viderListe())
 		{
-			this.viderListe();
-		}
-		JFileChooser chooser = this.creerFileChooser(JFileChooser.FILES_ONLY, "Sélectionner un fichier .java");
-		
-		int resultat = chooser.showOpenDialog(this);
-		if (resultat == JFileChooser.APPROVE_OPTION) 
-		{
-			File fichierSelectionne = chooser.getSelectedFile();
-			String nomFichier = "" + fichierSelectionne;
+			JFileChooser chooser = this.creerFileChooser(JFileChooser.FILES_ONLY, "Sélectionner un fichier .java");
 			
-			this.frameAppli.ajouterFichier(fichierSelectionne.getName());
-			this.afficherMessageSucces("Fichier " + fichierSelectionne.getName() + " chargé avec succès", "Chargement du fichier");
-			this.frameAppli.majListeClasses(false, nomFichier);
+			int resultat = chooser.showOpenDialog(this);
+			if (resultat == JFileChooser.APPROVE_OPTION) 
+			{
+				File fichierSelectionne = chooser.getSelectedFile();
+				String nomFichier = "" + fichierSelectionne;
+				
+				this.frameAppli.ajouterFichier(fichierSelectionne.getName());
+				this.afficherMessageSucces("Fichier " + fichierSelectionne.getName() + " chargé avec succès", "Chargement du fichier");
+				this.frameAppli.majListeClasses(false, nomFichier);
+			}
 		}
 	}
 
 	private void ouvrirDossier() 
 	{
-		if (!this.frameAppli.getModeleFichiers().isEmpty())
+		if (this.viderListe())
 		{
-			this.viderListe();
-		}
+			
+			JFileChooser chooser = this.creerFileChooser(JFileChooser.FILES_AND_DIRECTORIES, "Sélectionner un dossier contenant des fichiers .java");
+			chooser.setCurrentDirectory(new File("../"));
+			chooser.setSelectedFile(new File("data"));
+			
+			int resultat = chooser.showOpenDialog(this);
 
-		JFileChooser chooser = this.creerFileChooser(JFileChooser.FILES_AND_DIRECTORIES, "Sélectionner un dossier contenant des fichiers .java");
-		chooser.setCurrentDirectory(new File("../"));
-		chooser.setSelectedFile(new File("data"));
-
-		
-		int resultat = chooser.showOpenDialog(this);
-
-		if (resultat == JFileChooser.APPROVE_OPTION) 
-		{
-			this.dossierOuvert = chooser.getSelectedFile();
-			this.chargerFichiersDossier();
-			this.ctrl.LectureRepertoire(this.dossierOuvert);
-			this.frameAppli.majListeClasses(true, null);
+			if (resultat == JFileChooser.APPROVE_OPTION) 
+			{
+				this.dossierOuvert = chooser.getSelectedFile();
+				this.chargerFichiersDossier();
+				this.ctrl.LectureRepertoire(this.dossierOuvert);
+				this.frameAppli.majListeClasses(true, null);
+			}
 		}
 	}
 
@@ -286,8 +283,13 @@ public class PanneauMenu extends JPanel implements ActionListener
 		}
 	}
 
-	private void viderListe()
+	private boolean viderListe()
 	{
+		if (this.frameAppli.getModeleFichiers().isEmpty())
+		{
+			return true;
+		}
+
 		int reponse = JOptionPane.showConfirmDialog(this,
 			"Voulez-vous vraiment vider la liste des fichiers ?",
 			"Confirmation",
@@ -301,6 +303,11 @@ public class PanneauMenu extends JPanel implements ActionListener
 			this.afficherMessageSucces("Liste vidée avec succès", "Liste vidée");
 			this.frameEdit.clearInfo();
 			this.frameEdit.dispose();
+			return true;
+		}
+		else 
+		{
+			return false;
 		}
 	}
 
