@@ -135,15 +135,7 @@ public class CreeClass implements Serializable
 		
 		if (!paramBrut.isEmpty())
 		{
-			Scanner sc = new Scanner(paramBrut);
-			sc.useDelimiter(",");
-			while (sc.hasNext())
-			{
-				String sh = sc.next().trim();
-				tabInfo   = sh.split(" ");
-				lstLstParamInfo.add(tabInfo);
-			}
-			sc.close();
+			lstLstParamInfo = parserParametresAvecGeneriques(paramBrut);
 		}
 
 		Methode c = new Methode(visibilite, null, nom, false,false, lstLstParamInfo);
@@ -281,36 +273,119 @@ public class CreeClass implements Serializable
 
 		String resteStr = reste.toString().trim();
 		int posOuv = resteStr.indexOf("(");
-		int posFerm = resteStr.indexOf(")");
+		int finOuv = resteStr.lastIndexOf(")");
 
-		if (posOuv == -1 || posFerm == -1)
+		if (posOuv == -1 || finOuv == -1)
 		{
 			return;
 		}
 
 		String nom = resteStr.substring(0, posOuv).trim();
-		String paramBrut = resteStr.substring(posOuv + 1, posFerm).trim();
+		String paramBrut = resteStr.substring(posOuv + 1, finOuv).trim();
 
 		List<String[]> lstLstParamInfo = new ArrayList<>();
-		String[] tabInfo = null;
+		
 		if (!paramBrut.isEmpty())
 		{
-			sc = new Scanner(paramBrut);
-			sc.useDelimiter(",");
-			while (sc.hasNext())
-			{
-				String sh= sc.next().trim();
-				tabInfo = sh.split(" ");
-				lstLstParamInfo.add(tabInfo);
-			}
-	
-			sc.close();
+			// Nouvelle méthode pour parser les paramètres qui gère les génériques
+			lstLstParamInfo = parserParametresAvecGeneriques(paramBrut);
 		}
 
-		Methode meth = new Methode(visibilite, type, nom, estStatic,estAbstract, lstLstParamInfo);
+		Methode meth = new Methode(visibilite, type, nom, estStatic, estAbstract, lstLstParamInfo);
 		this.lstMethode.add(meth);
 	}
 
+	/**
+	 * Parse les paramètres en gérant les types génériques (HashMap<K,V>, List<T>, etc.)
+	 * 
+	 * @param paramBrut la chaîne brute des paramètres
+	 * @return la liste des paramètres parsés [type, nom]
+	 */
+	private List<String[]> parserParametresAvecGeneriques(String paramBrut)
+	{
+		List<String[]> lstLstParamInfo = new ArrayList<>();
+		
+		int index = 0;
+		int longueur = paramBrut.length();
+		int niveauChevrons = 0;
+		StringBuilder paramCourant = new StringBuilder();
+		
+		while (index < longueur)
+		{
+			char c = paramBrut.charAt(index);
+			
+			if (c == '<')
+			{
+				niveauChevrons++;
+				paramCourant.append(c);
+			}
+			else if (c == '>')
+			{
+				niveauChevrons--;
+				paramCourant.append(c);
+			}
+			else if (c == ',' && niveauChevrons == 0)
+			{
+				// C'est une vraie virgule séparant les paramètres (pas à l'intérieur des chevrons)
+				String param = paramCourant.toString().trim();
+				if (!param.isEmpty())
+				{
+					String[] tabInfo = extraireTypeEtNom(param);
+					if (tabInfo != null)
+					{
+						lstLstParamInfo.add(tabInfo);
+					}
+				}
+				paramCourant = new StringBuilder();
+			}
+			else
+			{
+				paramCourant.append(c);
+			}
+			index++;
+		}
+		
+		// Dernier paramètre
+		String dernierParam = paramCourant.toString().trim();
+		if (!dernierParam.isEmpty())
+		{
+			String[] tabInfo = extraireTypeEtNom(dernierParam);
+			if (tabInfo != null)
+			{
+				lstLstParamInfo.add(tabInfo);
+			}
+		}
+		
+		return lstLstParamInfo;
+	}
+
+	/**
+	 * Extrait le type et le nom d'un paramètre
+	 * 
+	 * @param param le paramètre complet (ex: "HashMap<String, Integer> map")
+	 * @return tableau [type, nom] ou null si invalide
+	 */
+	private String[] extraireTypeEtNom(String param)
+	{
+		param = param.trim();
+		if (param.isEmpty())
+		{
+			return null;
+		}
+		
+		// Trouver le dernier espace pour séparer type et nom
+		int dernierEspace = param.lastIndexOf(' ');
+		if (dernierEspace == -1)
+		{
+			// Pas d'espace, seulement le type (cas rare mais possible)
+			return new String[]{param, ""};
+		}
+		
+		String type = param.substring(0, dernierEspace).trim();
+		String nom = param.substring(dernierEspace + 1).trim();
+		
+		return new String[]{type, nom};
+	}
 	/**
 	 * ça ajoute le constructeur et ces methode cacher dans lstMethodes
 	 * et ajoute tous ces attribut dans lstAttribut
@@ -337,16 +412,7 @@ public class CreeClass implements Serializable
 		String[] tabInfo = null;
 		if (!paramBrut.isEmpty())
 		{
-			Scanner sc = new Scanner(paramBrut);
-			sc.useDelimiter(",");
-			while (sc.hasNext())
-			{
-				String sh= sc.next().trim();
-				tabInfo = sh.split(" ");
-				lstLstParamInfo.add(tabInfo);
-			}
-
-			sc.close();
+			lstLstParamInfo = parserParametresAvecGeneriques(paramBrut);
 		}
 		//cree constructeur
 		this.lstMethode.add(new Methode("public",null,this.nom,false,false,lstLstParamInfo) );
