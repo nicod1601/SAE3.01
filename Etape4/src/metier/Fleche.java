@@ -138,7 +138,20 @@ public class Fleche
 		switch (this.typeLien) 
 		{
 			case "association":
-				if (bidirectionnel) 
+				if (this.source.getNom().equals(this.cible.getNom()))
+				{
+					//Fleche pour une assotiation vers lui meme - Carré
+					g2.setStroke(new BasicStroke(2f));
+					int taille = 50;
+					
+					// Dessiner un carré
+					g2.drawLine(pointXDepart, pointYDepart, pointXDepart + taille, pointYDepart);
+					g2.drawLine(pointXDepart + taille, pointYDepart, pointXDepart + taille, pointYDepart + taille);
+					g2.drawLine(pointXDepart + taille, pointYDepart + taille, pointXDepart, pointYDepart + taille);
+					
+					this.dessinerPointe(g2, pointXDepart + taille, pointYDepart + taille, pointXDepart, pointYDepart + taille, false);
+				}
+				else if (bidirectionnel) 
 				{
 					// Trait simple sans flèche pour bidirectionnel
 					g2.setStroke(new BasicStroke(2f));
@@ -186,25 +199,45 @@ public class Fleche
 		// Afficher les multiplicités
 		if (this.multipliciteSource != null && !this.multipliciteSource.isEmpty()) 
 		{
-			g2.setColor(Couleur.NOIR.getColor());
-			int xTextSrc = pointXDepart + (pointXArrivee - pointXDepart) / 10;
-			int yTextSrc = pointYDepart + (pointYArrivee - pointYDepart) / 10 - 5;
-			g2.rotate(angleRotation, xTextSrc, yTextSrc);
-			g2.drawString(multipliciteSource, xTextSrc, yTextSrc);
-			g2.rotate(-angleRotation, xTextSrc, yTextSrc);
-
+			if (this.source.getNom().equals(this.cible.getNom()))
+			{
+				g2.setColor(Couleur.NOIR.getColor());
+				int xTextSrc = pointXDepart + 5;
+				int yTextSrc = pointYDepart - 10;
+				g2.drawString(multipliciteSource, xTextSrc, yTextSrc);
+			}
+			else
+			{
+				g2.setColor(Couleur.NOIR.getColor());
+				int xTextSrc = pointXDepart + (pointXArrivee - pointXDepart) / 10;
+				int yTextSrc = pointYDepart + (pointYArrivee - pointYDepart) / 10 - 5;
+				g2.rotate(angleRotation, xTextSrc, yTextSrc);
+				g2.drawString(multipliciteSource, xTextSrc, yTextSrc);
+				g2.rotate(-angleRotation, xTextSrc, yTextSrc);
+			}
 		}
 		
 		if (this.multipliciteCible != null && !this.multipliciteCible.isEmpty()) 
 		{
-			g2.setColor(Couleur.NOIR.getColor());
-			int xTextCible = pointXDepart + (pointXArrivee - pointXDepart) * 90 / 100;
-			int yTextCible = pointYDepart + (pointYArrivee - pointYDepart) * 90 / 100 - 5;
+			if (this.source.getNom().equals(this.cible.getNom()))
+			{
+				g2.setColor(Couleur.NOIR.getColor());
+				int xTextCible = pointXDepart + 5;
+				int yTextCible = pointYDepart + 50 + 20;
 
-			g2.rotate(angleRotation, xTextCible, yTextCible);
-			g2.drawString(multipliciteCible, xTextCible, yTextCible);
-			g2.rotate(-angleRotation, xTextCible, yTextCible);
+				
+				g2.drawString(multipliciteCible, xTextCible, yTextCible);
+			}
+			else
+			{
+				g2.setColor(Couleur.NOIR.getColor());
+				int xTextCible = pointXDepart + (pointXArrivee - pointXDepart) * 90 / 100;
+				int yTextCible = pointYDepart + (pointYArrivee - pointYDepart) * 90 / 100 - 5;
 
+				g2.rotate(angleRotation, xTextCible, yTextCible);
+				g2.drawString(multipliciteCible, xTextCible, yTextCible);
+				g2.rotate(-angleRotation, xTextCible, yTextCible);
+			}
 		}
 
 		// Afficher le rôle si défini

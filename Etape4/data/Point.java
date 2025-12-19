@@ -10,6 +10,7 @@ public class Point
 	private int x;
 	private int y;
 	private Disque[] lstDisqueAssocies;
+	private Point point;
 
 /*╔════════════════════════╗*/
 /*║      Constructeur      ║*/
