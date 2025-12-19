@@ -377,6 +377,19 @@ public class Fleche
 		}
 	}
 
+	/**
+	 * Dessine le triangle fermé (la pointe) pour les relations d'héritage ou d'implémentation.
+	 * <p>
+	 * Le triangle est rempli en blanc et bordé en noir. L'orientation du triangle
+	 * est calculée en fonction de la direction entre le point de départ et le point
+	 * d'arrivée.
+	 *
+	 * @param g2         contexte graphique pour le dessin
+	 * @param xDepart    coordonnée x du point d'arrivée (sommet de la pointe)
+	 * @param yDepart    coordonnée y du point d'arrivée (sommet de la pointe)
+	 * @param xArrivee   coordonnée x du point de départ de la ligne
+	 * @param yArrivee   coordonnée y du point de départ de la ligne
+	 */
 	private void dessinerTriangleFerme(Graphics2D g2, int xDepart, int yDepart, int xArrivee, int yArrivee)
 	{
 		g2.setStroke(new BasicStroke(2f));

@@ -49,12 +49,7 @@ public class PanneauChoix extends JPanel implements MouseListener
 	 * @param frameEdit  la fenêtre parente
 	 * @param panneauInfo le panneau d'information associé
 	 */
-	public PanneauChoix
-	(
-		Controleur controleur,
-		FrameEdit  frameEdit,
-		PanneauInfo panneauInfo
-	)
+	public PanneauChoix(Controleur controleur,FrameEdit frameEdit,PanneauInfo panneauInfo)
 	{
 		this.controleur  = controleur;
 		this.frameEdit   = frameEdit;
@@ -74,8 +69,8 @@ public class PanneauChoix extends JPanel implements MouseListener
 		this.setBackground(Couleur.COULEUR_FOND.getColor());
 		this.setBorder    (BorderFactory.
 		                   createMatteBorder(0, 0, 0, 2,
-			               Couleur.COULEUR_BORDURE.getColor()
-			                        )
+			                Couleur.COULEUR_BORDURE.getColor()
+			                                )
 		);
 	}
 

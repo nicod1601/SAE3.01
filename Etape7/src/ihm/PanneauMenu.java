@@ -407,14 +407,6 @@ public class PanneauMenu extends JPanel implements ActionListener
 	}
 
 	/**
-	 * Affiche un message d'erreur.
-	 */
-	private void afficherMessageErreur(String message, String titre)
-	{
-		JOptionPane.showMessageDialog(this, message, titre, JOptionPane.ERROR_MESSAGE);
-	}
-
-	/**
 	 * Applique le style et les animations à un élément de menu.
 	 */
 	private void stylerMenuItem(JMenuItem item)
