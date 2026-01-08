@@ -243,7 +243,6 @@ public class IhmCui
 				}
 
 				res += String.format("%s %s : %s", symbole, attribut.getNom(), attribut.getType());
-				res += " <<attribut.getPropriete()>>"+" = "+attribut.getValeur();
 				res += reset + "\n";
 			}
 

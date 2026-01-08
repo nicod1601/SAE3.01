@@ -1,68 +1,45 @@
 package data;
 
-public class Point 
+import java.util.ArrayList;
+
+public class ClassAssociation
 {
 /*╔════════════════════════╗*/
 /*║       Attribut         ║*/
 /*╚════════════════════════╝*/
 	
-	private String nom;//Nom du Point
-	private int x;
-	private int y;
-	private Disque[] lstDisqueAssocies;
-	private Point point;
+	private String attrVerifComm; //Verification de si ça s'affiche
+
+	private ArrayList<ClassPrincipal> lstClassPrincipals;
+
+	private ClassAssociation          autoAssociation;
 
 
 /*╔════════════════════════╗*/
 /*║      Constructeur      ║*/
 /*╚════════════════════════╝*/
 /*
-	public Point(String nom, int x, int y) 
+	public ClassAssociation(String attrVerifComm) 
 	{
-		this.nom = nom;
-		this.x   = x;
-		this.y   = y;
+		this.attrVerifComm   = attrVerifComm;
 	}
 */
-	public Point(String nom, int x, int y) 
+	public ClassAssociation(String attrVerifComm) 
 	{
-		this.nom = nom;
-		this.x   = x;/* public String getNom()*/
-		this.y   = y;
+		this.attrVerifComm   = attrVerifComm;/* public String getattrVerifComm()*/
 	}
 
 
 /*╔════════════════════════╗*/
 /*║   Getters & Setters    ║*/
 /*╚════════════════════════╝*/
-	public String getNom()
+	public String getAttrVerifComm()
 	{
-		return this.nom;
+		return this.attrVerifComm;
 	}
 
-	public void setNom(String nom)
+	public void /*boolean*/ setAttrVerifComm(String attrVerifComm)
 	{ 
-		this.nom = nom;
+		this.attrVerifComm = attrVerifComm;
 	}
-
-	public int getX()
-	{ 
-		return this.x;
-	}
-
-	public void /*boolean*/ setX(int x)
-	{ 
-		this.x = x;
-	}
-
-	public int getY()
-	{
-		return this.y;
-	}
-
-	public void setY(int y)
-	{ 
-		this.y = y;
-	}
-
 }
