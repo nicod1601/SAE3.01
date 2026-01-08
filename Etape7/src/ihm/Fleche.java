@@ -3,6 +3,7 @@ package src.ihm;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,7 +18,7 @@ import src.metier.Couleur;
  * d'une liaison (type, multiplicités, rôle, orientation) ainsi que
  * quelques utilitaires pour dessiner différents types de pointes.
  */
-public class Fleche
+public class Fleche implements Serializable
 {
 	/** Classe source de la liaison. */
 	private CreeClass source;
